@@ -15,4 +15,10 @@ https://docs.google.com/spreadsheets/d/1DqY_ybKibNQ15xTntpKzz1D4TmLLcau9_5C6Badf
     - date_of_birth (date)  - Tanggal Lahir karyawan
     - address (string)      - Alamat tinggal karyawan
     - id_number (string)    - Nomor KTP karyawan
-    - age (integer, default 0) - hasil perhitungan tanggal sekarang dengan date_of_birth 
+    - age (integer, default 0) - hasil perhitungan tanggal sekarang dengan date_of_birth
+    - role_id (integer)     - Foreign key dari Job_Roles
+  
+- **Job_Roles**. Job Role adalah peran pegawai dalam pekerjaannya
+  - Atribut
+    - id (primary key)  - unique identifier
+    - role (string)     - peran pekerjaan contoh: Supervisor, Cashier, Manager, etc
