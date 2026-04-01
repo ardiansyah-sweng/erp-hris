@@ -1,6 +1,9 @@
 # ERP-HRIS
 Modul Manajemen SDM Aplikasi ERP
 
+# Tautan Google Sheet
+https://docs.google.com/spreadsheets/d/1DqY_ybKibNQ15xTntpKzz1D4TmLLcau9_5C6BadfCV4/edit?usp=sharing 
+
 ## Entitas/Set Relasi
 - **Employees**. Employee adalah pegawai/karyawan di perusahaan.
   - Atribut
