@@ -10,6 +10,9 @@ class JobroleController extends Controller
     {
         $jobRoles = JobRole::all();
 
-        return view('job_role.index', compact('jobRoles'));
+        return response()->json([
+            'success' => true,
+            'data' => $jobRoles,
+        ]);
     }
 }
