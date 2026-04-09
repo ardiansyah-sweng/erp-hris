@@ -1,7 +1,6 @@
 <?php
 
 namespace Tests\Feature;
-
 use Tests\TestCase;
 
 class JobroleControllerTest extends TestCase
