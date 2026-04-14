@@ -41,27 +41,31 @@ class EmployeeTest extends TestCase
     }
 
     public function test_create_employee_successfully()
-    {
-        $payload = [
-            'name' => 'John Doe',
-            'email' => 'john@example.com',
-            'position' => 'Developer',
-        ];
+{
+    $payload = [
+        'name'           => 'John Doe',
+        'email'          => 'john.doe@example.com',
+        'phone_number'   => '08123456789',
+        'place_of_birth' => 'Jakarta',
+        'date_of_birth'  => '1995-01-01',
+        'address'        => 'Jl. Merdeka No. 123',
+        'id_number'      => '3201234567890001',
+        'role_id'        => 1, // Pastikan ini integer sesuai validasi
+    ];
 
-        $response = $this->postJson('/employees', $payload);
+    $response = $this->postJson('/employees', $payload);
 
-        $response->assertStatus(201)
-                 ->assertJson([
-                     'payload' => [
-                         'statusCode' => 201,
-                         'message' => 'Employee created successfully!',
-                     ]
-                 ]);
-
-        $this->assertDatabaseHas('employees', [
-            'email' => 'john@example.com',
-        ]);
-    }
+    $response->assertStatus(201)
+             ->assertJson([
+                 'payload' => [
+                     'statusCode' => 201,
+                     'message'    => 'Employee created successfully!',
+                 ]
+             ]);
+    $this->assertDatabaseHas('employees', [
+        'email' => 'john.doe@example.com'
+    ]);
+}
 
     public function test_fail_create_employee_with_invalid_data()
     {

@@ -13,9 +13,15 @@ public function up(): void
 {
     Schema::create('employees', function (Blueprint $table) {
         $table->id();
-        $table->string('name'); 
-        $table->string('email')->unique(); 
-        $table->string('position'); 
+        $table->string('name');
+        $table->string('email')->unique();
+        $table->string('phone_number');
+        $table->string('place_of_birth');
+        $table->date('date_of_birth');
+        $table->string('address');
+        $table->string('id_number');
+        $table->integer('age')->default(0);
+        $table->unsignedBigInteger('role_id');
         $table->timestamps();
     });
 }
