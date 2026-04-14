@@ -19,7 +19,7 @@ class EmployeeFactory extends Factory
     public function definition(): array
     {
         $dateOfBirth = fake()->dateTimeBetween('-60 years', '-18 years');
-        $age = Carbon::now()->diffInYears(Carbon::instance($dateOfBirth));
+        $age = (int) Carbon::parse($dateOfBirth)->age;
 
         return [
             'name' => fake()->name(),
