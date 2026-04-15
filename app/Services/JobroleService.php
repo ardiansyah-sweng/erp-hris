@@ -11,13 +11,14 @@ class JobroleService
      */
     public function updateJobrole($id, array $data)
     {
-        // 1. Cari data berdasarkan ID, kalau nggak ada langsung error 404
+        // Cari data berdsarkan ID
         $jobrole = Jobrole::findOrFail($id);
 
-        // 2. Update datanya pake data baru dari input
-        $jobrole->update($data);
+        // Melakukan update data kolom 'role'
+        $jobrole->update([
+            'role' => $data['role']
+        ]);
 
-        // 3. Balikin data yang udah berhasil diupdate
         return $jobrole;
     }
 }

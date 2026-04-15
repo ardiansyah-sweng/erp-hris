@@ -5,20 +5,36 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Jobrole;
 
+/**
+ * Class JobroleSeeder
+ * Seeder untuk mengisi data awal (dummy) pada tabel job_roles
+ */
 class JobroleSeeder extends Seeder
 {
+    /**
+     * Menjalankan proses seeder ke database
+     * Update: Disesuaikan dengan skema tabel terbaru yang hanya menggunakan kolom 'role'
+     */
     public function run(): void
     {
-        // Data dummy pertama
         Jobrole::create([
-            'name' => 'Backend Developer',
-            'description' => 'Bertanggung jawab atas logic server dan database.'
+            'role' => 'Software Engineer'
         ]);
 
-        // Data dummy kedua
         Jobrole::create([
-            'name' => 'UI/UX Designer',
-            'description' => 'Mendesain tampilan aplikasi agar user nyaman.'
+            'role' => 'Data Analyst'
+        ]);
+
+        Jobrole::create([
+            'role' => 'HR Manager'
+        ]);
+
+        Jobrole::create([
+            'role' => 'Quality Assurance'
+        ]);
+
+        Jobrole::create([
+            'role' => 'Product Manager'
         ]);
     }
 }

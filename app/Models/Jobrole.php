@@ -9,10 +9,9 @@ class Jobrole extends Model
 {
     use HasFactory;
     
-    protected $table = 'jobroles';
+    protected $table = 'job_roles';
 
     protected $fillable = [
-        'name',
-        'description',
+        'role'
     ];
 }

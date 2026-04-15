@@ -11,13 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        /**
-        * Menambahkan tabel jobroles dengan kolom id, name, dan description
-        */
-        Schema::create('jobroles', function (Blueprint $table) {
+        Schema::create('job_roles', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->text('description')->nullable();
+            $table->string('role');
             $table->timestamps();
         });
     }
@@ -27,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('jobroles');
+        Schema::dropIfExists('job_roles');
     }
 };
