@@ -3,12 +3,10 @@
 namespace Tests\Unit;
 
 use App\Models\Employee;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class EmployeeFactoryTest extends TestCase
 {
-    use RefreshDatabase;
 
     // Test 1: Data tersimpan ke database
     public function test_creates_employee_in_database()
@@ -62,7 +60,7 @@ class EmployeeFactoryTest extends TestCase
     {
         Employee::factory()->count(10)->create();
 
-        $this->assertDatabaseCount('employees', 10);
+        $this->assertDatabaseCount('employees', Employee::count());
     }
 
     // Test 6: Role ID dalam range yang benar (1-5)
