@@ -9,3 +9,6 @@ Route::get('/', function () {
 Route::get('/job-roles', function () {
     return view('job_role.index');
 });
+Route::get('/dashboard', function () {
+    return view('dashboard');
+});
