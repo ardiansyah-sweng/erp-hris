@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 
 class JobroleController extends Controller
@@ -16,4 +17,5 @@ class JobroleController extends Controller
             'data' => $validated
         ]);
     }
+    //
 }
