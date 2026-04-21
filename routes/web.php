@@ -14,3 +14,5 @@ Route::get('/', function () {
 Route::get('/job-roles', function () {
     return view('job_role.index');
 });
+
+Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy']);
