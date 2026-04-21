@@ -19,5 +19,10 @@ class DatabaseSeeder extends Seeder
             JobRoleSeeder::class,
             // EmployeeSeeder::class,
         ]);
+
+        $this->call([
+            JobRoleSeeder::class,
+            // EmployeeSeeder::class,
+        ]);
     }
 }
