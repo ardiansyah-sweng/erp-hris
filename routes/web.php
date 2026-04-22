@@ -5,6 +5,7 @@ use App\Http\Controllers\EmployeeController;
 
 
 Route::post('/employees', [EmployeeController::class, 'store']);
+Route::get('/employees/{employee}', [EmployeeController::class, 'show']);
 
 Route::get('/detail-employee', function () {
     return view('employee.detail');
