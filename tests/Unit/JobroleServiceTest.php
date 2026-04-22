@@ -52,6 +52,7 @@ class JobroleServiceTest extends TestCase
         // Pastikan jumlah data sesuai
         $this->assertCount(3, $result);
 
+        
         // Pastikan data yang diambil benar (tidak tergantung urutan)
         $this->assertTrue($result->contains('role', 'Software Engineer'));
         $this->assertTrue($result->contains('role', 'UI/UX Designer'));
