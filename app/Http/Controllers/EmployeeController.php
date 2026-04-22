@@ -98,4 +98,15 @@ class EmployeeController extends Controller
             ]
         ], 200);
     }
+
+    public function show(Employee $employee)
+    {
+        return response()->json([
+            'payload' => [
+                'statusCode' => 200,
+                'message' => 'Employee retrieved successfully!',
+                'data' => $employee
+            ]
+        ], 200);
+    }
 }
