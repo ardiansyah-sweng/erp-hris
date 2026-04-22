@@ -11,11 +11,11 @@ class JobroleControllerTest extends TestCase
             'name' => 'Developer'
         ]);
 
-        $response->assertStatus(200)
-                 ->assertJson([
-                     'message' => 'store() berhasil dipanggil',
-                     'data' => ['name' => 'Developer']
-                 ]);
+        $response->assertStatus(201)
+            ->assertJson([
+                'message' => 'Data berhasil disimpan',
+                'data' => ['role' => 'Developer']
+            ]);
     }
 
     public function test_store_gagal_tanpa_name()

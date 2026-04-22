@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Jobrole;
 
 class JobroleController extends Controller
 {
@@ -12,10 +13,14 @@ class JobroleController extends Controller
             'name' => 'required|string|max:255',
         ]);
 
-        return response()->json([
-            'message' => 'store() berhasil dipanggil',
-            'data' => $validated
+        $jobrole = Jobrole::create([
+            'role' => $validated['name'],
         ]);
+
+        return response()->json([
+            'message' => 'Data berhasil disimpan',
+            'data' => $jobrole
+        ], 201);
     }
     //
 }
