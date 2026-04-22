@@ -9,19 +9,19 @@ use Exception;
 class EmployeeController extends Controller
 {
     public function store(Request $request)
-{
-    $validated = $request->validate([
-        'name' => 'required|string',
-        'email' => 'required|email|unique:employees,email',
-        'phone_number' => 'required|string',
-        'place_of_birth' => 'required|string',
-        'date_of_birth' => 'required|date',
-        'address' => 'required|string',
-        'id_number' => 'required|string',
-        'role_id' => 'required|integer', 
-    ]);
+    {
+        $validated = $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email|unique:employees,email',
+            'phone_number' => 'required|string',
+            'place_of_birth' => 'required|string',
+            'date_of_birth' => 'required|date',
+            'address' => 'required|string',
+            'id_number' => 'required|string',
+            'role_id' => 'required|integer', 
+        ]);
 
-    $employee = Employee::create($validated);
+        $employee = Employee::create($validated);
 
     return response()->json([
         'payload' => [
