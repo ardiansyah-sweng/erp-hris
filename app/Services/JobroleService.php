@@ -6,15 +6,19 @@ use App\Models\Jobrole;
 
 class JobroleService
 {
-    /**
-     * Method untuk update data Job Role
-     */
+    public function createJobrole(array $data)
+    {
+        $jobrole = Jobrole::create([
+            'role' => $data['role']
+        ]);
+
+        return $jobrole;
+    }
+
     public function updateJobrole($id, array $data)
     {
-        // Cari data berdsarkan ID
         $jobrole = Jobrole::findOrFail($id);
 
-        // Melakukan update data kolom 'role'
         $jobrole->update([
             'role' => $data['role']
         ]);
