@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Employee;
 use Carbon\Carbon;
+use Exception;
 
 class EmployeeController extends Controller
 {
@@ -17,6 +18,7 @@ class EmployeeController extends Controller
             'address' => 'required|string',
             'id_number' => 'required|string',
             'role_id' => 'required|integer',
+            'role_id' => 'required|integer', 
         ]);
 
         $employee = Employee::create($validated);
@@ -56,5 +58,40 @@ class EmployeeController extends Controller
                 'data' => $employee->fresh()
             ]
         ], 200);
+    return response()->json([
+        'payload' => [
+            'statusCode' => 201,
+            'message' => 'Employee created successfully!',
+            'data' => $employee
+        ]
+    ], 201);
+}
+
+    public function destroy(Employee $employee)
+    {
+        try {
+            // Melakukan penghapusan (akan menjadi Soft Delete jika model mendukung)
+            $employee->delete();
+
+            return response()->json([
+                'payload' => [
+                    'statusCode' => 200,
+                    'message' => 'Employee deleted successfully!',
+                    'data' => [
+                        'id' => $employee->id,
+                        'name' => $employee->name
+                    ]
+                ]
+            ], 200);
+
+        } catch (Exception $e) {
+            return response()->json([
+                'payload' => [
+                    'statusCode' => 500,
+                    'message' => 'Gagal menghapus data karyawan.',
+                    'error' => $e->getMessage()
+                ]
+            ], 500);
+        }
     }
 }

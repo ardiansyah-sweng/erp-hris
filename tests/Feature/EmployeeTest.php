@@ -79,4 +79,29 @@ class EmployeeTest extends TestCase
 
         $response->assertStatus(422);
     }
+
+    public function test_delete_employee_successfully()
+    {
+        $employee = Employee::create([
+            'name'           => 'Budi Santoso',
+            'email'          => 'budi.test@example.com',
+            'phone_number'   => '08123456789',
+            'place_of_birth' => 'Jakarta',
+            'date_of_birth'  => '1990-05-20',
+            'address'        => 'Jl. Sudirman No. 1',
+            'id_number'      => '1234567890123456',
+            'role_id'        => 1,
+        ]);
+
+    
+        $response = $this->deleteJson("/employees/{$employee->id}");
+
+        // dd(Route::getRoutes()); 
+
+        $response->assertStatus(200);
+
+        $this->assertDatabaseMissing('employees', [
+            'id' => $employee->id
+        ]);
+    }
 }
