@@ -7,6 +7,7 @@ use App\Models\Jobrole;
 class JobroleService
 {
 
+
     /**
      * Method untuk mengambil semua data Job Role
      */
