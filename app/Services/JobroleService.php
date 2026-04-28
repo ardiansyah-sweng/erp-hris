@@ -21,4 +21,14 @@ class JobroleService
 
         return $jobrole;
     }
+
+    /**
+     * Method untuk menghapus data Job Role
+     */
+    public function destroyJobrole($id)
+    {
+        $jobrole = Jobrole::findOrFail($id);
+        $jobrole->delete();
+        return $jobrole;
+    }
 }

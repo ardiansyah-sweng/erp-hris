@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController; 
+use App\Http\Controllers\JobroleController;
 
 
 Route::post('/employees', [EmployeeController::class, 'store']);
@@ -17,3 +18,5 @@ Route::get('/', function () {
 Route::get('/job-roles', function () {
     return view('job_role.index');
 });
+
+Route::delete('/job-roles/{id}', [JobroleController::class, 'destroy']);
