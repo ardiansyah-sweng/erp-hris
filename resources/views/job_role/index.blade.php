@@ -24,7 +24,7 @@
         <div class="mt-4 sm:mt-0">
             <button type="button" class="inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm shadow-indigo-200 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all duration-200 hover:-translate-y-0.5 transform">
                 <svg class="mr-2 -ml-0.5 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                    <path stroke-linecap="rounk" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                 </svg>
                 Tambah Role Baru
             </button>
@@ -77,6 +77,7 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100 bg-white">
+                    <!--yang di dummyJobRoles diganti sesuai variabel di Controller nya-->
                     @forelse($dummyJobRoles as $role)
                         <tr class="hover:bg-indigo-50/40 transition-colors duration-150 group">
                             <td class="whitespace-nowrap py-4 pl-6 pr-3 text-sm font-medium text-gray-900">{{ $loop->iteration }}</td>
