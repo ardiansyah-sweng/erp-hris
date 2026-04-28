@@ -22,3 +22,6 @@ Route::get('/job-roles', function () {
 });
 
 Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy']);
+Route::get('/dashboard', function () {
+    return view('dashboard');
+});
