@@ -2,15 +2,23 @@
 
 namespace Tests\Unit;
 
+<<<<<<< HEAD
 use Tests\TestCase;
 use App\Models\Employee;
 use App\Services\EmployeeService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+=======
+use App\Models\Employee;
+use App\Services\EmployeeService;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+>>>>>>> 52be0b1d4566c3d56303d3e5e4f4d6d236f065c2
 
 class EmployeeServiceTest extends TestCase
 {
     use RefreshDatabase;
 
+<<<<<<< HEAD
     public function test_update_employee_success()
     {
         $employee = Employee::create([
@@ -36,5 +44,42 @@ class EmployeeServiceTest extends TestCase
 
         $this->assertEquals('Baru', $updated->name);
         $this->assertEquals('baru@gmail.com', $updated->email);
+=======
+    /**
+     * Test the getAllEmployee method returns all employees.
+     */
+    public function test_get_all_employee_returns_all_employees(): void
+    {
+        // Create some test employees
+        Employee::create([
+            'name' => 'John Doe',
+            'email' => 'john@example.com',
+            'phone_number' => '1234567890',
+            'place_of_birth' => 'Jakarta',
+            'date_of_birth' => '1990-01-01',
+            'address' => 'Jl. Example',
+            'id_number' => '1234567890123456',
+            'age' => 30,
+            'role_id' => 1,
+        ]);
+
+        Employee::create([
+            'name' => 'Jane Doe',
+            'email' => 'jane@example.com',
+            'phone_number' => '0987654321',
+            'place_of_birth' => 'Bandung',
+            'date_of_birth' => '1992-02-02',
+            'address' => 'Jl. Another',
+            'id_number' => '6543210987654321',
+            'age' => 28,
+            'role_id' => 2,
+        ]);
+
+        $service = new EmployeeService();
+        $employees = $service->getAllEmployee();
+
+        $this->assertCount(2, $employees);
+        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Collection::class, $employees);
+>>>>>>> 52be0b1d4566c3d56303d3e5e4f4d6d236f065c2
     }
 }

@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Employee;
+<<<<<<< HEAD
 use App\Services\EmployeeService;
+=======
+use Exception;
+>>>>>>> 52be0b1d4566c3d56303d3e5e4f4d6d236f065c2
 
 class EmployeeController extends Controller
 {
@@ -23,13 +27,41 @@ class EmployeeController extends Controller
 
         $employee = Employee::create($validated);
 
-        return response()->json([
-            'payload' => [
-                'statusCode' => 201,
-                'message' => 'Employee created successfully!',
-                'data' => $employee
-            ]
-        ], 201);
+    return response()->json([
+        'payload' => [
+            'statusCode' => 201,
+            'message' => 'Employee created successfully!',
+            'data' => $employee
+        ]
+    ], 201);
+}
+
+    public function destroy(Employee $employee)
+    {
+        try {
+            // Melakukan penghapusan (akan menjadi Soft Delete jika model mendukung)
+            $employee->delete();
+
+            return response()->json([
+                'payload' => [
+                    'statusCode' => 200,
+                    'message' => 'Employee deleted successfully!',
+                    'data' => [
+                        'id' => $employee->id,
+                        'name' => $employee->name
+                    ]
+                ]
+            ], 200);
+
+        } catch (Exception $e) {
+            return response()->json([
+                'payload' => [
+                    'statusCode' => 500,
+                    'message' => 'Gagal menghapus data karyawan.',
+                    'error' => $e->getMessage()
+                ]
+            ], 500);
+        }
     }
 
     public function update(Request $request, $id)
