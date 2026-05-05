@@ -1,41 +1,29 @@
-<?php
-namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Employee;
-use Carbon\Carbon;
+
+use App\Services\EmployeeService;
+
 use Exception;
+
 
 class EmployeeController extends Controller
 {
     public function store(Request $request)
+    public function destroy(Employee $employee)
     {
-        $validated = $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|email|unique:employees,email',
-            'phone_number' => 'required|string',
-            'place_of_birth' => 'required|string',
-            'date_of_birth' => 'required|date',
-            'address' => 'required|string',
-            'id_number' => 'required|string',
-            'role_id' => 'required|integer',
-            'role_id' => 'required|integer', 
-        ]);
+        try {
+            // Melakukan penghapusan (akan menjadi Soft Delete jika model mendukung)
+            
+            $employee->delete();
 
-        $employee = Employee::create($validated);
-
-        return response()->json([
-            'payload' => [
-                'statusCode' => 201,
-                'message' => 'Employee created successfully!',
-                'data' => $employee
-            ]
-        ], 201);
+            return response()->json([
+            ], 500);
+        }
     }
+}
 
     public function update(Request $request, $id)
-    {
-        $employee = Employee::findOrFail($id);
-
+{
         $validated = $request->validate([
             'name' => 'required|string',
             'email' => 'required|email|unique:employees,email,' . $id,
@@ -43,55 +31,29 @@ class EmployeeController extends Controller
             'place_of_birth' => 'required|string',
             'date_of_birth' => 'required|date',
             'address' => 'required|string',
-            'id_number' => 'required|string|unique:employees,id_number,' . $id,
+            'id_number' => 'required|string',
             'role_id' => 'required|integer',
-        ]);
+    ]);
 
-        $validated['age'] = Carbon::parse($validated['date_of_birth'])->age;
+    $employeeService = new EmployeeService();
+    $employee = $employeeService->updateEmployee($id, $validated);
 
-        $employee->update($validated);
-
+    if (!$employee) {
         return response()->json([
             'payload' => [
-                'statusCode' => 200,
-                'message' => 'Employee updated successfully!',
-                'data' => $employee->fresh()
+                'statusCode' => 404,
+                'message' => 'Employee not found',
+                'data' => null
             ]
-        ], 200);
+        ], 404);
+    }
+
     return response()->json([
         'payload' => [
-            'statusCode' => 201,
-            'message' => 'Employee created successfully!',
+            'statusCode' => 200,
+            'message' => 'Employee updated successfully!',
             'data' => $employee
-        ]
-    ], 201);
-}
-
-    public function destroy(Employee $employee)
-    {
-        try {
-            // Melakukan penghapusan (akan menjadi Soft Delete jika model mendukung)
-            $employee->delete();
-
-            return response()->json([
-                'payload' => [
-                    'statusCode' => 200,
-                    'message' => 'Employee deleted successfully!',
-                    'data' => [
-                        'id' => $employee->id,
-                        'name' => $employee->name
-                    ]
-                ]
-            ], 200);
-
-        } catch (Exception $e) {
-            return response()->json([
-                'payload' => [
-                    'statusCode' => 500,
-                    'message' => 'Gagal menghapus data karyawan.',
-                    'error' => $e->getMessage()
-                ]
-            ], 500);
-        }
+            ]
+        ], 200);
     }
 }
