@@ -78,5 +78,70 @@ class EmployeeTest extends TestCase
         $response = $this->postJson('/employees', $payload);
 
         $response->assertStatus(422);
+    }public function test_update_employee_successfully()
+    {
+        $employee = Employee::create([
+            'name'           => 'Budi Santoso',
+            'email'          => 'budi.test@example.com',
+            'phone_number'   => '08123456789',
+            'place_of_birth' => 'Jakarta',
+            'date_of_birth'  => '1990-05-20',
+            'address'        => 'Jl. Sudirman No. 1',
+            'id_number'      => '1234567890123456',
+            'age'            => 34,
+            'role_id'        => 1,
+        ]);
+    
+        $response = $this->putJson("/employees/{$employee->id}", [
+            'name'           => 'Budi Update',
+            'email'          => 'budi.update@example.com',
+            'phone_number'   => '08999999999',
+            'place_of_birth' => 'Bandung',
+            'date_of_birth'  => '1990-05-20',
+            'address'        => 'Jl. Thamrin No. 2',
+            'id_number'      => '1234567890123456',
+            'role_id'        => 1,
+            // HAPUS 'age' — tidak ada di validasi controller
+        ]);
+    
+        $response->assertStatus(200);
+        $response->assertJson([
+            'payload' => [
+                'statusCode' => 200,
+                'message'    => 'Employee updated successfully!',
+            ]
+        ]);
+    
+        $this->assertDatabaseHas('employees', [
+            'id'   => $employee->id,
+            'name' => 'Budi Update',
+            'email' => 'budi.update@example.com',
+        ]);
+    }
+    
+    public function test_update_employee_not_found()
+    {
+        // ID 9999 tidak ada, tapi tetap harus lolos VALIDASI dulu
+        // Problem sebelumnya: validasi unique:employees,email,9999
+        // akan gagal kalau email itu sudah ada — jadi pakai email unik
+        $response = $this->putJson("/employees/9999", [
+            'name'           => 'Ghost User',
+            'email'          => 'ghost.notexist@example.com', // pastikan belum ada di DB
+            'phone_number'   => '08999999999',
+            'place_of_birth' => 'Bandung',
+            'date_of_birth'  => '1990-05-20',
+            'address'        => 'Jl. Thamrin No. 2',
+            'id_number'      => '1234567890123456',
+            'role_id'        => 1,
+        ]);
+    
+        $response->assertStatus(404);
+        $response->assertJson([
+            'payload' => [
+                'statusCode' => 404,
+                'message'    => 'Employee not found',
+                'data'       => null
+            ]
+        ]);
     }
 }
