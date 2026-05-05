@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Employee;
-<<<<<<< HEAD
+
 use App\Services\EmployeeService;
-=======
+
 use Exception;
->>>>>>> 52be0b1d4566c3d56303d3e5e4f4d6d236f065c2
+
 
 class EmployeeController extends Controller
 {
@@ -39,7 +39,7 @@ class EmployeeController extends Controller
     public function destroy(Employee $employee)
     {
         try {
-            // Melakukan penghapusan (akan menjadi Soft Delete jika model mendukung)
+            
             $employee->delete();
 
             return response()->json([
