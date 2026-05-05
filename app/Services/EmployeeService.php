@@ -2,8 +2,11 @@
 
 namespace App\Services;
 
+use App\Models\Employee;
+
 class EmployeeService
 {
+
     public function showEmployee()
 {
     // dummy
@@ -34,4 +37,5 @@ class EmployeeService
 
     return Employee::all();
 }
+
 }
