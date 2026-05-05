@@ -8,15 +8,9 @@ use App\Models\Employee;
 use App\Services\EmployeeService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-use App\Models\Employee;
-use App\Services\EmployeeService;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
-
 class EmployeeServiceTest extends TestCase
 {
     use RefreshDatabase;
-
 
     public function test_update_employee_success()
     {
@@ -43,7 +37,7 @@ class EmployeeServiceTest extends TestCase
 
         $this->assertEquals('Baru', $updated->name);
         $this->assertEquals('baru@gmail.com', $updated->email);
-
+    }
     public function test_get_all_employee_returns_all_employees(): void
     {
         // Create some test employees
