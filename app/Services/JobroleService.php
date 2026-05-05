@@ -16,6 +16,7 @@ class JobroleService
         // Mengambil semua data dari tabel jobroles
         return Jobrole::all();
     }
+    
     public function showJobrole($id)
     {
         return Jobrole::findOrFail($id);
