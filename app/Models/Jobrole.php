@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Jobrole extends Model
 {
     use HasFactory;
+    
+    protected $table = 'job_roles';
+
+    protected $fillable = [
+        'role'
+    ];
 }

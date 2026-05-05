@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Employee;
+
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
@@ -37,5 +38,10 @@ class EmployeeService
             Log::error('Failed to create employee: ' . $e->getMessage());
             throw $e;
         }
+    }
+
+    public function getAllEmployee()
+    {
+        return Employee::all();
     }
 }
