@@ -2,23 +2,22 @@
 
 namespace Tests\Unit;
 
-<<<<<<< HEAD
+
 use Tests\TestCase;
 use App\Models\Employee;
 use App\Services\EmployeeService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-=======
+
 use App\Models\Employee;
 use App\Services\EmployeeService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
->>>>>>> 52be0b1d4566c3d56303d3e5e4f4d6d236f065c2
 
 class EmployeeServiceTest extends TestCase
 {
     use RefreshDatabase;
 
-<<<<<<< HEAD
+
     public function test_update_employee_success()
     {
         $employee = Employee::create([
@@ -44,10 +43,7 @@ class EmployeeServiceTest extends TestCase
 
         $this->assertEquals('Baru', $updated->name);
         $this->assertEquals('baru@gmail.com', $updated->email);
-=======
-    /**
-     * Test the getAllEmployee method returns all employees.
-     */
+
     public function test_get_all_employee_returns_all_employees(): void
     {
         // Create some test employees
@@ -80,6 +76,5 @@ class EmployeeServiceTest extends TestCase
 
         $this->assertCount(2, $employees);
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Collection::class, $employees);
->>>>>>> 52be0b1d4566c3d56303d3e5e4f4d6d236f065c2
     }
 }
