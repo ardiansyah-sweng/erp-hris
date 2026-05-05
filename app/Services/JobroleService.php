@@ -6,6 +6,17 @@ use App\Models\Jobrole;
 
 class JobroleService
 {
+
+
+    /**
+     * Method untuk mengambil semua data Job Role
+     */
+    public function getAllJobrole()
+    {
+        // Mengambil semua data dari tabel jobroles
+        return Jobrole::all();
+    }
+
     /**
      * Method untuk update data Job Role
      */

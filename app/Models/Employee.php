@@ -9,6 +9,8 @@ class Employee extends Model
 {
     use HasFactory;
 
+protected $table = 'employees';
+
     protected $fillable = [
         'name',
         'email',
@@ -20,4 +22,14 @@ class Employee extends Model
         'age',
         'role_id',
     ];
+
+    protected $casts = [
+        'date_of_birth' => 'date',
+        'age' => 'integer',
+    ];
+
+    public function jobrole()
+    {
+        return $this->belongsTo(Jobrole::class, 'role_id');
+    }
 }
