@@ -22,6 +22,7 @@ class EmployeeService
 
         return $employee;
     }
+    
     public function getAllEmployee()
     {
         return Employee::all();
