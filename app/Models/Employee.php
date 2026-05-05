@@ -20,4 +20,11 @@ class Employee extends Model
         'age',
         'role_id',
     ];
+
+    public function scopeCashier($query)
+    {
+        return $query->join('job_roles', 'employees.role_id', '=', 'job_roles.id')
+                     ->where('job_roles.role', 'Cashier')
+                     ->select('employees.id as id_employee', 'employees.name');
+    }
 }
