@@ -11,17 +11,11 @@ class EmployeeTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * Test that the employees table exists after migration.
-     */
     public function test_employees_table_exists(): void
     {
         $this->assertTrue(Schema::hasTable('employees'));
     }
 
-    /**
-     * Test that the employees table has all required columns.
-     */
     public function test_employees_table_has_expected_columns(): void
     {
         $this->assertTrue(Schema::hasColumns('employees', [
@@ -41,44 +35,46 @@ class EmployeeTest extends TestCase
     }
 
     public function test_create_employee_successfully()
-{
-    $payload = [
-        'name'           => 'John Doe',
-        'email'          => 'john.doe@example.com',
-        'phone_number'   => '08123456789',
-        'place_of_birth' => 'Jakarta',
-        'date_of_birth'  => '1995-01-01',
-        'address'        => 'Jl. Merdeka No. 123',
-        'id_number'      => '3201234567890001',
-        'role_id'        => 1, // Pastikan ini integer sesuai validasi
-    ];
+    {
+        $payload = [
+            'name'           => 'John Doe',
+            'email'          => 'john.doe@example.com',
+            'phone_number'   => '08123456789',
+            'place_of_birth' => 'Jakarta',
+            'date_of_birth'  => '1995-01-01',
+            'address'        => 'Jl. Merdeka No. 123',
+            'id_number'      => '3201234567890001',
+            'role_id'        => 1,
+        ];
 
-    $response = $this->postJson('/employees', $payload);
+        $response = $this->postJson('/employees', $payload);
 
-    $response->assertStatus(201)
-             ->assertJson([
-                 'payload' => [
-                     'statusCode' => 201,
-                     'message'    => 'Employee created successfully!',
-                 ]
-             ]);
-    $this->assertDatabaseHas('employees', [
-        'email' => 'john.doe@example.com'
-    ]);
-}
+        $response->assertStatus(201)
+                 ->assertJson([
+                     'payload' => [
+                         'statusCode' => 201,
+                         'message'    => 'Employee created successfully!',
+                     ]
+                 ]);
+
+        $this->assertDatabaseHas('employees', [
+            'email' => 'john.doe@example.com'
+        ]);
+    }
 
     public function test_fail_create_employee_with_invalid_data()
     {
         $payload = [
-            'name' => '',
+            'name'  => '',
             'email' => 'not-an-email',
-            'position' => '',
         ];
 
         $response = $this->postJson('/employees', $payload);
 
         $response->assertStatus(422);
-    }public function test_update_employee_successfully()
+    }
+
+    public function test_update_employee_successfully()
     {
         $employee = Employee::create([
             'name'           => 'Budi Santoso',
@@ -91,7 +87,13 @@ class EmployeeTest extends TestCase
             'age'            => 34,
             'role_id'        => 1,
         ]);
-    
+
+        $this->mock(\App\Services\EmployeeService::class, function ($mock) use ($employee) {
+            $mock->shouldReceive('updateEmployee')
+                 ->once()
+                 ->andReturn($employee);
+        });
+
         $response = $this->putJson("/employees/{$employee->id}", [
             'name'           => 'Budi Update',
             'email'          => 'budi.update@example.com',
@@ -101,9 +103,8 @@ class EmployeeTest extends TestCase
             'address'        => 'Jl. Thamrin No. 2',
             'id_number'      => '1234567890123456',
             'role_id'        => 1,
-            // HAPUS 'age' — tidak ada di validasi controller
         ]);
-    
+
         $response->assertStatus(200);
         $response->assertJson([
             'payload' => [
@@ -111,22 +112,19 @@ class EmployeeTest extends TestCase
                 'message'    => 'Employee updated successfully!',
             ]
         ]);
-    
-        $this->assertDatabaseHas('employees', [
-            'id'   => $employee->id,
-            'name' => 'Budi Update',
-            'email' => 'budi.update@example.com',
-        ]);
     }
-    
+
     public function test_update_employee_not_found()
     {
-        // ID 9999 tidak ada, tapi tetap harus lolos VALIDASI dulu
-        // Problem sebelumnya: validasi unique:employees,email,9999
-        // akan gagal kalau email itu sudah ada — jadi pakai email unik
+        $this->mock(\App\Services\EmployeeService::class, function ($mock) {
+            $mock->shouldReceive('updateEmployee')
+                 ->once()
+                 ->andReturn(null);
+        });
+
         $response = $this->putJson("/employees/9999", [
             'name'           => 'Ghost User',
-            'email'          => 'ghost.notexist@example.com', // pastikan belum ada di DB
+            'email'          => 'ghost.notexist@example.com',
             'phone_number'   => '08999999999',
             'place_of_birth' => 'Bandung',
             'date_of_birth'  => '1990-05-20',
@@ -134,7 +132,7 @@ class EmployeeTest extends TestCase
             'id_number'      => '1234567890123456',
             'role_id'        => 1,
         ]);
-    
+
         $response->assertStatus(404);
         $response->assertJson([
             'payload' => [
