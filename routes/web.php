@@ -2,9 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JobroleController;
-use App\Http\Controllers\EmployeeController; 
+use App\Http\Controllers\EmployeeController;
 
 Route::post('/test-jobrole', [JobroleController::class, 'store']);
+
 Route::post('/employees', [EmployeeController::class, 'store']);
 
 Route::get('/detail-employee', function () {
@@ -26,7 +27,8 @@ Route::get('/dashboard', function () {
 });
 
 Route::get('/job_role/edit', function () {
-    $jobrole = (object)[
+
+    $jobrole = (object) [
         'id' => 1,
         'name' => 'Admin',
         'description' => 'Mengelola sistem'
@@ -34,20 +36,28 @@ Route::get('/job_role/edit', function () {
 
     return view('job_role.edit', compact('jobrole'));
 
-//Edit file dummy ( karna belum ada controller edit dan updatenya)
+});
+
+
+// Edit file dummy
 Route::get('/employee/test-edit', function () {
-    // Membuat data dummy agar variabel di view tidak error
+
     $employee = (object) [
         'id' => 1,
         'name' => 'Budi Setiawan',
         'email' => 'budi@erp-hris.com',
-        'job_role_id' => 1, // ID untuk Cashier 
+        'job_role_id' => 1,
         'address' => 'Jl. Merdeka No. 45, Semarang'
     ];
 
     return view('employee.edit', compact('employee'));
+
 });
-// Route dummy untuk menangkap klik tombol Update dari form edit
+
+
+// Route dummy update
 Route::put('/employee/test-edit', function () {
-    return "Tombol Update berhasil diklik! (Ini hanya simulasi, data belum tersimpan karena Controller Update asli belum disambungkan).";
+
+    return "Tombol Update berhasil diklik!";
+
 });
