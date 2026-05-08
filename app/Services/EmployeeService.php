@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Employee;
 use Carbon\Carbon;
+
 class EmployeeService
 {
     public function updateEmployee($id, $data)
@@ -15,7 +16,7 @@ class EmployeeService
         }
 
         if (isset($data['date_of_birth'])) {
-            $data['age'] = Carbon::parse($data['date_of_birth'])->age;
+        $data['age'] = Carbon::parse($data['date_of_birth'])->age;
     }
 
         $employee->update($data);

@@ -2,7 +2,6 @@
 
 namespace Tests\Unit;
 
-
 use Tests\TestCase;
 use App\Models\Employee;
 use App\Services\EmployeeService;
@@ -38,6 +37,10 @@ class EmployeeServiceTest extends TestCase
         $this->assertEquals('Baru', $updated->name);
         $this->assertEquals('baru@gmail.com', $updated->email);
     }
+
+    /**
+     * Test the getAllEmployee method returns all employees.
+     */
     public function test_get_all_employee_returns_all_employees(): void
     {
         // Create some test employees
