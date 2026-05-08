@@ -1,9 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\JobroleController;
-
-Route::post('/test-jobrole', [JobroleController::class, 'store']);
 use App\Http\Controllers\EmployeeController; 
 
 
@@ -18,12 +15,6 @@ Route::get('/detail-employee', function () {
 Route::get('/', function () {
     return view('welcome');
 });
-
-Route::get('/job-roles', function () {
-    return view('job_role.index');
-});
-
-Route::get('/job-roles/{id}', [JobroleController::class, 'show']);
 
 Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy']);
 Route::get('/dashboard', function () {
