@@ -74,26 +74,24 @@
                         <div class="mb-4">
                             <label class="form-label fw-semibold">
                                 <i class="bi bi-person-badge me-1"></i>
-                                Nama Job Role
+                                Job Role
                             </label>
-                            <input type="text" 
-                                   name="name" 
-                                   class="form-control"
-                                   value="{{ $jobrole->name ?? 'Admin' }}"
-                                   placeholder="Masukkan nama job role"
-                                   required>
+                            <input type="text"
+                                name="name"
+                                value="{{ $jobrole['name'] }}"
+                                class="w-full border rounded-lg px-3 py-2">
                         </div>
 
                         <!-- Deskripsi -->
                         <div class="mb-4">
                             <label class="form-label fw-semibold">
                                 <i class="bi bi-card-text me-1"></i>
-                                Deskripsi
+                                Departement
                             </label>
-                            <textarea name="description" 
-                                      class="form-control" 
-                                      rows="4"
-                                      placeholder="Masukkan deskripsi">{{ $jobrole->description ?? 'Deskripsi sementara' }}</textarea>
+                            <input type="text"
+                                name="description"
+                                value="{{ $jobrole['department'] }}"
+                                class="w-full border rounded-lg px-3 py-2">
                         </div>
 
                         <!-- Tombol -->

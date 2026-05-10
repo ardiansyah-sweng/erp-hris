@@ -51,13 +51,6 @@
                 Job Role
             </a>
 
-            <a href="/job_role/edit" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors {{ request()->is('job_role/edit') ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
-                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5h2m-1-1v2m-6 4h12M5 19h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
-                </svg>
-                Edit Job Role
-            </a>
-
             <!-- Section: Kehadiran & Waktu -->
             <div class="pt-5 pb-2">
                 <p class="px-3 text-xs font-semibold text-gray-400 uppercase tracking-widest">Kehadiran & Waktu</p>
