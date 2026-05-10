@@ -1,12 +1,5 @@
 @php
-    // Data Dummy Sementara untuk Job Role
-    $dummyJobRoles = [
-        ['id' => 1, 'name' => 'Software Engineer', 'department' => 'IT', 'level' => 'Staff', 'status' => 'Active'],
-        ['id' => 2, 'name' => 'Data Analyst', 'department' => 'Data', 'level' => 'Senior', 'status' => 'Active'],
-        ['id' => 3, 'name' => 'HR Manager', 'department' => 'Human Resources', 'level' => 'Manager', 'status' => 'On Leave'],
-        ['id' => 4, 'name' => 'Quality Assurance', 'department' => 'IT', 'level' => 'Staff', 'status' => 'Active'],
-        ['id' => 5, 'name' => 'Product Manager', 'department' => 'Product', 'level' => 'Manager', 'status' => 'Active'],
-    ];
+$roles = $roles ?? collect();
 @endphp
 
 <!DOCTYPE html>
@@ -14,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Job Roles - ERP HRIS</title>
+    <title>Job roles - ERP HRIS</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-gray-50/50 min-h-screen font-sans text-gray-800 antialiased selection:bg-indigo-500 selection:text-white">
@@ -64,7 +57,7 @@
                     <p class="text-sm font-medium text-gray-500">Total Job Role</p>
                 </div>
                 <div class="flex items-baseline gap-2">
-                    <p class="text-3xl font-bold text-gray-900">{{ count($dummyJobRoles) }}</p>
+                    <p class="text-3xl font-bold text-gray-900">{{ $roles->count() }}</p>
                     <span class="text-sm text-emerald-600 font-medium">role aktif</span>
                 </div>
             </div>
@@ -103,25 +96,25 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100 bg-white">
-                        @forelse($dummyJobRoles as $role)
+                        @forelse($roles as $role)
                             <tr class="hover:bg-indigo-50/40 transition-colors duration-150 group">
                                 <td class="whitespace-nowrap py-4 pl-6 pr-3 text-sm font-medium text-gray-900">{{ $loop->iteration }}</td>
                                 <td class="whitespace-nowrap px-3 py-4">
-                                    <div class="text-sm font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors">{{ $role['name'] }}</div>
+                                    <div class="text-sm font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors">{{ $role->role }}</div>
                                 </td>
                                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-600">
                                     <div class="flex items-center gap-1.5">
                                         <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-                                        {{ $role['department'] }}
+                                        {{ $role->department }}
                                     </div>
                                 </td>
                                 <td class="whitespace-nowrap px-3 py-4 text-sm">
                                     <span class="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-semibold text-blue-700 ring-1 ring-inset ring-blue-700/10">
-                                        {{ $role['level'] }}
+                                        {{ $role->level }}
                                     </span>
                                 </td>
                                 <td class="whitespace-nowrap px-3 py-4 text-sm">
-                                    @if($role['status'] == 'Active')
+                                    @if($role->status == 'Active')
                                         <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
                                             <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
                                             Aktif
@@ -135,14 +128,14 @@
                                 </td>
                                 <td class="relative whitespace-nowrap py-4 pl-3 pr-6 text-right text-sm font-medium">
                                     <div class="flex justify-end gap-3">
-                                        <a href="#" class="text-indigo-600 hover:text-indigo-900 transition-colors bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg flex items-center gap-1">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
-                                            Edit
-                                        </a>
-                                        <a href="#" class="text-red-600 hover:text-red-900 transition-colors bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg flex items-center gap-1">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                            Hapus
-                                        </a>
+                                        <form action="{{ url('/jobrole/' . $role->id) }}" method="POST" onsubmit="return confirm('Yakin mau hapus?')">
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <button type="submit" class="text-red-600 hover:text-red-900">
+                                                Hapus
+                                            </button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>

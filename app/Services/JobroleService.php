@@ -21,4 +21,11 @@ class JobroleService
 
         return $jobrole;
     }
+
+    public function destroyJobrole($id)
+    {
+        $jobrole = Jobrole::findOrFail($id);
+        $jobrole->delete();
+    }
+
 }
