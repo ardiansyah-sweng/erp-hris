@@ -18,9 +18,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/job-roles', function () {
-    return view('job_role.index');
-});
+Route::get('/job-roles', [JobroleController::class, 'index'])
+    ->name('jobrole.index');
 
 Route::get('/job-roles/{id}', [JobroleController::class, 'show']);
 

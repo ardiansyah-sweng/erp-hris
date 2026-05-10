@@ -7,6 +7,38 @@ use App\Models\Jobrole;
 
 class JobroleController extends Controller
 {
+    public function index(Request $request)
+{
+    $dummyData = collect([
+        (object)['id' => 1, 'name' => 'Software Engineer',  'department' => 'IT',              'level' => 'Staff',   'status' => 'Active'],
+        (object)['id' => 2, 'name' => 'Data Analyst',       'department' => 'Data',            'level' => 'Senior',  'status' => 'Active'],
+        (object)['id' => 3, 'name' => 'HR Manager',         'department' => 'Human Resources', 'level' => 'Manager', 'status' => 'On Leave'],
+        (object)['id' => 4, 'name' => 'Quality Assurance',  'department' => 'IT',              'level' => 'Staff',   'status' => 'Active'],
+        (object)['id' => 5, 'name' => 'Product Manager',    'department' => 'Product',         'level' => 'Manager', 'status' => 'Active'],
+    ]);
+
+    // FILTER DEPARTEMEN
+    if ($request->department) {
+        $dummyData = $dummyData->where('department', $request->department);
+    }
+
+    // SEARCH ROLE
+    if ($request->search) {
+        $dummyData = $dummyData->filter(function ($item) use ($request) {
+            return stripos($item->name, $request->search) !== false;
+        });
+    }
+
+    // AMBIL SEMUA DEPARTEMEN
+    $departments = collect([
+        'IT',
+        'Data',
+        'Human Resources',
+        'Product'
+    ]);
+
+    return view('job_role.index', compact('dummyData', 'departments'));
+}
     public function store(Request $request)
     {
         $validated = $request->validate([
