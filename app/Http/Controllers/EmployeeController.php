@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Employee;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class EmployeeController extends Controller
 {
@@ -18,19 +19,19 @@ class EmployeeController extends Controller
             'date_of_birth' => 'required|date',
             'address' => 'required|string',
             'id_number' => 'required|string',
-            'role_id' => 'required|integer', 
+            'role_id' => 'required|integer',
         ]);
 
         $employee = Employee::create($validated);
 
-    return response()->json([
-        'payload' => [
-            'statusCode' => 201,
-            'message' => 'Employee created successfully!',
-            'data' => $employee
-        ]
-    ], 201);
-}
+        return response()->json([
+            'payload' => [
+                'statusCode' => 201,
+                'message' => 'Employee created successfully!',
+                'data' => $employee
+            ]
+        ], 201);
+    }
 
     public function destroy(Employee $employee)
     {
@@ -48,7 +49,6 @@ class EmployeeController extends Controller
                     ]
                 ]
             ], 200);
-
         } catch (Exception $e) {
             return response()->json([
                 'payload' => [
@@ -69,5 +69,19 @@ class EmployeeController extends Controller
                 'data' => $employee
             ]
         ], 200);
+    }
+
+    public function getCashiers()
+    {
+        $cashierIds = DB::table('job_roles')
+            ->where('role', 'cashier')
+            ->pluck('id');
+
+        $cashiers = \App\Models\Employee::whereIn('role_id', $cashierIds)->get();
+
+        return response()->json([
+            'status' => 'success',
+            'data'   => $cashiers,
+        ]);
     }
 }
