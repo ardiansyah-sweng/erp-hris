@@ -84,7 +84,7 @@ class EmployeeController extends Controller
             ->where('role', 'cashier')
             ->pluck('id');
 
-        $cashiers = \App\Models\Employee::whereIn('role_id', $cashierIds)->get();
+        $cashiers = Employee::whereIn('role_id', $cashierIds)->get();
 
         return response()->json([
             'status' => 'success',
