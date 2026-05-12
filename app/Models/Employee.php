@@ -38,7 +38,8 @@ class Employee extends Model
         return $query->join('job_roles', 'employees.role_id', '=', 'job_roles.id')
                      ->where('job_roles.role', 'Cashier')
                      ->select('employees.id as id_employee', 'employees.name');
-                     
+    }
+    
     public function payrolls()
     {
         return $this->hasMany(Payroll::class, 'employee_id');
