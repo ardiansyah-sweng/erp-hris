@@ -32,4 +32,9 @@ protected $table = 'employees';
     {
         return $this->belongsTo(Jobrole::class, 'role_id');
     }
+
+    public function payrolls()
+    {
+        return $this->hasMany(Payroll::class, 'employee_id');
+    }
 }

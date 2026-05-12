@@ -31,36 +31,28 @@ class EmployeeService
         return Employee::all();
     }
 
-    public function createEmployee(array $data): Employee
+    // method kamu ditambah di sini
+    public function destroyEmployee($id)
     {
-        DB::beginTransaction();
-
         try {
-            $dateOfBirth = Carbon::parse($data['date_of_birth']);
-            $age = $dateOfBirth->diffInYears(Carbon::now());
+            $employee = Employee::findOrFail($id);
+            $employee->delete();
 
-            $employee = Employee::create([
-                'name'           => $data['name'],
-                'email'          => $data['email'],
-                'phone_number'   => $data['phone_number'],
-                'place_of_birth' => $data['place_of_birth'],
-                'date_of_birth'  => $data['date_of_birth'],
-                'address'        => $data['address'],
-                'id_number'      => $data['id_number'],
-                'age'            => $age,
-                'role_id'        => $data['role_id'],
-            ]);
-
-            DB::commit();
-
-            return $employee;
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-
-            Log::error('Failed to create employee: ' . $e->getMessage());
-
-            throw $e;
+            return [
+                'statusCode' => 200,
+                'message' => 'Employee deleted successfully!',
+                'data' => [
+                    'id' => $employee->id,
+                    'name' => $employee->name
+                ]
+            ];
+        } catch (Exception $e) {
+            return [
+                'statusCode' => 500,
+                'message' => 'Gagal menghapus data karyawan.',
+                'error' => $e->getMessage()
+            ];
         }
     }
 }
+
