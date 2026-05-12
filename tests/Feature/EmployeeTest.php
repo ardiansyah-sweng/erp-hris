@@ -56,7 +56,6 @@ class EmployeeTest extends TestCase
                          'message'    => 'Employee created successfully!',
                      ]
                  ]);
-
         $this->assertDatabaseHas('employees', [
             'email' => 'john.doe@example.com'
         ]);
@@ -65,13 +64,36 @@ class EmployeeTest extends TestCase
     public function test_fail_create_employee_with_invalid_data()
     {
         $payload = [
-            'name'  => '',
-            'email' => 'not-an-email',
+            'name'     => '',
+            'email'    => 'not-an-email',
+            'position' => '',
         ];
 
         $response = $this->postJson('/employees', $payload);
 
         $response->assertStatus(422);
+    }
+
+    public function test_delete_employee_successfully()
+    {
+        $employee = Employee::create([
+            'name'           => 'Budi Santoso',
+            'email'          => 'budi.test@example.com',
+            'phone_number'   => '08123456789',
+            'place_of_birth' => 'Jakarta',
+            'date_of_birth'  => '1990-05-20',
+            'address'        => 'Jl. Sudirman No. 1',
+            'id_number'      => '1234567890123456',
+            'role_id'        => 1,
+        ]);
+
+        $response = $this->deleteJson("/employees/{$employee->id}");
+
+        $response->assertStatus(200);
+
+        $this->assertDatabaseMissing('employees', [
+            'id' => $employee->id
+        ]);
     }
 
     public function test_update_employee_successfully()
