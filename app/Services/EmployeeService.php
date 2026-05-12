@@ -3,13 +3,17 @@
 namespace App\Services;
 
 use App\Models\Employee;
-
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
 class EmployeeService
 {
+    public function getAllEmployee()
+    {
+        return Employee::all();
+    }
+
     public function createEmployee(array $data): Employee
     {
         DB::beginTransaction();
@@ -31,17 +35,15 @@ class EmployeeService
             ]);
 
             DB::commit();
+
             return $employee;
 
         } catch (\Exception $e) {
             DB::rollBack();
+
             Log::error('Failed to create employee: ' . $e->getMessage());
+
             throw $e;
         }
-    }
-
-    public function getAllEmployee()
-    {
-        return Employee::all();
     }
 }
