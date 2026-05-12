@@ -61,7 +61,7 @@
                     <label for="role_id" class="block text-sm font-medium text-gray-700">Jabatan (Role)</label>
                     <select name="role_id" id="role_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
                         <option value="">Pilih Jabatan</option>
-                        @foreach($jobRoles as $role)
+                        @foreach($Jobroles as $role)
                             <option value="{{ $role->id }}" {{ old('role_id') == $role->id ? 'selected' : '' }}>
                                 {{ $role->role }}
                             </option>

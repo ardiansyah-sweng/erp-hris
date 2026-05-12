@@ -11,7 +11,12 @@ use Exception;
 class EmployeeController extends Controller
 {
     protected $employeeService;
-
+    // ✅ FIX (tambahkan compact)
+    public function create()
+    {
+        $Jobroles = JobRole::all();
+        return view('employee.create', compact('Jobroles')); // ← tambah ini
+    }   
     public function __construct(EmployeeService $employeeService)
     {
         $this->employeeService = $employeeService;
