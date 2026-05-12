@@ -16,7 +16,6 @@ class EmployeeServiceTest extends TestCase
      */
     public function test_get_all_employee_returns_all_employees(): void
     {
-        // Create some test employees
         Employee::create([
             'name' => 'John Doe',
             'email' => 'john@example.com',
@@ -46,5 +45,28 @@ class EmployeeServiceTest extends TestCase
 
         $this->assertCount(2, $employees);
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Collection::class, $employees);
+    }
+
+    // tambahan test kamu
+    public function test_destroy_employee_berhasil(): void
+    {
+        $employee = Employee::create([
+            'name' => 'Ghinan Test',
+            'email' => 'ghinan@example.com',
+            'phone_number' => '1234567890',
+            'place_of_birth' => 'Bandung',
+            'date_of_birth' => '1990-01-01',
+            'address' => 'Jl. Test',
+            'id_number' => '1234567890123499',
+            'age' => 25,
+            'role_id' => 1,
+        ]);
+
+        $service = new EmployeeService();
+        $result = $service->destroyEmployee($employee->id);
+
+        $this->assertEquals(200, $result['statusCode']);
+        $this->assertEquals('Employee deleted successfully!', $result['message']);
+        $this->assertEquals($employee->id, $result['data']['id']);
     }
 }
