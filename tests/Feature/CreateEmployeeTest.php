@@ -15,7 +15,7 @@ class CreateEmployeeTest extends TestCase
 
     public function test_create_employee_success()
     {
-        // 🔥 Kunci waktu biar sama persis
+
         Carbon::setTestNow(Carbon::parse('2026-01-01'));
 
         $role = Role::factory()->create();
