@@ -6,7 +6,7 @@ use Tests\TestCase;
 use App\Services\EmployeeService;
 use App\Models\Employee;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Models\Role;
+use App\Models\Jobrole;
 use Carbon\Carbon;
 
 class CreateEmployeeTest extends TestCase
@@ -18,7 +18,7 @@ class CreateEmployeeTest extends TestCase
 
         Carbon::setTestNow(Carbon::parse('2026-01-01'));
 
-        $role = Role::factory()->create();
+        $role = Jobrole::factory()->create();
 
         $service = new EmployeeService();
 
