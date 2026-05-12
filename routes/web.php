@@ -6,7 +6,7 @@ use App\Http\Controllers\JobroleController;
 
 Route::post('/test-jobrole', [JobroleController::class, 'store']);
 
-
+Route::get('/employees/create', [EmployeeController::class, 'create'])->name('employees.create');
 Route::post('/employees', [EmployeeController::class, 'store']);
 Route::get('/employees/{employee}', [EmployeeController::class, 'show']);
 
