@@ -5,14 +5,16 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\JobRole; // Import model JobRole
 use App\Models\Employee;
+use App\Services\EmployeeService;
 use Exception;
 
 class EmployeeController extends Controller
 {
-    public function create()
+    protected $employeeService;
+
+    public function __construct(EmployeeService $employeeService)
     {
-        $jobRoles = JobRole::all(); // Ambil semua data job roles
-        return view('employee.create', compact('jobRoles')); // Teruskan data ke view
+        $this->employeeService = $employeeService;
     }
 
     public function store(Request $request)
@@ -25,24 +27,23 @@ class EmployeeController extends Controller
             'date_of_birth' => 'required|date',
             'address' => 'required|string',
             'id_number' => 'required|string',
-            'role_id' => 'required|integer', 
+            'role_id' => 'required|integer',
         ]);
 
         $employee = Employee::create($validated);
 
-    return response()->json([
-        'payload' => [
-            'statusCode' => 201,
-            'message' => 'Employee created successfully!',
-            'data' => $employee
-        ]
-    ], 201);
-}
+        return response()->json([
+            'payload' => [
+                'statusCode' => 201,
+                'message' => 'Employee created successfully!',
+                'data' => $employee
+            ]
+        ], 201);
+    }
 
     public function destroy(Employee $employee)
     {
         try {
-            // Melakukan penghapusan (akan menjadi Soft Delete jika model mendukung)
             $employee->delete();
 
             return response()->json([
@@ -65,5 +66,50 @@ class EmployeeController extends Controller
                 ]
             ], 500);
         }
+    }
+
+    public function show(Employee $employee)
+    {
+        return response()->json([
+            'payload' => [
+                'statusCode' => 200,
+                'message' => 'Employee retrieved successfully!',
+                'data' => $employee
+            ]
+        ], 200);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'name'           => 'required|string',
+            'email'          => 'required|email|unique:employees,email,' . $id,
+            'phone_number'   => 'required|string',
+            'place_of_birth' => 'required|string',
+            'date_of_birth'  => 'required|date',
+            'address'        => 'required|string',
+            'id_number'      => 'required|string',
+            'role_id'        => 'required|integer',
+        ]);
+
+        $employee = $this->employeeService->updateEmployee($id, $validated);
+
+        if (!$employee) {
+            return response()->json([
+                'payload' => [
+                    'statusCode' => 404,
+                    'message'    => 'Employee not found',
+                    'data'       => null
+                ]
+            ], 404);
+        }
+
+        return response()->json([
+            'payload' => [
+                'statusCode' => 200,
+                'message'    => 'Employee updated successfully!',
+                'data'       => $employee
+            ]
+        ], 200);
     }
 }
