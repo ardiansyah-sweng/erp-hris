@@ -4,11 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Employee;
+use App\Services\EmployeeService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
 class EmployeeController extends Controller
 {
+    protected $employeeService;
+
+    public function __construct(EmployeeService $employeeService)
+    {
+        $this->employeeService = $employeeService;
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -36,7 +44,6 @@ class EmployeeController extends Controller
     public function destroy(Employee $employee)
     {
         try {
-            // Melakukan penghapusan (akan menjadi Soft Delete jika model mendukung)
             $employee->delete();
 
             return response()->json([
