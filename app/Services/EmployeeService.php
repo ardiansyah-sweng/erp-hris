@@ -20,7 +20,7 @@ class EmployeeService
 
         if (isset($data['date_of_birth'])) {
         $data['age'] = Carbon::parse($data['date_of_birth'])->age;
-    }
+        }
 
         $employee->update($data);
 
@@ -31,8 +31,12 @@ class EmployeeService
     {
         return Employee::all();
     }
+    
+    public function showEmployee()
+    {
+        return Employee::all();
+    }
 
-    // method kamu ditambah di sini
     public function destroyEmployee($id)
     {
         try {
