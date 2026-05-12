@@ -78,5 +78,6 @@ Route::get('/employee/test-edit', function () {
 });
 
 Route::put('/employee/test-edit', function () {
-    return "Tombol Update berhasil diklik!";
+    return "Tombol Update berhasil diklik! (Ini hanya simulasi, data belum tersimpan karena Controller Update asli belum disambungkan).";
 });
+Route::put('/employees/{id}', [EmployeeController::class, 'update']);
