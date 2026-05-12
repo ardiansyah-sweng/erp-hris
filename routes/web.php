@@ -8,6 +8,7 @@ use App\Http\Controllers\EmployeeController;
 
 
 Route::post('/employees', [EmployeeController::class, 'store']);
+Route::get('/employees/{employee}', [EmployeeController::class, 'show']);
 
 Route::get('/detail-employee', function () {
     return view('employee.detail');
@@ -20,6 +21,8 @@ Route::get('/', function () {
 Route::get('/job-roles', function () {
     return view('job_role.index');
 });
+
+Route::get('/job-roles/{id}', [JobroleController::class, 'show']);
 
 Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy']);
 Route::get('/dashboard', function () {
