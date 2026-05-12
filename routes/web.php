@@ -18,6 +18,20 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/dashboard', function () {
+    return view('dashboard');
+});
+
+Route::post('/test-jobrole', [JobroleController::class, 'store']);
+
+Route::post('/employees', [EmployeeController::class, 'store']);
+
+Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy']);
+
+Route::get('/detail-employee', function () {
+    return view('employee.detail');
+});
+
 Route::get('/job-roles', function () {
     return view('job_role.index');
 });
@@ -31,20 +45,39 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 });
 
-//Edit file dummy ( karna belum ada controller edit dan updatenya)
+// ROUTE EDIT JOB ROLE
+Route::get('/job-roles/{id}/edit', function ($id) {
+
+    $dummyJobRoles = [
+        ['id' => 1, 'name' => 'Software Engineer', 'department' => 'IT', 'level' => 'Staff', 'status' => 'Active'],
+        ['id' => 2, 'name' => 'Data Analyst', 'department' => 'Data', 'level' => 'Senior', 'status' => 'Active'],
+        ['id' => 3, 'name' => 'HR Manager', 'department' => 'Human Resources', 'level' => 'Manager', 'status' => 'On Leave'],
+        ['id' => 4, 'name' => 'Quality Assurance', 'department' => 'IT', 'level' => 'Staff', 'status' => 'Active'],
+        ['id' => 5, 'name' => 'Product Manager', 'department' => 'Product', 'level' => 'Manager', 'status' => 'Active'],
+    ];
+
+    $jobrole = collect($dummyJobRoles)->firstWhere('id', $id);
+
+    return view('job_role.edit', compact('jobrole'));
+
+})->name('jobrole.edit');
+
+
+// ROUTE TEST EDIT EMPLOYEE
 Route::get('/employee/test-edit', function () {
-    // Membuat data dummy agar variabel di view tidak error
+
     $employee = (object) [
         'id' => 1,
         'name' => 'Budi Setiawan',
         'email' => 'budi@erp-hris.com',
-        'job_role_id' => 1, // ID untuk Cashier 
+        'job_role_id' => 1,
         'address' => 'Jl. Merdeka No. 45, Semarang'
     ];
 
     return view('employee.edit', compact('employee'));
 });
-// Route dummy untuk menangkap klik tombol Update dari form edit
+
 Route::put('/employee/test-edit', function () {
     return "Tombol Update berhasil diklik! (Ini hanya simulasi, data belum tersimpan karena Controller Update asli belum disambungkan).";
 });
+Route::put('/employees/{id}', [EmployeeController::class, 'update']);
