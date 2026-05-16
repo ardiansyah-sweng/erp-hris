@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JobroleController;
+use App\Http\Controllers\PayrollController;
 
 Route::post('/test-jobrole', [JobroleController::class, 'store']);
 
@@ -81,3 +82,6 @@ Route::put('/employee/test-edit', function () {
     return "Tombol Update berhasil diklik! (Ini hanya simulasi, data belum tersimpan karena Controller Update asli belum disambungkan).";
 });
 Route::put('/employees/{id}', [EmployeeController::class, 'update']);
+
+Route::post('/payroll', [PayrollController::class, 'store']);
+Route::get('/payroll/{id}', [PayrollController::class, 'show']);
