@@ -8,29 +8,69 @@ use Exception;
 
 class JobroleController extends Controller
 {
-    public function index(Request $request)
+  public function index(Request $request)
 {
     $dummyData = collect([
-        (object)['id' => 1, 'name' => 'Software Engineer',  'department' => 'IT',              'level' => 'Staff',   'status' => 'Active'],
-        (object)['id' => 2, 'name' => 'Data Analyst',       'department' => 'Data',            'level' => 'Senior',  'status' => 'Active'],
-        (object)['id' => 3, 'name' => 'HR Manager',         'department' => 'Human Resources', 'level' => 'Manager', 'status' => 'On Leave'],
-        (object)['id' => 4, 'name' => 'Quality Assurance',  'department' => 'IT',              'level' => 'Staff',   'status' => 'Active'],
-        (object)['id' => 5, 'name' => 'Product Manager',    'department' => 'Product',         'level' => 'Manager', 'status' => 'Active'],
+        (object) [
+            'id' => 1,
+            'name' => 'Software Engineer',
+            'department' => 'IT',
+            'level' => 'Staff',
+            'status' => 'Active'
+        ],
+
+        (object) [
+            'id' => 2,
+            'name' => 'Data Analyst',
+            'department' => 'Data',
+            'level' => 'Senior',
+            'status' => 'Active'
+        ],
+
+        (object) [
+            'id' => 3,
+            'name' => 'HR Manager',
+            'department' => 'Human Resources',
+            'level' => 'Manager',
+            'status' => 'On Leave'
+        ],
+
+        (object) [
+            'id' => 4,
+            'name' => 'Quality Assurance',
+            'department' => 'IT',
+            'level' => 'Staff',
+            'status' => 'Active'
+        ],
+
+        (object) [
+            'id' => 5,
+            'name' => 'Product Manager',
+            'department' => 'Product',
+            'level' => 'Manager',
+            'status' => 'Active'
+        ],
     ]);
 
-    // FILTER DEPARTEMEN
+    // Filter berdasarkan department
     if ($request->department) {
-        $dummyData = $dummyData->where('department', $request->department);
+        $dummyData = $dummyData->where(
+            'department',
+            $request->department
+        );
     }
 
-    // SEARCH ROLE
+    // Search berdasarkan nama role
     if ($request->search) {
         $dummyData = $dummyData->filter(function ($item) use ($request) {
-            return stripos($item->name, $request->search) !== false;
+            return stripos(
+                $item->name,
+                $request->search
+            ) !== false;
         });
     }
 
-    // AMBIL SEMUA DEPARTEMEN
+    // List department untuk dropdown
     $departments = collect([
         'IT',
         'Data',
@@ -38,7 +78,10 @@ class JobroleController extends Controller
         'Product'
     ]);
 
-    return view('job_role.index', compact('dummyData', 'departments'));
+    return view('job_role.index', compact(
+        'dummyData',
+        'departments'
+    ));
 }
     public function store(Request $request)
     {
