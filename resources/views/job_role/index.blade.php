@@ -8,6 +8,26 @@
         ['id' => 5, 'name' => 'Product Manager', 'department' => 'Product', 'level' => 'Manager', 'status' => 'Active'],
     ];
 @endphp
+@php
+
+$selectedDepartment = request('department');
+$search = request('search');
+
+if ($selectedDepartment) {
+    $dummyJobRoles = array_filter($dummyJobRoles, function ($role) use ($selectedDepartment) {
+        return $role['department'] == $selectedDepartment;
+    });
+}
+
+if ($search) {
+    $dummyJobRoles = array_filter($dummyJobRoles, function ($role) use ($search) {
+        return stripos($role['name'], $search) !== false;
+    });
+}
+
+$departments = array_unique(array_column($dummyJobRoles, 'department'));
+
+@endphp
 
 @extends('layouts.app')
 
@@ -52,18 +72,55 @@
     <!-- Tabel -->
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-300">
 
-        <div class="px-6 py-5 border-b border-gray-100 flex justify-between items-center">
-            <h3 class="text-base font-semibold text-gray-900">Daftar Job Role</h3>
+       <div class="px-6 py-5 border-b border-gray-100">
+    
+    <div class="flex justify-between items-center">
+        <h3 class="text-base font-semibold text-gray-900">
+            Daftar Job Role
+        </h3>
+
+        <form method="GET" class="flex items-center gap-3">
+
+            <!-- Search -->
             <div class="relative">
                 <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                     <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                     </svg>
                 </div>
-                <input type="text" class="block w-full rounded-xl border-0 py-2 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm bg-gray-50/50" placeholder="Cari role...">
-            </div>
-        </div>
 
+                <input
+                    type="text"
+                    name="search"
+                    value="{{ request('search') }}"
+                    placeholder="Cari role..."
+                    class="block w-full rounded-xl border-0 py-2 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm bg-gray-50/50"
+                >
+            </div>
+
+            <!-- Filter Departemen -->
+            <select
+                name="department"
+                onchange="this.form.submit()"
+                class="rounded-xl border-gray-200 text-sm"
+            >
+                <option value="">Semua Departemen</option>
+
+                @foreach($departments as $department)
+                    <option
+                        value="{{ $department }}"
+                        {{ request('department') == $department ? 'selected' : '' }}
+                    >
+                        {{ $department }}
+                    </option>
+                @endforeach
+            </select>
+
+        </form>
+    </div>
+
+</div>
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50/50">
