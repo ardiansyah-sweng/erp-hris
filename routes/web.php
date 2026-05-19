@@ -6,6 +6,10 @@ use App\Http\Controllers\JobroleController;
 
 Route::post('/test-jobrole', [JobroleController::class, 'store']);
 
+Route::get('/employees', function () {
+    return view('employee.index');
+});
+Route::get('/api-v1/employees-data', [EmployeeController::class, 'index']);
 
 Route::post('/employees', [EmployeeController::class, 'store']);
 Route::get('/employees/{employee}', [EmployeeController::class, 'show']);

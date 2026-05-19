@@ -16,6 +16,30 @@ class EmployeeController extends Controller
         $this->employeeService = $employeeService;
     }
 
+    public function index()
+    {
+        try {
+            $employees = Employee::all();
+
+            return response()->json([
+                'payload' => [
+                    'statusCode' => 200,
+                    'message'    => 'Employees retrieved successfully!',
+                    'data'       => $employees
+                ]
+            ], 200);
+
+        } catch (Exception $e) {
+            return response()->json([
+                'payload' => [
+                    'statusCode' => 500,
+                    'message'    => 'Gagal mengambil data karyawan.',
+                    'error'      => $e->getMessage()
+                ]
+            ], 500);
+        }
+    }
+    
     public function store(Request $request)
     {
         $validated = $request->validate([
