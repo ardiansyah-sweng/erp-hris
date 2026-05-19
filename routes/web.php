@@ -62,6 +62,9 @@ Route::get('/job-roles/{id}/edit', function ($id) {
 
 })->name('jobrole.edit');
 
+// ROUTE UPDATE JOB ROLE
+Route::put('/job-roles/{id}', [JobroleController::class, 'update'])
+    ->name('jobrole.update');
 
 // ROUTE TEST EDIT EMPLOYEE
 Route::get('/employee/test-edit', function () {
