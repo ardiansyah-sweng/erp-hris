@@ -69,7 +69,7 @@ class EmployeeControllerTest extends TestCase
 
     public function test_get_cashiers_returns_json()
     {
-        $response = $this->get('/cashiers');
+        $response = $this->get('/api/cashiers');
 
         $response->assertStatus(200);
         $response->assertJsonStructure([
