@@ -1,11 +1,10 @@
 @php
-    // Data Dummy Sementara untuk Job Role
     $dummyJobRoles = [
-        ['id' => 1, 'name' => 'Software Engineer', 'department' => 'IT', 'level' => 'Staff', 'status' => 'Active'],
-        ['id' => 2, 'name' => 'Data Analyst', 'department' => 'Data', 'level' => 'Senior', 'status' => 'Active'],
-        ['id' => 3, 'name' => 'HR Manager', 'department' => 'Human Resources', 'level' => 'Manager', 'status' => 'On Leave'],
-        ['id' => 4, 'name' => 'Quality Assurance', 'department' => 'IT', 'level' => 'Staff', 'status' => 'Active'],
-        ['id' => 5, 'name' => 'Product Manager', 'department' => 'Product', 'level' => 'Manager', 'status' => 'Active'],
+        ['id' => 1, 'name' => 'Software Engineer', 'department' => 'IT', 'level' => 'Staff', 'status' => 'Active', 'min_salary' => 8000000, 'max_salary' => 15000000],
+        ['id' => 2, 'name' => 'Data Analyst', 'department' => 'Data', 'level' => 'Senior', 'status' => 'Active', 'min_salary' => 10000000, 'max_salary' => 18000000],
+        ['id' => 3, 'name' => 'HR Manager', 'department' => 'Human Resources', 'level' => 'Manager', 'status' => 'On Leave', 'min_salary' => 12000000, 'max_salary' => 20000000],
+        ['id' => 4, 'name' => 'Quality Assurance', 'department' => 'IT', 'level' => 'Staff', 'status' => 'Active', 'min_salary' => 7000000, 'max_salary' => 12000000],
+        ['id' => 5, 'name' => 'Product Manager', 'department' => 'Product', 'level' => 'Manager', 'status' => 'Active', 'min_salary' => 15000000, 'max_salary' => 25000000],
     ];
 @endphp
 
@@ -22,12 +21,12 @@
             <p class="mt-1 text-sm text-gray-500">Kelola daftar posisi pekerjaan dan struktur level pegawai di perusahaan.</p>
         </div>
         <div class="mt-4 sm:mt-0">
-            <button type="button" class="inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm shadow-indigo-200 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all duration-200 hover:-translate-y-0.5 transform">
+            <a href="{{ route('jobrole.create') }}" class="inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm shadow-indigo-200 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all duration-200 hover:-translate-y-0.5 transform">
                 <svg class="mr-2 -ml-0.5 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="rounk" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                 </svg>
                 Tambah Role Baru
-            </button>
+            </a>
         </div>
     </div>
 
@@ -72,12 +71,12 @@
                         <th class="px-3 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-widest">Nama Role</th>
                         <th class="px-3 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-widest">Departemen</th>
                         <th class="px-3 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-widest">Level</th>
+                        <th class="px-3 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-widest">Rentang Gaji</th>
                         <th class="px-3 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-widest">Status</th>
                         <th class="py-4 pl-3 pr-6 text-right text-xs font-semibold text-gray-500 uppercase tracking-widest">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100 bg-white">
-                    <!--yang di dummyJobRoles diganti sesuai variabel di Controller nya-->
                     @forelse($dummyJobRoles as $role)
                         <tr class="hover:bg-indigo-50/40 transition-colors duration-150 group">
                             <td class="whitespace-nowrap py-4 pl-6 pr-3 text-sm font-medium text-gray-900">{{ $loop->iteration }}</td>
@@ -97,6 +96,11 @@
                                     {{ $role['level'] }}
                                 </span>
                             </td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-600">
+                                <span class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-semibold text-green-700 ring-1 ring-inset ring-green-600/20">
+                                    Rp {{ number_format($role['min_salary'], 0, ',', '.') }} - Rp {{ number_format($role['max_salary'], 0, ',', '.') }}
+                                </span>
+                            </td>
                             <td class="whitespace-nowrap px-3 py-4 text-sm">
                                 @if($role['status'] == 'Active')
                                     <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
@@ -111,13 +115,8 @@
                                 @endif
                             </td>
                             <td class="relative whitespace-nowrap py-4 pl-3 pr-6 text-right text-sm">
-                            
                                 <div class="flex justify-end gap-3">
-
-                                    <a href="{{ route('jobrole.edit', $role['id']) }}" class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg flex items-center gap-1 transition-colors">
-
-                                    <a href="/job-roles/{{ $role['id'] }}" 
-                                    class="text-sky-600 hover:text-sky-900 bg-sky-50 hover:bg-sky-100 px-3 py-1.5 rounded-lg flex items-center gap-1 transition-colors">
+                                    <a href="/job-roles/{{ $role['id'] }}" class="text-sky-600 hover:text-sky-900 bg-sky-50 hover:bg-sky-100 px-3 py-1.5 rounded-lg flex items-center gap-1 transition-colors">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
@@ -130,7 +129,7 @@
                                         </svg>
                                         Edit
                                     </a>
-                                    <a href="#"class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg flex items-center gap-1 transition-colors">
+                                    <a href="#" class="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg flex items-center gap-1 transition-colors">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                                         </svg>
@@ -141,19 +140,9 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="py-16 text-center">
-                                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-50 mb-4">
-                                    <svg class="h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
-                                    </svg>
-                                </div>
+                            <td colspan="7" class="py-16 text-center">
                                 <h3 class="text-sm font-semibold text-gray-900">Belum ada Job Role</h3>
-                                <p class="mt-1 text-sm text-gray-500">Mulai dengan menambahkan job role baru ke dalam sistem.</p>
-                                <div class="mt-6">
-                                    <button type="button" class="inline-flex items-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700">
-                                        Tambah Role Baru
-                                    </button>
-                                </div>
+                                <p class="mt-1 text-sm text-gray-500">Mulai dengan menambahkan job role baru.</p>
                             </td>
                         </tr>
                     @endforelse
