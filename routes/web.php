@@ -37,6 +37,17 @@ Route::get('/job-roles', function () {
 });
 
 Route::delete('/job-roles/{jobrole}', [JobroleController::class, 'destroy']);
+Route::get('/job-roles/create', function () {
+    return view('job_role.create');
+})->name('jobrole.create');
+
+Route::post('/job-roles', function (\Illuminate\Http\Request $request) {
+    return redirect('/job-roles');
+})->name('jobrole.store');
+
+Route::get('/job-roles', function () {
+    return view('job_role.index');
+})->name('jobrole.index');
 Route::get('/job-roles/{id}', [JobroleController::class, 'show']);
 
 Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy']);
