@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Employee;
 use App\Services\EmployeeService;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class EmployeeController extends Controller
 {
@@ -55,7 +56,6 @@ class EmployeeController extends Controller
                     ]
                 ]
             ], 200);
-
         } catch (Exception $e) {
             return response()->json([
                 'payload' => [
@@ -78,37 +78,17 @@ class EmployeeController extends Controller
         ], 200);
     }
 
-    public function update(Request $request, $id)
+    public function getCashiers()
     {
-        $validated = $request->validate([
-            'name'           => 'required|string',
-            'email'          => 'required|email|unique:employees,email,' . $id,
-            'phone_number'   => 'required|string',
-            'place_of_birth' => 'required|string',
-            'date_of_birth'  => 'required|date',
-            'address'        => 'required|string',
-            'id_number'      => 'required|string',
-            'role_id'        => 'required|integer',
-        ]);
+        $cashierIds = DB::table('job_roles')
+            ->where('role', 'cashier')
+            ->pluck('id');
 
-        $employee = $this->employeeService->updateEmployee($id, $validated);
-
-        if (!$employee) {
-            return response()->json([
-                'payload' => [
-                    'statusCode' => 404,
-                    'message'    => 'Employee not found',
-                    'data'       => null
-                ]
-            ], 404);
-        }
+        $cashiers = Employee::whereIn('role_id', $cashierIds)->get();
 
         return response()->json([
-            'payload' => [
-                'statusCode' => 200,
-                'message'    => 'Employee updated successfully!',
-                'data'       => $employee
-            ]
-        ], 200);
+            'status' => 'success',
+            'data'   => $cashiers,
+        ]);
     }
 }

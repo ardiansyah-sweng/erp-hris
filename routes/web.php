@@ -5,8 +5,6 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JobroleController;
 
 Route::post('/test-jobrole', [JobroleController::class, 'store']);
-
-
 Route::post('/employees', [EmployeeController::class, 'store']);
 Route::get('/employees/{employee}', [EmployeeController::class, 'show']);
 
