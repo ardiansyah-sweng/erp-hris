@@ -34,4 +34,28 @@ class JobroleServiceTest extends TestCase
             'role' => 'Senior Software Engineer'
         ]);
     }
+
+    /**
+     * Test case untuk memastikan method getAllJobrole berhasil mengambil semua data
+     */
+    public function test_get_all_jobrole_successfully()
+    {
+        // Siapkan beberapa data di database
+        Jobrole::create(['role' => 'Software Engineer']);
+        Jobrole::create(['role' => 'UI/UX Designer']);
+        Jobrole::create(['role' => 'Project Manager']);
+
+        // Panggil service
+        $service = new JobroleService();
+        $result = $service->getAllJobrole();
+
+        // Pastikan jumlah data sesuai
+        $this->assertCount(3, $result);
+
+        
+        // Pastikan data yang diambil benar (tidak tergantung urutan)
+        $this->assertTrue($result->contains('role', 'Software Engineer'));
+        $this->assertTrue($result->contains('role', 'UI/UX Designer'));
+        $this->assertTrue($result->contains('role', 'Project Manager'));
+    }
 }

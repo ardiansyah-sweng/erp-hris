@@ -6,15 +6,27 @@ use App\Models\Jobrole;
 
 class JobroleService
 {
+   
     public function createJobrole(array $data)
     {
-        $jobrole = Jobrole::create([
+        return Jobrole::create([
             'role' => $data['role']
         ]);
-
-        return $jobrole;
     }
 
+   
+    public function getAllJobrole()
+    {
+        return Jobrole::all();
+    }
+
+    
+    public function showJobrole($id)
+    {
+        return Jobrole::findOrFail($id);
+    }
+
+   
     public function updateJobrole($id, array $data)
     {
         $jobrole = Jobrole::findOrFail($id);
