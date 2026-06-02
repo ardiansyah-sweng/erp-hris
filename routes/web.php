@@ -5,8 +5,6 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JobroleController;
 
 Route::post('/test-jobrole', [JobroleController::class, 'store']);
-
-
 Route::post('/employees', [EmployeeController::class, 'store']);
 Route::get('/employees/{employee}', [EmployeeController::class, 'show']);
 
@@ -15,7 +13,7 @@ Route::get('/detail-employee', function () {
 });
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('dashboard');
 });
 
 
@@ -30,7 +28,8 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 });
 
-Route::post('/test-jobrole', [JobroleController::class, 'store']);
+Route::post('/job-roles', [JobroleController::class, 'store'])
+    ->name('jobrole.store');
 
 Route::post('/employees', [EmployeeController::class, 'store']);
 
@@ -42,7 +41,12 @@ Route::get('/detail-employee', function () {
 
 Route::get('/job-roles', function () {
     return view('job_role.index');
-});
+})->name('jobrole.index');
+
+// ROUTE HALAMAN TAMBAH JOB ROLE
+Route::get('/job-roles/create', function () {
+    return view('job_role.create_jobrole');
+})->name('jobrole.create');
 
 Route::delete('/job-roles/{jobrole}', [JobroleController::class, 'destroy']);
 Route::get('/job-roles/{id}', [JobroleController::class, 'show']);
