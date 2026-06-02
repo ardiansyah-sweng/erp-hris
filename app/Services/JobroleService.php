@@ -26,7 +26,7 @@ class JobroleService
         return Jobrole::findOrFail($id);
     }
 
-   
+//    trigger
     public function updateJobrole($id, array $data)
     {
         $jobrole = Jobrole::findOrFail($id);
