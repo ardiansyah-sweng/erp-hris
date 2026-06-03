@@ -85,3 +85,6 @@ Route::put('/employee/test-edit', function () {
     return "Tombol Update berhasil diklik! (Ini hanya simulasi, data belum tersimpan karena Controller Update asli belum disambungkan).";
 });
 Route::put('/employees/{id}', [EmployeeController::class, 'update']);
+Route::get('/absensi', function () {
+    return view('absensi.index');
+})->name('absensi.index');
