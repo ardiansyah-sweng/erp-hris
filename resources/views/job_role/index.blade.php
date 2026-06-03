@@ -14,18 +14,30 @@
 
 @section('content')
 
+
     <!-- Header -->
     <div class="sm:flex sm:items-center sm:justify-between mb-8">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Manajemen Job Role</h1>
-            <p class="mt-1 text-sm text-gray-500">Kelola daftar posisi pekerjaan dan struktur level pegawai di perusahaan.</p>
+        <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Manajemen Job Role</h1>
+        <p class="mt-1 text-sm text-gray-500">
+            Kelola daftar posisi pekerjaan dan struktur level pegawai di perusahaan.
+        </p>
         </div>
+
         <div class="mt-4 sm:mt-0">
             <a href="{{ route('jobrole.create') }}" class="inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm shadow-indigo-200 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all duration-200 hover:-translate-y-0.5 transform">
                 <svg class="mr-2 -ml-0.5 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                 </svg>
                 Tambah Role Baru
+            <a href="{{ route('jobrole.create') }}"
+           class="inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm shadow-indigo-200 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all duration-200 hover:-translate-y-0.5 transform">
+
+            <svg class="mr-2 -ml-0.5 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+
+            Tambah Role Baru
             </a>
         </div>
     </div>
