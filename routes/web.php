@@ -85,3 +85,37 @@ Route::put('/employee/test-edit', function () {
     return "Tombol Update berhasil diklik! (Ini hanya simulasi, data belum tersimpan karena Controller Update asli belum disambungkan).";
 });
 Route::put('/employees/{id}', [EmployeeController::class, 'update']);
+
+
+Route::get('/leave-request', function () {
+    return view('leave_request.index');
+});
+
+Route::get('/leave-request', function () {
+    $dummyLeaveRequests = [
+        [
+            'id' => 1,
+            'employee_name' => 'Susanti Wijaya',
+            'start_date' => '2026-06-10',
+            'end_date' => '2026-06-12',
+            'reason' => 'Liburan keluarga',
+            'status' => 'Pending',
+        ],
+        [
+            'id' => 2,
+            'employee_name' => 'Budi Santoso',
+            'start_date' => '2026-06-15',
+            'end_date' => '2026-06-18',
+            'reason' => 'Keperluan pribadi',
+            'status' => 'Approved',
+        ],
+    ];
+    return view(
+        'leave_request.index',
+        compact('dummyLeaveRequests')
+    );
+})->name('leave_request.index');
+
+Route::get('/leave-request/create', function () {
+    return view('leave_request.create');
+});
