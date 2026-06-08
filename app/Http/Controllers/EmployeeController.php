@@ -91,4 +91,14 @@ class EmployeeController extends Controller
             'data'   => $cashiers,
         ]);
     }
+
+    public function getEmployeesByJobRole($id)
+    {
+        $employees = Employee::where('role_id', $id)->get();
+
+        return response()->json([
+            'status' => 'success',
+            'data'   => $employees,
+        ]);
+    }
 }

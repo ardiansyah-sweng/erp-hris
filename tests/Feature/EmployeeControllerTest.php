@@ -80,4 +80,19 @@ class EmployeeControllerTest extends TestCase
             'status' => 'success',
         ]);
     }
+
+    public function test_get_employees_by_job_role_returns_json()
+    {
+        $response = $this->get('/api/employees/role/1');
+
+        $response->assertStatus(200);
+        $response->assertJsonStructure([
+            'status',
+            'data',
+        ]);
+        $response->assertJson([
+            'status' => 'success',
+        ]);
+    }
 }
+
