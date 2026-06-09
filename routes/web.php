@@ -17,6 +17,14 @@ Route::get('/', function () {
     return view('dashboard');
 });
 
+
+Route::get('/job-roles', [JobroleController::class, 'index'])
+    ->name('jobrole.index');
+
+Route::get('/job-roles/{id}', [JobroleController::class, 'show']);
+
+Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy']);
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 });
