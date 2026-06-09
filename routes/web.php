@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JobroleController;
+use App\Http\Controllers\Auth\LoginController;
 
 Route::post('/test-jobrole', [JobroleController::class, 'store']);
 Route::post('/employees', [EmployeeController::class, 'store']);

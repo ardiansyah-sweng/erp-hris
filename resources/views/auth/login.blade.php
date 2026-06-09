@@ -1,8 +1,14 @@
-@extends('layouts.auth')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - ERP HRIS</title>
 
-@section('title', 'Login - ERP HRIS')
-
-@section('content')
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body>
+    
 <div class="min-h-screen flex items-center justify-center bg-gray-50">
     <div class="w-full max-w-md bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
 
@@ -108,4 +114,5 @@ function togglePassword() {
     }
 }
 </script>
-@endsection
+</body>
+</html>
