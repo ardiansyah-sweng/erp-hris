@@ -5,6 +5,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JobroleController;
 use App\Http\Controllers\PayrollController;
 
+
 Route::post('/test-jobrole', [JobroleController::class, 'store']);
 Route::post('/employees', [EmployeeController::class, 'store']);
 Route::get('/employees/{employee}', [EmployeeController::class, 'show']);
@@ -89,3 +90,5 @@ Route::put('/employees/{id}', [EmployeeController::class, 'update']);
 
 Route::post('/payroll', [PayrollController::class, 'store']);
 Route::get('/payroll/{id}', [PayrollController::class, 'show']);
+
+Route::resource('payroll', PayrollController::class);
