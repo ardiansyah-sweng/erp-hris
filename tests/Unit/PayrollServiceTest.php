@@ -1,52 +1,28 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
-use App\Models\Payroll;
+use Tests\TestCase; // ◄ Ganti ke Tests\TestCase bawaan Laravel agar bisa pakai database
 use App\Services\PayrollService;
-use Tests\TestCase;
+use App\Models\Payroll;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Collection;
 
 class PayrollServiceTest extends TestCase
 {
-    /**
-     * Test method getAllPayroll secara stand-alone tanpa database.
-     */
-    public function test_get_all_payroll_returns_data_with_employee_relation(): void
+    use RefreshDatabase; // ◄ Mengosongkan DB setiap kali test dijalankan
+
+    public function test_get_all_payroll_returns_all_data_from_database(): void
     {
-        // 1. Buat data object dummy untuk payroll dan relasinya
-        $payroll = new Payroll();
-        $payroll->id = 1;
-        $payroll->basic_salary = 4500000;
-        $payroll->net_salary = 5000000;
+        // 1. Arrange: Buat 3 data payroll tiruan di database menggunakan Factory
+        Payroll::factory()->count(3)->create();
 
-        $employeeDummy = new \stdClass();
-        $employeeDummy->name = 'Budi Santoso';
-        
-        // Pasang relasi secara manual ke dalam objek model
-        $payroll->setRelation('employee', $employeeDummy);
+        // 2. Act: Panggil fungsi di dalam Service
+        $service = new PayrollService();
+        $result = $service->getAllPayroll();
 
-        // 2. Buat Anonymous Class untuk menggantikan behavior PayrollService asli
-        // Cara ini 100% aman dari error query database karena method-nya di-override langsung
-        $payrollServiceMock = new class($payroll) extends PayrollService {
-            private $mockData;
-
-            public function __construct($mockData)
-            {
-                $this->mockData = collect([$mockData]);
-            }
-
-            public function getAllPayroll()
-            {
-                return $this->mockData;
-            }
-        };
-
-        // 3. Eksekusi method
-        $result = $payrollServiceMock->getAllPayroll();
-
-        // 4. Validasi Hasil (Assertions)
-        $this->assertCount(1, $result);
-        $this->assertEquals(4500000, $result->first()->basic_salary);
-        $this->assertEquals('Budi Santoso', $result->first()->employee->name);
+        // 3. Assert: Pastikan tipenya benar dan jumlahnya pas 3 sesuai database
+        $this->assertInstanceOf(Collection::class, $result);
+        $this->assertCount(3, $result);
     }
 }
