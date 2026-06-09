@@ -91,6 +91,50 @@ Route::get('/absensi', function () {
     return view('absensi.index');
 })->name('absensi.index');
 
+Route::get('/leave-request', function () {
+    return view('leave_request.index');
+});
+
+Route::get('/leave-request', function () {
+    $dummyLeaveRequests = [
+        [
+            'id' => '1',
+            'employee_id' => 'EMP001',
+            'employee_name' => 'Susanti Wijaya',
+            'start_date' => '2026-06-10',
+            'end_date' => '2026-06-12',
+            'reason' => 'Liburan keluarga',
+            'status' => 'Pending',
+        ],
+        [
+            'id' => '2',
+            'employee_id' => 'EMP002',
+            'employee_name' => 'Budi Santoso',
+            'start_date' => '2026-06-15',
+            'end_date' => '2026-06-18',
+            'reason' => 'Keperluan pribadi',
+            'status' => 'Approved',
+        ],
+        [
+            'id' => '3',
+            'employee_id' => 'EMP003',
+            'employee_name' => 'Andi Wijaya',
+            'start_date' => '2026-06-20',
+            'end_date' => '2026-06-22',
+            'reason' => 'Kunjungan keluarga',
+            'status' => 'Rejected',
+        ],
+    ];
+    return view(
+        'leave_request.index',
+        compact('dummyLeaveRequests')
+    );
+})->name('leave_request.index');
+
+Route::get('/leave-request/create', function () {
+    return view('leave_request.create');
+});
+
 Route::post('/payroll', [PayrollController::class, 'store']);
 Route::get('/payroll/{id}', [PayrollController::class, 'show']);
 
