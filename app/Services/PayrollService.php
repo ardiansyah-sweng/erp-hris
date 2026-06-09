@@ -24,7 +24,7 @@ class PayrollService
         
         $employee1 = new \stdClass();
         $employee1->name = 'Budi Santoso';
-        $employee1->job_role = 'Barista';
+        $employee1->job_role = 'Data Analyst';
         $payroll1->setRelation('employee', $employee1);
 
         // Data 2: Kasir (Paid)
@@ -40,7 +40,7 @@ class PayrollService
 
         $employee2 = new \stdClass();
         $employee2->name = 'Siti Aminah';
-        $employee2->job_role = 'Kasir';
+        $employee2->job_role = 'Software Engineer';
         $payroll2->setRelation('employee', $employee2);
 
         // Data 3: Kitchen / Cook (Pending)
@@ -56,7 +56,7 @@ class PayrollService
 
         $employee3 = new \stdClass();
         $employee3->name = 'Andi Wijaya';
-        $employee3->job_role = 'Kitchen Helper';
+        $employee3->job_role = 'HR Manager';
         $payroll3->setRelation('employee', $employee3);
 
         // Data 4: Supervisor (Pending)
@@ -72,7 +72,7 @@ class PayrollService
 
         $employee4 = new \stdClass();
         $employee4->name = 'Eko Prasetyo';
-        $employee4->job_role = 'Store Supervisor';
+        $employee4->job_role = 'Quality Assurance';
         $payroll4->setRelation('employee', $employee4);
 
         // Bungkus semua objek ke dalam collection dan kembalikan
