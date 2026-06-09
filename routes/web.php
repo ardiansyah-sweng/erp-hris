@@ -94,7 +94,8 @@ Route::get('/leave-request', function () {
 Route::get('/leave-request', function () {
     $dummyLeaveRequests = [
         [
-            'id' => 1,
+            'id' => '1',
+            'employee_id' => 'EMP001',
             'employee_name' => 'Susanti Wijaya',
             'start_date' => '2026-06-10',
             'end_date' => '2026-06-12',
@@ -102,12 +103,22 @@ Route::get('/leave-request', function () {
             'status' => 'Pending',
         ],
         [
-            'id' => 2,
+            'id' => '2',
+            'employee_id' => 'EMP002',
             'employee_name' => 'Budi Santoso',
             'start_date' => '2026-06-15',
             'end_date' => '2026-06-18',
             'reason' => 'Keperluan pribadi',
             'status' => 'Approved',
+        ],
+        [
+            'id' => '3',
+            'employee_id' => 'EMP003',
+            'employee_name' => 'Andi Wijaya',
+            'start_date' => '2026-06-20',
+            'end_date' => '2026-06-22',
+            'reason' => 'Kunjungan keluarga',
+            'status' => 'Rejected',
         ],
     ];
     return view(

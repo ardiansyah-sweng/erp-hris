@@ -45,13 +45,28 @@
     <!-- Form -->
     <form class="p-6 space-y-6">
 
+        <!-- ID Karyawan -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+                ID Karyawan
+            </label>
+
+            <input
+                type="text"
+                id="employee_id"
+                placeholder="Contoh: EMP001"
+                class="block w-full rounded-xl border-0 py-3 px-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm">
+        </div>      
+
         <!-- Nama Karyawan -->
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">
                 Nama Karyawan
             </label>
             <input type="text"
-                   placeholder="Masukkan nama karyawan"
+                    id="employee_name"
+                    readonly
+                   placeholder="Nama Karyawan akan muncul otomatis"
                    class="block w-full rounded-xl border-0 py-3 px-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm">
         </div>
 
@@ -101,5 +116,32 @@
 
     </form>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const employees = {
+        'EMP001': 'Budi Santoso',
+        'EMP002': 'Siti Aminah',
+        'EMP003': 'Andi Wijaya'
+    };
+
+    const employeeId = document.getElementById('employee_id');
+    const employeeName = document.getElementById('employee_name');
+
+    employeeId.addEventListener('keyup', function () {
+
+        const id = this.value.toUpperCase();
+
+        if (employees[id]) {
+            employeeName.value = employees[id];
+        } else {
+            employeeName.value = '';
+        }
+
+    });
+
+});
+</script>
 
 @endsection
