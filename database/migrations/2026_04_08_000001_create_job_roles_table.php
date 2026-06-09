@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('job_roles', function (Blueprint $table) {
             $table->id();
             $table->string('role');
+            $table->bigInteger('min_salary')->default(0);
+            $table->bigInteger('max_salary')->default(0);
             $table->timestamps();
         });
     }
