@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JobroleController;
+use App\Http\Controllers\PayrollController;
 
 Route::post('/test-jobrole', [JobroleController::class, 'store']);
 Route::post('/employees', [EmployeeController::class, 'store']);
@@ -86,7 +87,6 @@ Route::put('/employee/test-edit', function () {
 });
 Route::put('/employees/{id}', [EmployeeController::class, 'update']);
 
-
 Route::get('/leave-request', function () {
     return view('leave_request.index');
 });
@@ -119,3 +119,6 @@ Route::get('/leave-request', function () {
 Route::get('/leave-request/create', function () {
     return view('leave_request.create');
 });
+
+Route::post('/payroll', [PayrollController::class, 'store']);
+Route::get('/payroll/{id}', [PayrollController::class, 'show']);
