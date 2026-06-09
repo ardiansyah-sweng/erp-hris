@@ -7,6 +7,10 @@ use App\Http\Controllers\PayrollController;
 
 Route::post('/test-jobrole', [JobroleController::class, 'store']);
 Route::get('/employees', [EmployeeController::class, 'index'])->name('employee.index');
+Route::get('/employees/create', function () {
+    $jobroles = \App\Models\Jobrole::all();
+    return view('employee.create', compact('jobroles'));
+})->name('employee.create');
 Route::post('/employees', [EmployeeController::class, 'store']);
 Route::get('/employees/{employee}', [EmployeeController::class, 'show']);
 
