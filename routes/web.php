@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JobroleController;
+use App\Http\Controllers\PayrollController;
 
 Route::post('/test-jobrole', [JobroleController::class, 'store']);
 Route::post('/employees', [EmployeeController::class, 'store']);
@@ -88,3 +89,6 @@ Route::put('/employees/{id}', [EmployeeController::class, 'update']);
 Route::get('/absensi', function () {
     return view('absensi.index');
 })->name('absensi.index');
+
+Route::post('/payroll', [PayrollController::class, 'store']);
+Route::get('/payroll/{id}', [PayrollController::class, 'show']);
