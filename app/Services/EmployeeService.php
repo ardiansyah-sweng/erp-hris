@@ -32,9 +32,9 @@ class EmployeeService
         return Employee::all();
     }
     
-    public function showEmployee()
+    public function showEmployee($id)
     {
-        return Employee::all();
+        return Employee::with('jobrole')->findOrFail($id);
     }
 
     public function destroyEmployee($id)
