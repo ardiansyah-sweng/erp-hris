@@ -3,12 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController; 
 
-
+Route::get('/employees', [EmployeeController::class, 'index']);
+Route::get('/employees/{employee}', [EmployeeController::class, 'show']);
 Route::post('/employees', [EmployeeController::class, 'store']);
-
-Route::get('/detail-employee', function () {
-    return view('employee.detail');
-});
 
 Route::get('/', function () {
     return view('welcome');

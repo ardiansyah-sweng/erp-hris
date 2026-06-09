@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Jobrole;
 
 class Employee extends Model
 {
@@ -20,4 +21,9 @@ class Employee extends Model
         'age',
         'role_id',
     ];
+
+    public function jobrole()
+    {
+        return $this->belongsTo(Jobrole::class, 'role_id');
+    }
 }
