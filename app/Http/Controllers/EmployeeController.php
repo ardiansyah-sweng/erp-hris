@@ -17,9 +17,16 @@ class EmployeeController extends Controller
         return view('employee.index', compact('employees'));
     }
 
+    protected $employeeService;
+
+    public function __construct(EmployeeService $employeeService)
+    {
+        $this->employeeService = $employeeService;
+    }
+
     public function show(Employee $employee)
     {
-        $employee->load('jobrole');
+        $employee = $this->employeeService->showEmployee($employee->id);
 
         return view('employee.detail', compact('employee'));
     }
