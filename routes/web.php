@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JobroleController;
+use App\Http\Controllers\PayrollController;
 
 Route::get('/', function () {
     return view('dashboard');
@@ -69,3 +70,25 @@ Route::get('/job-roles/{id}/edit', function ($id) {
 Route::get('/absensi', function () {
     return view('absensi.index');
 })->name('absensi.index');
+
+// ROUTE TEST EDIT EMPLOYEE
+Route::get('/employee/test-edit', function () {
+
+    $employee = (object) [
+        'id' => 1,
+        'name' => 'Budi Setiawan',
+        'email' => 'budi@erp-hris.com',
+        'job_role_id' => 1,
+        'address' => 'Jl. Merdeka No. 45, Semarang'
+    ];
+
+    return view('employee.edit', compact('employee'));
+});
+
+Route::put('/employee/test-edit', function () {
+    return "Tombol Update berhasil diklik! (Ini hanya simulasi, data belum tersimpan karena Controller Update asli belum disambungkan).";
+});
+Route::put('/employees/{id}', [EmployeeController::class, 'update']);
+
+Route::post('/payroll', [PayrollController::class, 'store']);
+Route::get('/payroll/{id}', [PayrollController::class, 'show']);
