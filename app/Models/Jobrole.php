@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class JobRole extends Model
 {
     use HasFactory;
-
     /**
      * The table associated with the model.
      *

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\JobRole; // Import model JobRole
+use App\Models\JobRole;
 use App\Models\Employee;
 use App\Services\EmployeeService;
 use Exception;
