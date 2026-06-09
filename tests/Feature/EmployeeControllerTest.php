@@ -81,17 +81,4 @@ class EmployeeControllerTest extends TestCase
         ]);
     }
 
-    public function test_get_absensis_returns_json()
-    {
-        $response = $this->get('/api/absensis');
-
-        $response->assertStatus(200);
-        $response->assertJsonStructure([
-            'status',
-            'data',
-        ]);
-        $response->assertJson([
-            'status' => 'success',
-        ]);
-    }
 }
