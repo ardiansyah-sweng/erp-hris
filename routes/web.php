@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JobroleController;
+use App\Http\Controllers\PayrollController;
 
 Route::post('/test-jobrole', [JobroleController::class, 'store']);
 Route::post('/employees', [EmployeeController::class, 'store']);
@@ -13,14 +14,15 @@ Route::get('/detail-employee', function () {
 });
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('dashboard');
 });
 
 Route::get('/dashboard', function () {
     return view('dashboard');
 });
 
-Route::post('/test-jobrole', [JobroleController::class, 'store']);
+Route::post('/job-roles', [JobroleController::class, 'store'])
+    ->name('jobrole.store');
 
 Route::post('/employees', [EmployeeController::class, 'store']);
 
@@ -32,7 +34,12 @@ Route::get('/detail-employee', function () {
 
 Route::get('/job-roles', function () {
     return view('job_role.index');
-});
+})->name('jobrole.index');
+
+// ROUTE HALAMAN TAMBAH JOB ROLE
+Route::get('/job-roles/create', function () {
+    return view('job_role.create_jobrole');
+})->name('jobrole.create');
 
 Route::delete('/job-roles/{jobrole}', [JobroleController::class, 'destroy']);
 Route::get('/job-roles/{id}', [JobroleController::class, 'show']);
@@ -79,3 +86,6 @@ Route::put('/employee/test-edit', function () {
     return "Tombol Update berhasil diklik! (Ini hanya simulasi, data belum tersimpan karena Controller Update asli belum disambungkan).";
 });
 Route::put('/employees/{id}', [EmployeeController::class, 'update']);
+
+Route::post('/payroll', [PayrollController::class, 'store']);
+Route::get('/payroll/{id}', [PayrollController::class, 'show']);
