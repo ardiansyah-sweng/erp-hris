@@ -92,3 +92,16 @@ Route::get('/absensi', function () {
 
 Route::post('/payroll', [PayrollController::class, 'store']);
 Route::get('/payroll/{id}', [PayrollController::class, 'show']);
+
+// ABSENSI ROUTES
+Route::get('/absensi', function () {
+    return view('absensi.index');
+})->name('absensi.index');
+
+Route::get('/absensi/create', function () {
+    return view('absensi.create');
+})->name('absensi.create');
+
+Route::get('/absensi/detail', function () {
+    return view('absensi.detail');
+})->name('absensi.detail');

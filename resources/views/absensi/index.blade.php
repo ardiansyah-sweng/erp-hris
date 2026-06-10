@@ -110,6 +110,7 @@
                         <th class="px-3 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-widest">Jam Masuk</th>
                         <th class="px-3 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-widest">Jam Keluar</th>
                         <th class="px-3 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-widest">Status</th>
+                        <th class="px-3 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-widest">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100 bg-white">
@@ -124,27 +125,34 @@
                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-600">{{ $absen['check_in'] }}</td>
                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-600">{{ $absen['check_out'] }}</td>
                             <td class="whitespace-nowrap px-3 py-4 text-sm">
-                                @if($absen['status'] == 'Hadir')
-                                    <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
-                                        <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
-                                        Hadir
-                                    </span>
-                                @elseif($absen['status'] == 'Terlambat')
-                                    <span class="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700 ring-1 ring-inset ring-amber-600/20">
-                                        <span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span>
-                                        Terlambat
-                                    </span>
-                                @else
-                                    <span class="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-700 ring-1 ring-inset ring-red-600/20">
-                                        <span class="h-1.5 w-1.5 rounded-full bg-red-500"></span>
-                                        Tidak Hadir
-                                    </span>
-                                @endif
-                            </td>
+    @if($absen['status'] == 'Hadir')
+        <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
+            <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+            Hadir
+        </span>
+    @elseif($absen['status'] == 'Terlambat')
+        <span class="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700 ring-1 ring-inset ring-amber-600/20">
+            <span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span>
+            Terlambat
+        </span>
+    @else
+        <span class="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-700 ring-1 ring-inset ring-red-600/20">
+            <span class="h-1.5 w-1.5 rounded-full bg-red-500"></span>
+            Tidak Hadir
+        </span>
+    @endif
+</td>
+
+<td class="whitespace-nowrap px-3 py-4 text-sm">
+    <a href="{{ route('absensi.detail') }}"
+       class="inline-flex items-center rounded-lg bg-indigo-50 px-3 py-2 text-xs font-semibold text-indigo-600 hover:bg-indigo-100 transition">
+        Detail
+    </a>
+</td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="py-16 text-center">
+                            <td colspan="8" class="py-16 text-center">
                                 <h3 class="text-sm font-semibold text-gray-900">Belum ada data absensi</h3>
                                 <p class="mt-1 text-sm text-gray-500">Data absensi hari ini belum tersedia.</p>
                             </td>
