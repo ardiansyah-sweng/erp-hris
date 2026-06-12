@@ -38,8 +38,8 @@ class PayrollController extends Controller
             'payload' => [
                 'statusCode' => 201,
                 'message' => 'Payroll created successfully!',
-                'data' => $payroll,
-            ],
+                'data' => $payroll
+            ]
         ], 201);
     }
 
@@ -47,13 +47,13 @@ class PayrollController extends Controller
     {
         $payroll = Payroll::with('employee')->find($id);
 
-        if (! $payroll) {
+        if (!$payroll) {
             return response()->json([
                 'payload' => [
                     'statusCode' => 404,
                     'message' => 'Payroll not found',
-                    'data' => null,
-                ],
+                    'data' => null
+                ]
             ], 404);
         }
 
@@ -61,8 +61,8 @@ class PayrollController extends Controller
             'payload' => [
                 'statusCode' => 200,
                 'message' => 'Payroll retrieved successfully!',
-                'data' => $payroll,
-            ],
+                'data' => $payroll
+            ]
         ], 200);
     }
 
