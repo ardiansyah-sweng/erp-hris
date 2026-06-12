@@ -156,7 +156,7 @@
 
                             <div class="flex justify-end gap-2">
 
-                                <a href="#"
+                                <a href="{{ route('leave_request.detail', $request['id']) }}"
                                     class="text-sky-600 hover:text-sky-900 bg-sky-50 hover:bg-sky-100 px-3 py-1.5 rounded-lg">
                                     Detail
                                 </a>

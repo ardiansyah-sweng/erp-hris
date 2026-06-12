@@ -135,5 +135,24 @@ Route::get('/leave-request/create', function () {
     return view('leave_request.create');
 });
 
+Route::get('/leave-request/{id}', function ($id) {
+
+    $leaveRequest = [
+        'id' => $id,
+        'employee_id' => 'EMP001',
+        'employee_name' => 'Susanti Wijaya',
+        'start_date' => '2026-06-10',
+        'end_date' => '2026-06-12',
+        'reason' => 'Liburan keluarga',
+        'status' => 'Pending',
+        'created_at' => '2026-06-08',
+    ];
+
+    return view(
+        'leave_request.detail',
+        compact('leaveRequest')
+    );
+})->name('leave_request.detail');
+
 Route::post('/payroll', [PayrollController::class, 'store']);
 Route::get('/payroll/{id}', [PayrollController::class, 'show']);
