@@ -155,3 +155,5 @@ Route::get('/leave-request/{id}', function ($id) {
 
 Route::post('/payroll', [PayrollController::class, 'store']);
 Route::get('/payroll/{id}', [PayrollController::class, 'show']);
+Route::put('/payroll/{id}', [PayrollController::class, 'update']);
+Route::delete('/payroll/{id}', [PayrollController::class, 'destroy']);

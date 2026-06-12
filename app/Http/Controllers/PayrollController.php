@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Payroll;
+use App\Services\PayrollService;
+use Illuminate\Http\Request;
 
 class PayrollController extends Controller
 {
+    public function __construct(
+        protected PayrollService $payrollService
+    ) {}
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -33,8 +38,8 @@ class PayrollController extends Controller
             'payload' => [
                 'statusCode' => 201,
                 'message' => 'Payroll created successfully!',
-                'data' => $payroll
-            ]
+                'data' => $payroll,
+            ],
         ], 201);
     }
 
@@ -42,13 +47,13 @@ class PayrollController extends Controller
     {
         $payroll = Payroll::with('employee')->find($id);
 
-        if (!$payroll) {
+        if (! $payroll) {
             return response()->json([
                 'payload' => [
                     'statusCode' => 404,
                     'message' => 'Payroll not found',
-                    'data' => null
-                ]
+                    'data' => null,
+                ],
             ], 404);
         }
 
@@ -56,8 +61,64 @@ class PayrollController extends Controller
             'payload' => [
                 'statusCode' => 200,
                 'message' => 'Payroll retrieved successfully!',
-                'data' => $payroll
-            ]
+                'data' => $payroll,
+            ],
         ], 200);
+    }
+
+    public function update(Request $request, int $id)
+    {
+        $validated = $request->validate([
+            'employee_id' => 'sometimes|integer|exists:employees,id',
+            'month' => 'sometimes|integer|between:1,12',
+            'year' => 'sometimes|integer|digits:4',
+            'basic_salary' => 'sometimes|numeric|min:0',
+            'allowances' => 'sometimes|numeric|min:0',
+            'deductions' => 'sometimes|numeric|min:0',
+            'status' => 'sometimes|string|in:pending,approved,paid',
+        ]);
+
+        $payroll = $this->payrollService->updatePayroll($id, $validated);
+
+        if (! $payroll) {
+            return response()->json([
+                'payload' => [
+                    'statusCode' => 404,
+                    'message' => 'Payroll not found',
+                    'data' => null,
+                ],
+            ], 404);
+        }
+
+        return response()->json([
+            'payload' => [
+                'statusCode' => 200,
+                'message' => 'Payroll updated successfully!',
+                'data' => $payroll,
+            ],
+        ]);
+    }
+
+    public function destroy(int $id)
+    {
+        $payroll = $this->payrollService->destroyPayroll($id);
+
+        if (! $payroll) {
+            return response()->json([
+                'payload' => [
+                    'statusCode' => 404,
+                    'message' => 'Payroll not found',
+                    'data' => null,
+                ],
+            ], 404);
+        }
+
+        return response()->json([
+            'payload' => [
+                'statusCode' => 200,
+                'message' => 'Payroll deleted successfully!',
+                'data' => $payroll,
+            ],
+        ]);
     }
 }
