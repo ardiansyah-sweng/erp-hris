@@ -134,6 +134,46 @@ Route::get('/leave-request/create', function () {
     return view('leave_request.create');
 });
 
+Route::get('/leave-request/history', function () {
+
+    $leaveHistories = [
+
+        [
+            'employee_id' => 'EMP001',
+            'employee_name' => 'Susanti Wijaya',
+            'leave_type' => 'Cuti Tahunan',
+            'start_date' => '2026-06-10',
+            'end_date' => '2026-06-12',
+            'status' => 'Approved',
+        ],
+
+        [
+            'employee_id' => 'EMP002',
+            'employee_name' => 'Budi Santoso',
+            'leave_type' => 'Izin Pribadi',
+            'start_date' => '2026-05-15',
+            'end_date' => '2026-05-15',
+            'status' => 'Pending',
+        ],
+
+        [
+            'employee_id' => 'EMP003',
+            'employee_name' => 'Andi Wijaya',
+            'leave_type' => 'Cuti Sakit',
+            'start_date' => '2026-04-01',
+            'end_date' => '2026-04-03',
+            'status' => 'Rejected',
+        ],
+
+    ];
+
+    return view(
+        'leave_request.history',
+        compact('leaveHistories')
+    );
+
+})->name('leave_request.history');
+
 Route::get('/leave-request/{id}', function ($id) {
 
     $leaveRequest = [
@@ -152,6 +192,15 @@ Route::get('/leave-request/{id}', function ($id) {
         compact('leaveRequest')
     );
 })->name('leave_request.detail');
+
+Route::delete('/leave-request/{id}', function ($id) {
+
+    return redirect()
+        ->route('leave_request.index')
+        ->with('success', 'Data cuti berhasil dihapus');
+
+})->name('leave_request.destroy');
+
 
 Route::post('/payroll', [PayrollController::class, 'store']);
 Route::get('/payroll/{id}', [PayrollController::class, 'show']);

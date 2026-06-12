@@ -31,6 +31,23 @@
 
                 Ajukan Cuti
             </a>
+
+            <a href="{{ route('leave_request.history') }}"
+            class="inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 transition-all">
+
+                <svg class="mr-2 h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M8 7V3m8 4V3m-9 8h10m-11 9h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2v11a2 2 0 002 2z"/>
+                </svg>
+
+                Riwayat Cuti
+            </a>
+
         </div>
     </div>
 
@@ -166,10 +183,19 @@
                                     Edit
                                 </a>
 
-                                <a href="#"
-                                    class="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg">
-                                    Hapus
-                                </a>
+                                <form action="{{ route('leave_request.destroy', $request['id']) }}"
+                                    method="POST"
+                                    onsubmit="return confirm('Yakin ingin menghapus pengajuan cuti ini?')">
+
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button type="submit"
+                                        class="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg">
+                                        Hapus
+                                    </button>
+
+                                </form>
 
                             </div>
 
