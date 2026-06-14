@@ -9,7 +9,7 @@ class JobRoleFactory extends Factory
     public function definition(): array
     {
         return [
-            'role' => 'Staff',
+            'role' => $this->faker->jobTitle(),
         ];
     }
 }

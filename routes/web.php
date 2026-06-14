@@ -32,9 +32,8 @@ Route::get('/detail-employee', function () {
     return view('employee.detail');
 });
 
-Route::get('/job-roles', function () {
-    return view('job_role.index');
-})->name('jobrole.index');
+Route::get('/job-roles', [JobroleController::class, 'index'])
+    ->name('jobrole.index');
 
 // ROUTE HALAMAN TAMBAH JOB ROLE
 Route::get('/job-roles/create', function () {
