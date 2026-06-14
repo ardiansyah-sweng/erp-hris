@@ -3,38 +3,40 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Jobrole;
+use App\Models\JobRole;
 
-/**
- * Class JobroleSeeder
- * Seeder untuk mengisi data awal (dummy) pada tabel job_roles
- */
-class JobroleSeeder extends Seeder
+class JobRoleSeeder extends Seeder
 {
-    /**
-     * Menjalankan proses seeder ke database
-     * Update: Disesuaikan dengan skema tabel terbaru yang hanya menggunakan kolom 'role'
-     */
     public function run(): void
     {
-        Jobrole::create([
-            'role' => 'Software Engineer'
-        ]);
+        $jobRoles = [
+            'HR Manager',
+            'HR Staff',
+            'Recruitment Staff',
+            'Payroll Staff',
+            'Finance Manager',
+            'Accountant',
+            'IT Support',
+            'System Analyst',
+            'Software Developer',
+            'Project Manager',
+            'General Manager',
+            'Administrative Staff',
+            'Employee Relations Officer',
+            'Training and Development Staff',
+            'Attendance Administrator',
+            'Compensation and Benefit Staff',
+            'Performance Management Staff',
+            'Legal Officer',
+            'Operations Manager',
+            'Supervisor',
+        ];
 
-        Jobrole::create([
-            'role' => 'Data Analyst'
-        ]);
-
-        Jobrole::create([
-            'role' => 'HR Manager'
-        ]);
-
-        Jobrole::create([
-            'role' => 'Quality Assurance'
-        ]);
-
-        Jobrole::create([
-            'role' => 'Product Manager'
-        ]);
+        foreach ($jobRoles as $role) {
+            JobRole::updateOrCreate(
+                ['role' => $role],
+                ['role' => $role]
+            );
+        }
     }
 }
