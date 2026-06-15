@@ -50,6 +50,14 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 });
 
+Route::get('/profile', function () {
+    return view('profile.index');
+})->name('profile.index');
+
+Route::get('/settings', function () {
+    return view('settings.index');
+})->name('settings.index');
+
 // ROUTE EDIT JOB ROLE
 Route::get('/job-roles/{id}/edit', function ($id) {
 
