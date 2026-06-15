@@ -17,6 +17,25 @@ class EmployeeController extends Controller
         $this->employeeService = $employeeService;
     }
 
+    public function index(Request $request)
+    {
+        $query = $request->query('q');
+
+        if ($query) {
+            $employees = $this->employeeService->searchByName($query);
+        } else {
+            $employees = $this->employeeService->getAllEmployee();
+        }
+
+        return response()->json([
+            'payload' => [
+                'statusCode' => 200,
+                'message' => 'Employees retrieved successfully!',
+                'data' => $employees
+            ]
+        ], 200);
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([

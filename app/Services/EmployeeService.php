@@ -37,6 +37,16 @@ class EmployeeService
         return Employee::all();
     }
 
+    /**
+     * Search employees by name (partial, case-insensitive)
+     *
+     * @param string $name
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function searchByName(string $name)
+    {
+        return Employee::where('name', 'like', "%{$name}%")->get();
+    }
     public function destroyEmployee($id)
     {
         try {
