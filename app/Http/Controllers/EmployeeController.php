@@ -91,4 +91,36 @@ class EmployeeController extends Controller
             'data'   => $cashiers,
         ]);
     }
+    
+    public function index()
+{
+    $employees = collect([
+        (object)[
+            'id' => 1,
+            'name' => 'Budi Setiawan',
+            'email' => 'budi@gmail.com',
+            'phone_number' => '081234567890',
+            'place_of_birth' => 'Jakarta',
+            'date_of_birth' => '2000-01-15'
+        ],
+        (object)[
+            'id' => 2,
+            'name' => 'Siti Aminah',
+            'email' => 'siti@gmail.com',
+            'phone_number' => '082345678901',
+            'place_of_birth' => 'Bandung',
+            'date_of_birth' => '1999-05-20'
+        ],
+        (object)[
+            'id' => 3,
+            'name' => 'Andi Saputra',
+            'email' => 'andi@gmail.com',
+            'phone_number' => '083456789012',
+            'place_of_birth' => 'Surabaya',
+            'date_of_birth' => '2001-09-10'
+        ]
+    ]);
+
+    return view('employee.index', compact('employees'));
+}
 }
