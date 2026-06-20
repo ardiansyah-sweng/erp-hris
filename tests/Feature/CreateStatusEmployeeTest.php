@@ -52,7 +52,6 @@ class CreateStatusEmployeeTest extends TestCase
             'status'         => 'inactive'
         ]);
 
-        // Memastikan data benar-benar masuk ke database kamu
         $this->assertDatabaseHas('employees', [
             'email' => $employeeActive->email,
             'status' => 'active',
