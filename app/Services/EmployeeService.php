@@ -31,6 +31,13 @@ class EmployeeService
     {
         return Employee::all();
     }
+    public function getEmployeesByStatus($status = null)
+    {
+        if ($status) {
+            return Employee::with('jobrole')->where('status', $status)->get();
+        }
+        return Employee::with('jobrole')->get();
+    }
     
     public function showEmployee()
     {

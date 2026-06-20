@@ -78,6 +78,15 @@ class EmployeeController extends Controller
         ], 200);
     }
 
+    public function indexStatusTemp(Request $request)
+    {
+        $statusFilter = $request->query('status');
+
+        $employees = $this->employeeService->getEmployeesByStatus($statusFilter);
+
+        return view('employee.status', compact('employees', 'statusFilter'));
+    }
+
     public function getCashiers()
     {
         $cashierIds = DB::table('job_roles')

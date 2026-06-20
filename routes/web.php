@@ -155,3 +155,5 @@ Route::get('/leave-request/{id}', function ($id) {
 
 Route::post('/payroll', [PayrollController::class, 'store']);
 Route::get('/payroll/{id}', [PayrollController::class, 'show']);
+// Route UI Sementara untuk ngetes filter status employee
+Route::get('/employees-status-temp', [EmployeeController::class, 'indexStatusTemp'])->name('employees.status.temp');
