@@ -32,7 +32,6 @@ class EmployeeController extends Controller
             return response()->json([
                 'payload' => [
                     'statusCode' => 500,
-                    'message'    => 'Gagal mengambil data karyawan.',
                     'message'    => 'Failed retrieved Employees.',
                     'error'      => $e->getMessage()
                 ]
