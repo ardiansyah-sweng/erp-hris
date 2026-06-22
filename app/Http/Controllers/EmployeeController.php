@@ -28,18 +28,30 @@ class EmployeeController extends Controller
                     'data'       => $employees
                 ]
             ], 200);
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         } catch (Exception $e) {
             return response()->json([
                 'payload' => [
                     'statusCode' => 500,
+<<<<<<< Updated upstream
                     'message'    => 'Gagal mengambil data karyawan.',
+=======
+                    'message'    => 'Failed retrieved Employees.',
+>>>>>>> Stashed changes
                     'error'      => $e->getMessage()
                 ]
             ], 500);
         }
     }
+<<<<<<< Updated upstream
     
+=======
+
+
+>>>>>>> Stashed changes
     public function store(Request $request)
     {
         $validated = $request->validate([
