@@ -6,6 +6,14 @@ use App\Models\Payroll;
 
 class PayrollService
 {
+    /**
+     * Mengambil semua data payroll asli dari database SQL beserta relasi employee.
+     */
+    public function getAllPayroll()
+    {
+        return Payroll::with('employee')->get();
+    }
+
     public function updatePayroll(int $id, array $data): ?Payroll
     {
         $payroll = Payroll::find($id);

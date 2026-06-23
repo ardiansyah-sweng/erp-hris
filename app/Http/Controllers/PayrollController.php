@@ -8,9 +8,19 @@ use Illuminate\Http\Request;
 
 class PayrollController extends Controller
 {
-    public function __construct(
-        protected PayrollService $payrollService
-    ) {}
+    protected $payrollService;
+
+    public function __construct(PayrollService $payrollService)
+    {
+        $this->payrollService = $payrollService;
+    }
+
+    public function index()
+    {
+        $payrolls = $this->payrollService->getAllPayroll();
+
+        return view('payroll.index', compact('payrolls'));
+    }
 
     public function store(Request $request)
     {
@@ -80,13 +90,13 @@ class PayrollController extends Controller
 
         $payroll = $this->payrollService->updatePayroll($id, $validated);
 
-        if (! $payroll) {
+        if (!$payroll) {
             return response()->json([
                 'payload' => [
                     'statusCode' => 404,
                     'message' => 'Payroll not found',
-                    'data' => null,
-                ],
+                    'data' => null
+                ]
             ], 404);
         }
 
@@ -94,8 +104,8 @@ class PayrollController extends Controller
             'payload' => [
                 'statusCode' => 200,
                 'message' => 'Payroll updated successfully!',
-                'data' => $payroll,
-            ],
+                'data' => $payroll
+            ]
         ]);
     }
 
@@ -103,13 +113,13 @@ class PayrollController extends Controller
     {
         $payroll = $this->payrollService->destroyPayroll($id);
 
-        if (! $payroll) {
+        if (!$payroll) {
             return response()->json([
                 'payload' => [
                     'statusCode' => 404,
                     'message' => 'Payroll not found',
-                    'data' => null,
-                ],
+                    'data' => null
+                ]
             ], 404);
         }
 
@@ -117,8 +127,8 @@ class PayrollController extends Controller
             'payload' => [
                 'statusCode' => 200,
                 'message' => 'Payroll deleted successfully!',
-                'data' => $payroll,
-            ],
+                'data' => $payroll
+            ]
         ]);
     }
 }
