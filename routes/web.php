@@ -5,11 +5,6 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JobroleController;
 use App\Http\Controllers\PayrollController;
 
-/*
-|--------------------------------------------------------------------------
-| 1. Dashboard & Core Routes
-|--------------------------------------------------------------------------
-*/
 Route::get('/', function () {
     return view('dashboard');
 });
