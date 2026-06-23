@@ -161,11 +161,11 @@
                                     Detail
                                 </a>
 
-                                <a href="#"
+                                <a href="{{ route('leave_request.edit', $request['id']) }}"
                                     class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg">
                                     Edit
                                 </a>
-
+                                
                                 <a href="#"
                                     class="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg">
                                     Hapus
