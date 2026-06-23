@@ -17,13 +17,7 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return view('dashboard');
 });
-
-/*
-|--------------------------------------------------------------------------
-| 2. Employee Management Routes
-|--------------------------------------------------------------------------
-*/
-Route::get('/employees', [EmployeeController::class, 'indexStatusTemp'])->name('employees.status.temp');
+Route::get('/employees/status-temp', [EmployeeController::class, 'indexStatusTemp']);
 Route::post('/employees', [EmployeeController::class, 'store']);
 Route::get('/employees/{employee}', [EmployeeController::class, 'show']);
 Route::put('/employees/{id}', [EmployeeController::class, 'update']);

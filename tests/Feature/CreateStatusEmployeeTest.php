@@ -2,64 +2,70 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\Employee;
+use App\Models\Jobrole;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class CreateStatusEmployeeTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
-     * Test apakah halaman UI sementara filter employee bisa diakses.
+     * 1. TEST: Memastikan filter status 'Active' berfungsi via JSON
      */
-    public function test_halaman_filter_status_bisa_diakses(): void
+    public function test_can_filter_employees_by_active_status()
     {
-        $response = $this->get('/employees-status-temp');
+        $role = Jobrole::factory()->create();
+
+        // Buat Karyawan Active
+        Employee::factory()->create([
+            'name' => 'Girhantri Active',
+            'status' => 'Active',
+            'role_id' => $role->id
+        ]);
+
+        // Buat Karyawan Inactive
+        Employee::factory()->create([
+            'name' => 'Ricky Inactive',
+            'status' => 'Inactive',
+            'role_id' => $role->id
+        ]);
+
+        $response = $this->getJson('/employees/status-temp?status=Active');
 
         $response->assertStatus(200);
+        
+        // Memastikan data JSON mengandung nama yang Active dan tidak mengandung yang Inactive
+        $response->assertJsonFragment(['name' => 'Girhantri Active']);
+        $response->assertJsonMissing(['name' => 'Ricky Inactive']);
     }
 
     /**
-     * Test menambahkan data employee active & inactive langsung ke database lokal.
+     * 2. TEST: Memastikan filter status 'Inactive' berfungsi via JSON
      */
-    public function test_bisa_menambahkan_employee_status_ke_database(): void
+    public function test_can_filter_employees_by_inactive_status()
     {
-        // 1. Tambah data Active
-        $employeeActive = Employee::create([
-            'name'           => 'Rian Wijaya Test',
-            'email'          => 'rian.test.' . rand(1, 999) . '@erp-hris.com',
-            'phone_number'   => '081234567890',
-            'place_of_birth' => 'Jakarta',
-            'date_of_birth'  => '1995-05-12',
-            'address'        => 'Jl. Sudirman No. 10',
-            'id_number'      => '3171011205950001',
-            'age'            => 31,
-            'role_id'        => 1, 
-            'status'         => 'active'
+        $role = Jobrole::factory()->create();
+
+        Employee::factory()->create([
+            'name' => 'Girhantri Active',
+            'status' => 'Active',
+            'role_id' => $role->id
         ]);
 
-        // 2. Tambah data Inactive
-        $employeeInactive = Employee::create([
-            'name'           => 'Siti Aminah Test',
-            'email'          => 'siti.test.' . rand(1, 999) . '@erp-hris.com',
-            'phone_number'   => '089876543210',
-            'place_of_birth' => 'Bandung',
-            'date_of_birth'  => '1998-09-20',
-            'address'        => 'Jl. Dago No. 45',
-            'id_number'      => '3273012009980002',
-            'age'            => 28,
-            'role_id'        => 1,
-            'status'         => 'inactive'
+        Employee::factory()->create([
+            'name' => 'Ricky Inactive',
+            'status' => 'Inactive',
+            'role_id' => $role->id
         ]);
 
-        $this->assertDatabaseHas('employees', [
-            'email' => $employeeActive->email,
-            'status' => 'active',
-        ]);
+        $response = $this->getJson('/employees/status-temp?status=Inactive');
 
-        $this->assertDatabaseHas('employees', [
-            'email' => $employeeInactive->email,
-            'status' => 'inactive',
-        ]);
+        $response->assertStatus(200);
+        
+        // Memastikan data JSON mengandung nama yang Inactive dan tidak mengandung yang Active
+        $response->assertJsonFragment(['name' => 'Ricky Inactive']);
+        $response->assertJsonMissing(['name' => 'Girhantri Active']);
     }
 }
