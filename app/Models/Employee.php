@@ -21,6 +21,7 @@ class Employee extends Model
         'id_number',
         'age',
         'role_id',
+        'status',
     ];
     
     protected $casts = [
