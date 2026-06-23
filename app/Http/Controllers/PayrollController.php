@@ -2,25 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\Payroll;
 use App\Services\PayrollService;
-use Illuminate\Http\Request;
 
 class PayrollController extends Controller
 {
     protected $payrollService;
-
-    public function __construct(PayrollService $payrollService)
-    {
-        $this->payrollService = $payrollService;
-    }
-
-    public function index()
-    {
-        $payrolls = $this->payrollService->getAllPayroll();
-
-        return view('payroll.index', compact('payrolls'));
-    }
 
     public function store(Request $request)
     {
@@ -76,6 +64,20 @@ class PayrollController extends Controller
         ], 200);
     }
 
+    public function __construct(PayrollService $payrollService)
+    {
+        $this->payrollService = $payrollService;
+    }
+
+    public function index()
+    {
+        // 1. Mengambil seluruh data payroll yang sudah diproses oleh Service layer
+        $payrolls = $this->payrollService->getAllPayroll();
+
+        // 2. Mengirim data ke view 'payroll.index' menggunakan compact
+        return view('payroll.index', compact('payrolls'));
+    }
+
     public function update(Request $request, int $id)
     {
         $validated = $request->validate([
@@ -106,7 +108,7 @@ class PayrollController extends Controller
                 'message' => 'Payroll updated successfully!',
                 'data' => $payroll
             ]
-        ]);
+        ], 200);
     }
 
     public function destroy(int $id)
@@ -129,6 +131,6 @@ class PayrollController extends Controller
                 'message' => 'Payroll deleted successfully!',
                 'data' => $payroll
             ]
-        ]);
+        ], 200);
     }
 }

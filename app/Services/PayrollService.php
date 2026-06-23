@@ -11,6 +11,7 @@ class PayrollService
      */
     public function getAllPayroll()
     {
+        // Mengambil data dari database nyata hasil seeder kamu
         return Payroll::with('employee')->get();
     }
 
