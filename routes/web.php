@@ -5,6 +5,15 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JobroleController;
 use App\Http\Controllers\PayrollController;
 
+
+Route::post('/test-jobrole', [JobroleController::class, 'store']);
+Route::post('/employees', [EmployeeController::class, 'store']);
+Route::get('/employees/{employee}', [EmployeeController::class, 'show']);
+
+Route::get('/detail-employee', function () {
+    return view('employee.detail');
+});
+
 Route::get('/', function () {
     return view('dashboard');
 });
@@ -52,6 +61,20 @@ Route::post('/job-roles', [JobroleController::class, 'store'])->name('jobrole.st
 Route::post('/test-jobrole', [JobroleController::class, 'store']);
 Route::delete('/job-roles/{jobrole}', [JobroleController::class, 'destroy']);
 Route::get('/job-roles/{id}', [JobroleController::class, 'show']);
+
+Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy']);
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+});
+
+Route::get('/profile', function () {
+    return view('profile.index');
+})->name('profile.index');
+
+Route::get('/settings', function () {
+    return view('settings.index');
+})->name('settings.index');
 
 // ROUTE EDIT JOB ROLE
 Route::get('/job-roles/{id}/edit', function ($id) {
@@ -159,6 +182,7 @@ Route::get('/leave-request/{id}', function ($id) {
 Route::post('/payroll', [PayrollController::class, 'store']);
 Route::get('/payroll/{id}', [PayrollController::class, 'show']);
 
+Route::resource('payroll', PayrollController::class);
 Route::get('/leave-request/{id}/edit', function ($id) {
 
     $leaveRequest = [
