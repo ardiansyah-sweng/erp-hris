@@ -5,6 +5,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JobroleController;
 use App\Http\Controllers\PayrollController;
 
+
 Route::post('/test-jobrole', [JobroleController::class, 'store']);
 Route::post('/employees', [EmployeeController::class, 'store']);
 Route::get('/employees/{employee}', [EmployeeController::class, 'show']);
@@ -49,6 +50,14 @@ Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy']);
 Route::get('/dashboard', function () {
     return view('dashboard');
 });
+
+Route::get('/profile', function () {
+    return view('profile.index');
+})->name('profile.index');
+
+Route::get('/settings', function () {
+    return view('settings.index');
+})->name('settings.index');
 
 // ROUTE EDIT JOB ROLE
 Route::get('/job-roles/{id}/edit', function ($id) {
@@ -168,6 +177,7 @@ Route::get('/absensi/create', function () {
 Route::get('/absensi/detail', function () {
     return view('absensi.detail');
 })->name('absensi.detail');
+Route::resource('payroll', PayrollController::class);
 Route::get('/leave-request/{id}/edit', function ($id) {
 
     $leaveRequest = [
