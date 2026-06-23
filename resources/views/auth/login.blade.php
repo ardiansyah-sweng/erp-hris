@@ -21,6 +21,12 @@
             </p>
         </div>
 
+        @if(session('error'))
+            <div class="mb-4 p-3 rounded-lg bg-red-100 text-red-600 text-sm">
+                {{ session('error') }}
+            </div>
+        @endif
+
         <form action="/login" method="POST" class="space-y-5">
             @csrf
 

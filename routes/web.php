@@ -14,9 +14,8 @@ Route::get('/detail-employee', function () {
     return view('employee.detail');
 });
 
-Route::get('/', function () {
-    return view('auth.login');
-});
+Route::get('/', [LoginController::class, 'showLoginForm']);
+Route::post('/login', [LoginController::class, 'login']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
