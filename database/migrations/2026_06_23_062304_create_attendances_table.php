@@ -6,16 +6,13 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('absensis', function (Blueprint $table) {
+        Schema::create('attendances', function (Blueprint $table) {
             $table->id();
             $table->foreignId('employee_id')->constrained('employees')->onDelete('cascade');
             $table->date('date');
-            $table->enum('status', ['hadir', 'izin', 'sakit', 'alpha'])->default('hadir');
+            $table->enum('status', ['present', 'absent', 'late', 'sick', 'leave'])->default('present');
             $table->time('check_in')->nullable();
             $table->time('check_out')->nullable();
             $table->text('notes')->nullable();
@@ -28,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('absensis');
+        Schema::dropIfExists('attendances');
     }
 };

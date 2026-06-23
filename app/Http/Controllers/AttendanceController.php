@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Absensi;
+use App\Models\Attendance;
 use Illuminate\Http\Request;
 
-class AbsensiController extends Controller
+class AttendanceController extends Controller
 {
     public function index()
     {
-        $absensis = Absensi::with('employee')->get();
+        $attendances = Attendance::with('employee')->get();
 
         return response()->json([
             'status' => 'success',
-            'data'   => $absensis,
+            'data'   => $attendances,
         ]);
     }
 }
