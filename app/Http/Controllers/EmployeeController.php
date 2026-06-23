@@ -84,7 +84,6 @@ class EmployeeController extends Controller
 
         $employees = $this->employeeService->getEmployeesByStatus($statusFilter);
 
-        // KITA UBAH DARI RETURN VIEW MENJADI RETURN JSON API
         return response()->json([
             'status' => 'success',
             'statusFilter' => $statusFilter,
