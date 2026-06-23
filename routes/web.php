@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JobroleController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PayrollController;
 
 
@@ -14,9 +15,8 @@ Route::get('/detail-employee', function () {
     return view('employee.detail');
 });
 
-Route::get('/', function () {
-    return view('dashboard');
-});
+Route::get('/', [LoginController::class, 'showLoginForm']);
+Route::post('/login', [LoginController::class, 'login']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
