@@ -5,7 +5,11 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use App\Models\Employee;
 use App\Models\Payroll;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Services\PayrollService;
+use App\Http\Controllers\PayrollController;
+use Illuminate\Support\Facades\View;
 
 class PayrollControllerTest extends TestCase
 {
@@ -79,4 +83,25 @@ class PayrollControllerTest extends TestCase
             ]
         ]);
     }
+
+    public function test_user_can_access_payroll_index_page(): void
+    {
+        // 1. Arrange: Siapkan data payroll di database dan user untuk login (jika web memakai auth)
+        Payroll::factory()->count(2)->create();
+        $user = User::factory()->create();
+
+        // 2. Act: Simulasikan user membuka halaman utama payroll
+        // (Sesuaikan dengan nama route kamu, misal 'payroll.index')
+        $response = $this->actingAs($user)->get(route('payroll.index'));
+
+        // 3. Assert: Pastikan halaman berhasil terbuka (Status 200 OK)
+        $response->assertStatus(200);
+
+        // Pastikan view yang digunakan sudah benar
+        $response->assertViewIs('payroll.index');
+
+        // Pastikan variabel 'payrolls' ikut dikirimkan ke halaman view
+        $response->assertViewHas('payrolls');
+    }
+
 }
