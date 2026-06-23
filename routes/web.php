@@ -5,6 +5,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JobroleController;
 use App\Http\Controllers\PayrollController;
 
+
 Route::get('/employees/status-temp', [EmployeeController::class, 'indexStatusTemp']);
 Route::post('/test-jobrole', [JobroleController::class, 'store']);
 Route::post('/employees', [EmployeeController::class, 'store']);
