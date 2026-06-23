@@ -5,6 +5,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JobroleController;
 use App\Http\Controllers\PayrollController;
 
+
 Route::post('/test-jobrole', [JobroleController::class, 'store']);
 Route::post('/employees', [EmployeeController::class, 'store']);
 Route::get('/employees/{employee}', [EmployeeController::class, 'show']);
@@ -156,6 +157,7 @@ Route::get('/leave-request/{id}', function ($id) {
 Route::post('/payroll', [PayrollController::class, 'store']);
 Route::get('/payroll/{id}', [PayrollController::class, 'show']);
 
+Route::resource('payroll', PayrollController::class);
 Route::get('/leave-request/{id}/edit', function ($id) {
 
     $leaveRequest = [
