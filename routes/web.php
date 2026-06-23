@@ -158,3 +158,29 @@ Route::post('/payroll', [PayrollController::class, 'store']);
 Route::get('/payroll/{id}', [PayrollController::class, 'show']);
 
 Route::resource('payroll', PayrollController::class);
+Route::get('/leave-request/{id}/edit', function ($id) {
+
+    $leaveRequest = [
+        'id' => $id,
+        'employee_id' => 'EMP001',
+        'employee_name' => 'Susanti Wijaya',
+        'start_date' => '2026-06-10',
+        'end_date' => '2026-06-12',
+        'reason' => 'Liburan keluarga',
+        'status' => 'Pending',
+    ];
+
+    return view(
+        'leave_request.edit',
+        compact('leaveRequest')
+    );
+
+})->name('leave_request.edit');
+
+Route::put('/leave-request/{id}', function ($id) {
+
+    return redirect()
+        ->route('leave_request.index')
+        ->with('success', 'Data cuti berhasil diperbarui.');
+
+})->name('leave_request.update');
