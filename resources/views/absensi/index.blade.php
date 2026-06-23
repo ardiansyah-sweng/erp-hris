@@ -12,6 +12,11 @@
         ['id' => 4, 'name' => 'Dewi Lestari', 'role' => 'Quality Assurance', 'date' => '2026-06-03', 'check_in' => '08:30', 'check_out' => '17:00', 'status' => 'Terlambat'],
         ['id' => 5, 'name' => 'Rizki Pratama', 'role' => 'Product Manager', 'date' => '2026-06-03', 'check_in' => '08:05', 'check_out' => '17:00', 'status' => 'Hadir'],
     ];
+
+    $hadir = collect($dummyAbsensi)->where('status', 'Hadir')->values();
+    $tidakHadir = collect($dummyAbsensi)->where('status', 'Tidak Hadir')->values();
+    $terlambat = collect($dummyAbsensi)->where('status', 'Terlambat')->values();
+    $totalKaryawan = collect($dummyAbsensi)->values();
 @endphp
 
     <!-- Header -->
@@ -24,7 +29,7 @@
 
     <!-- Stat Cards -->
     <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8">
-        <div class="bg-white overflow-hidden rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col transition-transform hover:-translate-y-1 duration-300">
+        <div onclick="openAbsensiModal('hadir')" class="cursor-pointer bg-white overflow-hidden rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col transition-transform hover:-translate-y-1 duration-300">
             <div class="flex items-center mb-2">
                 <div class="p-2.5 rounded-xl bg-emerald-50 text-emerald-600 mr-3">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -39,7 +44,7 @@
             </div>
         </div>
 
-        <div class="bg-white overflow-hidden rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col transition-transform hover:-translate-y-1 duration-300">
+        <div onclick="openAbsensiModal('tidakHadir')" class="cursor-pointer bg-white overflow-hidden rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col transition-transform hover:-translate-y-1 duration-300">
             <div class="flex items-center mb-2">
                 <div class="p-2.5 rounded-xl bg-red-50 text-red-600 mr-3">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -54,7 +59,7 @@
             </div>
         </div>
 
-        <div class="bg-white overflow-hidden rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col transition-transform hover:-translate-y-1 duration-300">
+        <div onclick="openAbsensiModal('terlambat')" class="cursor-pointer bg-white overflow-hidden rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col transition-transform hover:-translate-y-1 duration-300">
             <div class="flex items-center mb-2">
                 <div class="p-2.5 rounded-xl bg-amber-50 text-amber-600 mr-3">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -69,7 +74,7 @@
             </div>
         </div>
 
-        <div class="bg-white overflow-hidden rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col transition-transform hover:-translate-y-1 duration-300">
+        <div onclick="openAbsensiModal('total')" class="cursor-pointer bg-white overflow-hidden rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col transition-transform hover:-translate-y-1 duration-300">
             <div class="flex items-center mb-2">
                 <div class="p-2.5 rounded-xl bg-indigo-50 text-indigo-600 mr-3">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -178,5 +183,112 @@
             </table>
         </div>
     </div>
+
+<!-- Modal -->
+<div id="absensiModal" class="fixed inset-0 z-50 hidden bg-black/40">
+    <div class="absolute inset-y-0 right-0 w-full lg:w-[70%] bg-white shadow-2xl overflow-y-auto">
+
+        <div class="sticky top-0 bg-white z-10 px-8 py-6 border-b flex justify-between items-center">
+            <div>
+                <h3 id="modalTitle" class="text-2xl font-bold text-gray-900">Daftar Karyawan</h3>
+                <p id="modalSubtitle" class="text-sm text-gray-500 mt-1">Informasi absensi hari ini</p>
+            </div>
+
+            <button onclick="closeAbsensiModal()"
+                    class="px-4 py-2 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 font-semibold">
+                Tutup
+            </button>
+        </div>
+
+        <div id="modalContent" class="p-8 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5"></div>
+
+    </div>
+</div>
+
+<script>
+const absensiData = {
+    hadir: @json($hadir),
+    tidakHadir: @json($tidakHadir),
+    terlambat: @json($terlambat),
+    total: @json($totalKaryawan),
+};
+
+const modalTitles = {
+    hadir: 'Karyawan Hadir Hari Ini',
+    tidakHadir: 'Karyawan Tidak Hadir',
+    terlambat: 'Karyawan Terlambat',
+    total: 'Total Seluruh Karyawan',
+};
+
+const statusStyle = {
+    Hadir: 'bg-emerald-50 text-emerald-700 ring-emerald-600/20',
+    'Tidak Hadir': 'bg-red-50 text-red-700 ring-red-600/20',
+    Terlambat: 'bg-amber-50 text-amber-700 ring-amber-600/20',
+};
+
+function openAbsensiModal(type) {
+    const modal = document.getElementById('absensiModal');
+    const title = document.getElementById('modalTitle');
+    const subtitle = document.getElementById('modalSubtitle');
+    const content = document.getElementById('modalContent');
+
+    title.innerText = modalTitles[type];
+    subtitle.innerText = `${absensiData[type].length} karyawan ditemukan`;
+    content.innerHTML = '';
+
+    absensiData[type].forEach((item) => {
+        const initials = item.name
+            .split(' ')
+            .map(word => word[0])
+            .join('')
+            .substring(0, 2)
+            .toUpperCase();
+
+        content.innerHTML += `
+            <div class="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md transition">
+                <div class="flex items-start justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold">
+                            ${initials}
+                        </div>
+
+                        <div>
+                            <p class="font-bold text-gray-900">${item.name}</p>
+                            <p class="text-sm text-gray-500">${item.role}</p>
+                        </div>
+                    </div>
+
+                    <span class="text-xs font-semibold px-3 py-1 rounded-full ring-1 ${statusStyle[item.status]}">
+                        ${item.status}
+                    </span>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3 mt-5 text-xs">
+                    <div class="bg-gray-50 rounded-xl p-3">
+                        <p class="text-gray-400">Tanggal</p>
+                        <p class="font-semibold text-gray-700 mt-1">${item.date}</p>
+                    </div>
+
+                    <div class="bg-gray-50 rounded-xl p-3">
+                        <p class="text-gray-400">Masuk</p>
+                        <p class="font-semibold text-gray-700 mt-1">${item.check_in}</p>
+                    </div>
+
+                    <div class="bg-gray-50 rounded-xl p-3">
+                        <p class="text-gray-400">Keluar</p>
+                        <p class="font-semibold text-gray-700 mt-1">${item.check_out}</p>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+
+    modal.classList.remove('hidden');
+}
+
+function closeAbsensiModal() {
+    document.getElementById('absensiModal').classList.add('hidden');
+}
+</script>
 
 @endsection
