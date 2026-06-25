@@ -43,6 +43,20 @@ class LeaveRequestController extends Controller
             compact('leaveRequest')
         );
     }
+    public function store(Request $request)
+{
+    $this->leaveRequestService->createLeaveRequest([
+        'employee_id' => $request->employee_id,
+        'employee_name' => $request->employee_name,
+        'start_date' => $request->start_date,
+        'end_date' => $request->end_date,
+        'reason' => $request->reason,
+        'status' => 'Pending',
+        'submission_date' => now(),
+    ]);
+
+    return redirect()->route('leave_request.index');
+}
     public function update(Request $request, $id)
 {
     $leaveRequest = $this->leaveRequestService->updateLeaveRequest(

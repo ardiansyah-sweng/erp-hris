@@ -106,7 +106,11 @@ Route::get('/leave-request',
 
 Route::get('/leave-request/create', function () {
     return view('leave_request.create');
-});
+})->name('leave_request.create');
+
+Route::post('/leave-request',
+    [LeaveRequestController::class, 'store'])
+    ->name('leave_request.store');
 
 Route::get('/leave-request/{id}',
     [LeaveRequestController::class, 'show'])
