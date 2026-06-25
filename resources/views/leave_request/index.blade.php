@@ -105,38 +105,38 @@
 
                 <tbody class="divide-y divide-gray-100 bg-white">
 
-                @forelse($dummyLeaveRequests as $request)
+                @forelse($leaveRequests as $request)
 
                     <tr class="hover:bg-gray-50">
                         <td class="px-6 py-4 text-sm text-gray-600">
-                            {{ $request['employee_id'] }}
+                            {{ $request->employee_id }}
                         </td>
 
                         <td class="px-6 py-4 text-sm font-medium text-gray-900">
-                            {{ $request['employee_name'] }}
+                            {{ $request->employee_name }}
                         </td>
 
                         <td class="px-6 py-4 text-sm text-gray-600">
-                            {{ $request['start_date'] }}
+                            {{ $request->start_date }}
                         </td>
 
                         <td class="px-6 py-4 text-sm text-gray-600">
-                            {{ $request['end_date'] }}
+                            {{ $request->end_date }}
                         </td>
 
                         <td class="px-6 py-4 text-sm text-gray-600">
-                            {{ $request['reason'] }}
+                            {{ $request->reason }}
                         </td>
 
                         <td class="px-6 py-4">
 
-                            @if($request['status'] == 'Approved')
+                            @if($request->status == 'Approved')
 
                                 <span class="inline-flex rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
                                     Approved
                                 </span>
 
-                            @elseif($request['status'] == 'Pending')
+                            @elseif($request->status == 'Pending')
 
                                 <span class="inline-flex rounded-full bg-yellow-100 px-3 py-1 text-xs font-semibold text-yellow-700">
                                     Pending
@@ -156,12 +156,12 @@
 
                             <div class="flex justify-end gap-2">
 
-                                <a href="{{ route('leave_request.detail', $request['id']) }}"
+                                <a href="{{ route('leave_request.detail', $request->id) }}"
                                     class="text-sky-600 hover:text-sky-900 bg-sky-50 hover:bg-sky-100 px-3 py-1.5 rounded-lg">
                                     Detail
                                 </a>
 
-                                <a href="{{ route('leave_request.edit', $request['id']) }}"
+                                <a href="{{ route('leave_request.edit', $request->id) }}"
                                     class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg">
                                     Edit
                                 </a>

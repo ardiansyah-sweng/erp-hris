@@ -43,4 +43,41 @@ class LeaveRequestController extends Controller
             compact('leaveRequest')
         );
     }
+    public function update(Request $request, $id)
+{
+    $leaveRequest = $this->leaveRequestService->updateLeaveRequest(
+        $id,
+        $request->all()
+    );
+
+    if (!$leaveRequest) {
+        abort(404, 'Data pengajuan cuti tidak ditemukan');
+    }
+
+    return redirect('/leave-request');
+}
+public function destroy($id)
+{
+    $deleted = $this->leaveRequestService->destroyLeaveRequest($id);
+
+    if (!$deleted) {
+        abort(404, 'Data pengajuan cuti tidak ditemukan');
+    }
+
+    return redirect('/leave-request');
+}
+public function edit($id)
+{
+    $leaveRequest = $this->leaveRequestService
+        ->getLeaveRequestDetail($id);
+
+    if (!$leaveRequest) {
+        abort(404);
+    }
+
+    return view(
+        'leave_request.edit',
+        compact('leaveRequest')
+    );
+}
 }
