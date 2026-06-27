@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Payroll;
+use App\Models\Employee;
 use App\Services\PayrollService;
 
 class PayrollController extends Controller
@@ -131,5 +132,48 @@ class PayrollController extends Controller
         };
 
         return response()->stream($callback, 200, $headers);
+    }
+
+    /**
+     * Menampilkan form edit data penggajian.
+     */
+    public function edit($id)
+    {
+        $payroll = Payroll::with('employee')->findOrFail($id);
+        $employees = Employee::orderBy('name')->get();
+
+        return view('payroll.edit', compact('payroll', 'employees'));
+    }
+
+    /**
+     * Memproses pembaruan data penggajian. Net salary dihitung ulang di server.
+     */
+    public function update(Request $request, $id)
+    {
+        $payroll = Payroll::findOrFail($id);
+
+        $validated = $request->validate([
+            'employee_id'  => 'required|exists:employees,id',
+            'month'        => 'required|integer|min:1|max:12',
+            'year'         => 'required|integer|min:2000|max:2100',
+            'basic_salary' => 'required|numeric|min:0',
+            'allowances'   => 'nullable|numeric|min:0',
+            'deductions'   => 'nullable|numeric|min:0',
+            'status'       => 'nullable|string',
+        ]);
+
+        $validated['allowances'] = $validated['allowances'] ?? 0;
+        $validated['deductions'] = $validated['deductions'] ?? 0;
+
+        $validated['net_salary'] =
+            $validated['basic_salary']
+            + $validated['allowances']
+            - $validated['deductions'];
+
+        $payroll->update($validated);
+
+        return redirect()
+            ->route('payroll.index')
+            ->with('success', 'Data penggajian berhasil diperbarui.');
     }
 }
