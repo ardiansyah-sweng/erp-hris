@@ -87,5 +87,49 @@ class PayrollController extends Controller
         return view('payroll.index', compact('payrolls'));
     }
 
+    /**
+     * Export seluruh data penggajian ke file CSV (dapat dibuka di Excel).
+     */
+    public function export()
+    {
+        $payrolls = $this->payrollService->getAllPayroll();
+        $payrolls->load('employee.jobrole'); // muat jabatan untuk kolom CSV
 
+        $fileName = 'penggajian_' . now()->format('Y-m-d') . '.csv';
+
+        $headers = [
+            'Content-Type'        => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+        ];
+
+        $columns = ['No', 'Nama Karyawan', 'Jabatan', 'Bulan', 'Tahun',
+            'Gaji Pokok', 'Tunjangan', 'Potongan', 'Gaji Bersih', 'Status'];
+
+        $callback = function () use ($payrolls, $columns) {
+            $output = fopen('php://output', 'w');
+
+            // BOM UTF-8 agar Excel membaca karakter dengan benar
+            fwrite($output, "\xEF\xBB\xBF");
+            fputcsv($output, $columns);
+
+            foreach ($payrolls as $index => $payroll) {
+                fputcsv($output, [
+                    $index + 1,
+                    $payroll->employee->name ?? '-',
+                    $payroll->employee->jobrole->role ?? '-',
+                    $payroll->month,
+                    $payroll->year,
+                    $payroll->basic_salary,
+                    $payroll->allowances,
+                    $payroll->deductions,
+                    $payroll->net_salary,
+                    $payroll->status,
+                ]);
+            }
+
+            fclose($output);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
 }

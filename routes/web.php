@@ -163,6 +163,8 @@ Route::get('/leave-request/{id}', function ($id) {
 })->name('leave_request.detail');
 
 Route::post('/payroll', [PayrollController::class, 'store']);
+// Route export WAJIB di atas '/payroll/{id}' agar 'export' tidak ditangkap sebagai id
+Route::get('/payroll/export', [PayrollController::class, 'export'])->name('payroll.export');
 Route::get('/payroll/{id}', [PayrollController::class, 'show']);
 
 Route::resource('payroll', PayrollController::class);

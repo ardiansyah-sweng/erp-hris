@@ -104,4 +104,20 @@ class PayrollControllerTest extends TestCase
         $response->assertViewHas('payrolls');
     }
 
+    public function test_export_payroll_to_csv(): void
+    {
+        // 1. Arrange: siapkan satu data payroll dengan nama karyawan yang jelas
+        $employee = Employee::factory()->create(['name' => 'Budi Eksportir']);
+        Payroll::factory()->create(['employee_id' => $employee->id]);
+
+        // 2. Act: minta file export
+        $response = $this->get(route('payroll.export'));
+
+        // 3. Assert: respons CSV yang dapat di-download dan berisi data karyawan
+        $response->assertStatus(200);
+        $response->assertHeader('Content-Type', 'text/csv; charset=UTF-8');
+        $this->assertStringContainsString('attachment', $response->headers->get('Content-Disposition'));
+        $this->assertStringContainsString('Budi Eksportir', $response->streamedContent());
+    }
+
 }
