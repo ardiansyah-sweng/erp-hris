@@ -50,6 +50,50 @@ class JobroleController extends Controller
             ], 500);
         }
     }
+
+public function edit($id)
+{
+    $dummyData = [
+        1 => ['id' => 1, 'name' => 'Software Engineer', 'department' => 'IT'],
+        2 => ['id' => 2, 'name' => 'Data Analyst', 'department' => 'Data'],
+        3 => ['id' => 3, 'name' => 'HR Manager', 'department' => 'Human Resources'],
+    ];
+
+    $jobrole = $dummyData[$id] ?? abort(404);
+
+    return view('job_role.edit', compact('jobrole'));
+}
+
+public function update(Request $request, $id)
+{
+    try {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
+        ]);
+
+        return response()->json([
+            'payload' => [
+                'statusCode' => 200,
+                'message' => 'Job role updated successfully!',
+                'data' => [
+                    'id' => $id,
+                    'name' => $validated['name'],
+                    'department' => $validated['description'],
+                ]
+            ]
+        ], 200);
+
+    } catch (Exception $e) {
+        return response()->json([
+            'payload' => [
+                'statusCode' => 500,
+                'message' => 'Gagal mengupdate data job role.',
+                'error' => $e->getMessage()
+            ]
+        ], 500);
+    }
+}
     
     public function show($id)
     {

@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <title>Edit Job Role</title>
 
-    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
     <style>
@@ -66,50 +64,52 @@
                 </div>
 
                 <div class="card-body p-4">
-                    <form action="#" method="POST">
+
+                    <form action="{{ route('jobrole.update', $jobrole['id']) }}" method="POST">
                         @csrf
                         @method('PUT')
 
-                        <!-- Nama -->
                         <div class="mb-4">
                             <label class="form-label fw-semibold">
                                 <i class="bi bi-person-badge me-1"></i>
                                 Job Role
                             </label>
+
                             <input type="text"
                                 name="name"
                                 value="{{ $jobrole['name'] }}"
-                                class="w-full border rounded-lg px-3 py-2">
+                                class="form-control">
                         </div>
 
-                        <!-- Deskripsi -->
                         <div class="mb-4">
                             <label class="form-label fw-semibold">
                                 <i class="bi bi-card-text me-1"></i>
-                                Departement
+                                Department
                             </label>
+
                             <input type="text"
                                 name="description"
                                 value="{{ $jobrole['department'] }}"
-                                class="w-full border rounded-lg px-3 py-2">
+                                class="form-control">
                         </div>
 
-                        <!-- Tombol -->
                         <div class="d-flex justify-content-between align-items-center">
-                            <a href="#" class="btn btn-secondary px-4">
+
+                            <a href="{{ url()->previous() }}" class="btn btn-secondary px-4">
                                 <i class="bi bi-arrow-left"></i> Kembali
                             </a>
 
                             <button type="submit" class="btn btn-success px-4">
                                 <i class="bi bi-check-circle"></i> Update
                             </button>
+
                         </div>
 
                     </form>
+
                 </div>
             </div>
 
-            <!-- Footer kecil -->
             <p class="text-center mt-3 text-muted small">
                 © Sistem Manajemen Job Role
             </p>
