@@ -162,12 +162,16 @@ Route::get('/leave-request/{id}', function ($id) {
     );
 })->name('leave_request.detail');
 
+Route::get('/payroll/create', function () {
+    return view('payroll.create');
+})->name('payroll.create');
+
 Route::post('/payroll', [PayrollController::class, 'store']);
 Route::get('/payroll/{id}', [PayrollController::class, 'show']);
 Route::put('/payroll/{id}', [PayrollController::class, 'update']);
 Route::delete('/payroll/{id}', [PayrollController::class, 'destroy']);
 
-Route::resource('payroll', PayrollController::class);
+Route::resource('payroll', PayrollController::class)->except(['create']);
 Route::get('/leave-request/{id}/edit', function ($id) {
 
     $leaveRequest = [
