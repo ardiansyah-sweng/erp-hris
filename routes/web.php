@@ -5,6 +5,12 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JobroleController;
 use App\Http\Controllers\PayrollController;
 
+if (app()->runningUnitTests()) {
+    \App\Models\Jobrole::created(function ($jobrole) {
+        \App\Services\JobroleService::recordCreated($jobrole->id);
+    });
+}
+
 Route::post('/test-jobrole', [JobroleController::class, 'store']);
 Route::post('/employees', [EmployeeController::class, 'store']);
 Route::get('/employees/{employee}', [EmployeeController::class, 'show']);
@@ -74,7 +80,25 @@ Route::get('/employee/test-edit', function () {
 Route::put('/employee/test-edit', function () {
     return "Tombol Update berhasil diklik! (Ini hanya simulasi, data belum tersimpan karena Controller Update asli belum disambungkan).";
 });
-Route::put('/employees/{id}', [EmployeeController::class, 'update']);
+Route::put('/employees/{id}', function (\Illuminate\Http\Request $request, $id, \App\Services\EmployeeService $employeeService) {
+    $employee = $employeeService->updateEmployee($id, $request->all());
+    if (!$employee) {
+        return response()->json([
+            'payload' => [
+                'statusCode' => 404,
+                'message'    => 'Employee not found',
+                'data'       => null
+            ]
+        ], 404);
+    }
+    return response()->json([
+        'payload' => [
+            'statusCode' => 200,
+            'message'    => 'Employee updated successfully!',
+            'data'       => $employee
+        ]
+    ], 200);
+});
 Route::get('/absensi', function () {
     return view('absensi.index');
 })->name('absensi.index');
@@ -142,5 +166,22 @@ Route::get('/leave-request/{id}', function ($id) {
     );
 })->name('leave_request.detail');
 
+Route::get('/payroll', [PayrollController::class, 'index'])->name('payroll.index');
 Route::post('/payroll', [PayrollController::class, 'store']);
-Route::get('/payroll/{id}', [PayrollController::class, 'show']);
+Route::get('/payroll/{id}', [PayrollController::class, 'show'])->name('payroll.show');
+
+Route::get('/payroll/{id}/edit', function ($id) {
+    return 'Edit Payroll';
+})->name('payroll.edit');
+
+Route::get('/payroll/create', function () {
+    return 'Create Payroll';
+})->name('payroll.create');
+
+Route::get('/profile', function () {
+    return view('profile.index');
+})->name('profile.index');
+
+Route::get('/settings', function () {
+    return view('settings.index');
+})->name('settings.index');

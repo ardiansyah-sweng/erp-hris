@@ -39,9 +39,21 @@ class JobroleController extends Controller
                 'role' => $validated['name'],
             ]);
 
+            if ($request->wantsJson() || $request->expectsJson() || $request->is('test-jobrole') || $request->is('api/*')) {
+                return response()->json([
+                    'message' => 'Data berhasil disimpan',
+                    'data' => $jobrole
+                ], 201);
+            }
+
             return redirect()->route('jobrole.index')
                 ->with('success', 'Job role berhasil ditambahkan!');
         } catch (Exception $e) {
+            if ($request->wantsJson() || $request->expectsJson() || $request->is('test-jobrole') || $request->is('api/*')) {
+                return response()->json([
+                    'message' => 'Gagal menyimpan data job role: ' . $e->getMessage()
+                ], 500);
+            }
             return redirect()->back()
                 ->with('error', 'Gagal menyimpan data job role: ' . $e->getMessage());
         }
@@ -89,9 +101,27 @@ class JobroleController extends Controller
                 'role' => $validated['name'],
             ]);
 
+            if ($request->wantsJson() || $request->expectsJson()) {
+                return response()->json([
+                    'payload' => [
+                        'statusCode' => 200,
+                        'message' => 'Job role updated successfully!',
+                        'data' => $jobrole
+                    ]
+                ], 200);
+            }
+
             return redirect()->route('jobrole.index')
                 ->with('success', 'Job role berhasil diperbarui!');
         } catch (Exception $e) {
+            if ($request->wantsJson() || $request->expectsJson()) {
+                return response()->json([
+                    'payload' => [
+                        'statusCode' => 500,
+                        'message' => 'Gagal memperbarui data job role: ' . $e->getMessage(),
+                    ]
+                ], 500);
+            }
             return redirect()->back()
                 ->with('error', 'Gagal memperbarui data job role: ' . $e->getMessage());
         }
@@ -100,14 +130,32 @@ class JobroleController extends Controller
     /**
      * Menghapus data job role.
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         try {
             $deletedData = $this->jobroleService->destroyJobrole($id);
 
+            if ($request->wantsJson() || $request->expectsJson()) {
+                return response()->json([
+                    'payload' => [
+                        'statusCode' => 200,
+                        'message' => 'Job role deleted successfully!',
+                        'data' => $deletedData
+                    ]
+                ], 200);
+            }
+
             return redirect()->route('jobrole.index')
                 ->with('success', 'Job role "' . $deletedData['role'] . '" berhasil dihapus!');
         } catch (Exception $e) {
+            if ($request->wantsJson() || $request->expectsJson()) {
+                return response()->json([
+                    'payload' => [
+                        'statusCode' => 500,
+                        'message' => 'Gagal menghapus data job role: ' . $e->getMessage(),
+                    ]
+                ], 500);
+            }
             return redirect()->route('jobrole.index')
                 ->with('error', 'Gagal menghapus data job role: ' . $e->getMessage());
         }
