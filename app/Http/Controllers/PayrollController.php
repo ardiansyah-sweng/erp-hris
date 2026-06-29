@@ -77,5 +77,28 @@ class PayrollController extends Controller
         return view('payroll.index', compact('payrolls'));
     }
 
+    public function filter(Request $request)
+    {
+        $validated = $request->validate([
+            'employee_id' => 'nullable|integer',
+            'month' => 'nullable|integer|between:1,12',
+            'year' => 'nullable|integer|digits:4',
+        ]);
+
+        $payrolls = $this->payrollService->filterPayroll(
+            $validated['employee_id'] ?? null,
+            $validated['month'] ?? null,
+            $validated['year'] ?? null
+        );
+
+        return response()->json([
+            'payload' => [
+                'statusCode' => 200,
+                'message' => 'Payroll filtered successfully!',
+                'data' => $payrolls
+            ]
+        ], 200);
+    }
+
 
 }

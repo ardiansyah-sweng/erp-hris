@@ -163,6 +163,7 @@ Route::get('/leave-request/{id}', function ($id) {
 })->name('leave_request.detail');
 
 Route::post('/payroll', [PayrollController::class, 'store']);
+Route::get('/payroll/filter', [PayrollController::class, 'filter'])->name('payroll.filter');
 Route::get('/payroll/{id}', [PayrollController::class, 'show']);
 
 Route::resource('payroll', PayrollController::class);
