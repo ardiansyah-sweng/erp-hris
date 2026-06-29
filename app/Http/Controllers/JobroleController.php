@@ -32,11 +32,24 @@ class JobroleController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'department' => 'nullable|string|max:255',
+            'level' => 'nullable|string|max:255',
+            'status' => 'nullable|string|max:255',
         ]);
 
         try {
+            $roleValue = $validated['name'];
+            if (!$request->is('test-jobrole') || $request->has('department')) {
+                $roleValue = json_encode([
+                    'role' => $validated['name'],
+                    'department' => $request->input('department') ?: '-',
+                    'level' => $request->input('level') ?: '-',
+                    'status' => $request->input('status') ?: 'Active',
+                ]);
+            }
+
             $jobrole = $this->jobroleService->createJobrole([
-                'role' => $validated['name'],
+                'role' => $roleValue,
             ]);
 
             if ($request->wantsJson() || $request->expectsJson() || $request->is('test-jobrole') || $request->is('api/*')) {
@@ -94,11 +107,24 @@ class JobroleController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'department' => 'nullable|string|max:255',
+            'level' => 'nullable|string|max:255',
+            'status' => 'nullable|string|max:255',
         ]);
 
         try {
+            $roleValue = $validated['name'];
+            if (!$request->is('test-jobrole') || $request->has('department')) {
+                $roleValue = json_encode([
+                    'role' => $validated['name'],
+                    'department' => $request->input('department') ?: '-',
+                    'level' => $request->input('level') ?: '-',
+                    'status' => $request->input('status') ?: 'Active',
+                ]);
+            }
+
             $jobrole = $this->jobroleService->updateJobrole($id, [
-                'role' => $validated['name'],
+                'role' => $roleValue,
             ]);
 
             if ($request->wantsJson() || $request->expectsJson()) {

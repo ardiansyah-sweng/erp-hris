@@ -1,122 +1,135 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Edit Job Role</title>
+@extends('layouts.app')
 
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+@section('title', 'Edit Job Role - ERP HRIS')
 
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+@section('content')
 
-    <style>
-        body {
-            background: linear-gradient(to right, #eef2f3, #dfe9f3);
-        }
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
-        .card {
-            border: none;
-            border-radius: 15px;
-        }
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900 tracking-tight">
+            Edit Job Role
+        </h1>
 
-        .card-header {
-            border-top-left-radius: 15px;
-            border-top-right-radius: 15px;
-            background: linear-gradient(135deg, #4e73df, #224abe);
-        }
+        <p class="mt-2 text-sm text-gray-500">
+            Perbarui informasi posisi pekerjaan.
+        </p>
+    </div>
 
-        .form-control {
-            border-radius: 10px;
-        }
+    <!-- Card Form -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
 
-        .btn {
-            border-radius: 10px;
-        }
+        <!-- Header Card -->
+        <div class="px-6 py-5 border-b border-gray-100 bg-gradient-to-r from-indigo-50 to-white">
+            <h2 class="text-lg font-semibold text-gray-900">
+                Form Edit Job Role
+            </h2>
 
-        .btn-success {
-            background: linear-gradient(135deg, #1cc88a, #17a673);
-            border: none;
-        }
+            <p class="mt-1 text-sm text-gray-500">
+                Ubah informasi job role di bawah ini.
+            </p>
+        </div>
 
-        .btn-secondary {
-            background: #858796;
-            border: none;
-        }
+        <!-- Form -->
+        <form action="{{ route('jobrole.update', $jobrole->id) }}" method="POST" class="p-6">
+            @csrf
+            @method('PUT')
 
-        .btn:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
-        }
-    </style>
-</head>
+            <!-- Nama Role -->
+            <div class="mb-6">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                    Nama Role
+                </label>
 
-<body>
+                <input
+                    type="text"
+                    name="name"
+                    value="{{ old('name', $jobrole->name) }}"
+                    placeholder="Contoh: Software Engineer"
+                    class="w-full px-4 py-3 rounded-xl border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                >
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
+                @error('name')
+                    <p class="mt-2 text-xs text-red-500">{{ $message }}</p>
+                @enderror
 
-            <div class="card shadow-lg">
-                <div class="card-header text-white text-center">
-                    <h5 class="mb-0">
-                        <i class="bi bi-pencil-square me-2"></i>
-                        Edit Job Role
-                    </h5>
-                </div>
-
-                <div class="card-body p-4">
-                    <form action="#" method="POST">
-                        @csrf
-                        @method('PUT')
-
-                        <!-- Nama -->
-                        <div class="mb-4">
-                            <label class="form-label fw-semibold">
-                                <i class="bi bi-person-badge me-1"></i>
-                                Job Role
-                            </label>
-                            <input type="text"
-                                name="name"
-                                value="{{ $jobrole['name'] }}"
-                                class="w-full border rounded-lg px-3 py-2">
-                        </div>
-
-                        <!-- Deskripsi -->
-                        <div class="mb-4">
-                            <label class="form-label fw-semibold">
-                                <i class="bi bi-card-text me-1"></i>
-                                Departement
-                            </label>
-                            <input type="text"
-                                name="description"
-                                value="{{ $jobrole['department'] }}"
-                                class="w-full border rounded-lg px-3 py-2">
-                        </div>
-
-                        <!-- Tombol -->
-                        <div class="d-flex justify-content-between align-items-center">
-                            <a href="#" class="btn btn-secondary px-4">
-                                <i class="bi bi-arrow-left"></i> Kembali
-                            </a>
-
-                            <button type="submit" class="btn btn-success px-4">
-                                <i class="bi bi-check-circle"></i> Update
-                            </button>
-                        </div>
-
-                    </form>
-                </div>
+                <p class="mt-2 text-xs text-gray-400">
+                    Masukkan nama posisi pekerjaan.
+                </p>
             </div>
 
-            <!-- Footer kecil -->
-            <p class="text-center mt-3 text-muted small">
-                © Sistem Manajemen Job Role
-            </p>
+            <!-- Departemen -->
+            <div class="mb-6">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                    Departemen
+                </label>
 
-        </div>
+                <select
+                    name="department"
+                    class="w-full rounded-xl border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                >
+                    <option value="">Pilih Departemen</option>
+                    <option value="IT" {{ old('department', $jobrole->department) == 'IT' ? 'selected' : '' }}>IT</option>
+                    <option value="Data" {{ old('department', $jobrole->department) == 'Data' ? 'selected' : '' }}>Data</option>
+                    <option value="Human Resources" {{ old('department', $jobrole->department) == 'Human Resources' ? 'selected' : '' }}>Human Resources</option>
+                    <option value="Product" {{ old('department', $jobrole->department) == 'Product' ? 'selected' : '' }}>Product</option>
+                </select>
+            </div>
+
+            <!-- Level -->
+            <div class="mb-6">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                    Level
+                </label>
+
+                <select
+                    name="level"
+                    class="w-full rounded-xl border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                >
+                    <option value="">Pilih Level</option>
+                    <option value="Staff" {{ old('level', $jobrole->level) == 'Staff' ? 'selected' : '' }}>Staff</option>
+                    <option value="Senior" {{ old('level', $jobrole->level) == 'Senior' ? 'selected' : '' }}>Senior</option>
+                    <option value="Manager" {{ old('level', $jobrole->level) == 'Manager' ? 'selected' : '' }}>Manager</option>
+                </select>
+            </div>
+
+            <!-- Status -->
+            <div class="mb-8">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                    Status
+                </label>
+
+                <select
+                    name="status"
+                    class="w-full rounded-xl border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                >
+                    <option value="Active" {{ old('status', $jobrole->status) == 'Active' ? 'selected' : '' }}>Aktif</option>
+                    <option value="On Leave" {{ old('status', $jobrole->status) == 'On Leave' ? 'selected' : '' }}>Cuti</option>
+                </select>
+            </div>
+
+            <!-- Tombol -->
+            <div class="flex items-center justify-end gap-4 pt-6 border-t border-gray-100">
+
+                <a href="{{ route('jobrole.index') }}"
+                   class="rounded-xl border border-gray-200 bg-white px-5 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition">
+                    Kembali
+                </a>
+
+                <button
+                    type="submit"
+                    class="rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 transition-all duration-200"
+                >
+                    Update Job Role
+                </button>
+
+            </div>
+
+        </form>
+
     </div>
+
 </div>
 
-</body>
-</html>
+@endsection
