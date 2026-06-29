@@ -60,6 +60,33 @@ class EmployeeControllerTest extends TestCase
             ->assertJsonPath('payload.message', 'Employee retrieved successfully!');
     }
 
+    public function test_search_employee_returns_results(): void
+    {
+        Employee::factory()->create([
+            'name' => 'Bayu Pratama',
+            'email' => 'bayu.pratama@example.com',
+            'id_number' => '1112223334445556',
+        ]);
+
+        Employee::factory()->create([
+            'name' => 'Dewi Anggraini',
+            'email' => 'dewi.anggraini@example.com',
+            'id_number' => '6667778889990001',
+        ]);
+
+        $response = $this->getJson('/employees/search?keyword=Bayu');
+
+        $response->assertStatus(200)
+            ->assertJsonPath('payload.message', 'Employee search completed successfully!')
+            ->assertJsonCount(1, 'payload.data');
+
+        $response = $this->getJson('/employees/search?keyword=dewi.anggraini@example.com');
+
+        $response->assertStatus(200)
+            ->assertJsonCount(1, 'payload.data')
+            ->assertJsonPath('payload.data.0.email', 'dewi.anggraini@example.com');
+    }
+
     public function test_show_employee_not_found()
     {
         $response = $this->getJson('/employees/9999');

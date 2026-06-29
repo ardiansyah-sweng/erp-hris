@@ -9,6 +9,7 @@ use App\Http\Controllers\PayrollController;
 
 Route::post('/test-jobrole', [JobroleController::class, 'store']);
 Route::post('/employees', [EmployeeController::class, 'store']);
+Route::get('/employees/search', [EmployeeController::class, 'search']);
 Route::get('/employees/{employee}', [EmployeeController::class, 'show']);
 
 Route::get('/detail-employee', function () {

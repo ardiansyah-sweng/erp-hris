@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class EmployeeController extends Controller
 {
-    protected $employeeService;
+    protected EmployeeService $employeeService;
 
     public function __construct(EmployeeService $employeeService)
     {
@@ -74,6 +74,24 @@ class EmployeeController extends Controller
                 'statusCode' => 200,
                 'message' => 'Employee retrieved successfully!',
                 'data' => $employee
+            ]
+        ], 200);
+    }
+
+    public function search(Request $request)
+    {
+        $request->validate([
+            'keyword' => 'sometimes|string',
+        ]);
+
+        $keyword = $request->input('keyword', '');
+        $employees = $this->employeeService->searchEmployee($keyword);
+
+        return response()->json([
+            'payload' => [
+                'statusCode' => 200,
+                'message' => 'Employee search completed successfully!',
+                'data' => $employees
             ]
         ], 200);
     }
