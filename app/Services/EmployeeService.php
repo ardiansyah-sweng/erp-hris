@@ -37,6 +37,20 @@ class EmployeeService
         return Employee::all();
     }
 
+    public function searchEmployee(string $keyword = '')
+    {
+        $keyword = trim($keyword);
+
+        if ($keyword === '') {
+            return Employee::all();
+        }
+
+        return Employee::where('name', 'like', "%{$keyword}%")
+                ->orWhere('id_number', 'like', "%{$keyword}%")
+                ->orWhere('email', 'like', "%{$keyword}%")
+                ->get();
+    }
+
     public function destroyEmployee($id)
     {
         try {

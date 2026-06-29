@@ -44,6 +44,47 @@ class EmployeeServiceTest extends TestCase
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Collection::class, $employees);
     }
 
+    public function test_search_employee_returns_matching_records(): void
+    {
+        Employee::create([
+            'name' => 'Asep Kurniawan',
+            'email' => 'asep.kurniawan@example.com',
+            'phone_number' => '081234567890',
+            'place_of_birth' => 'Jakarta',
+            'date_of_birth' => '1990-01-01',
+            'address' => 'Jl. Mawar No. 1',
+            'id_number' => '1234567890123456',
+            'age' => 33,
+            'role_id' => 1,
+        ]);
+
+        Employee::create([
+            'name' => 'Rina Suryani',
+            'email' => 'rina.suryani@example.com',
+            'phone_number' => '089876543210',
+            'place_of_birth' => 'Bandung',
+            'date_of_birth' => '1992-02-02',
+            'address' => 'Jl. Melati No. 2',
+            'id_number' => '9876543210987654',
+            'age' => 31,
+            'role_id' => 2,
+        ]);
+
+        $service = new EmployeeService();
+
+        $resultsByName = $service->searchEmployee('Asep');
+        $this->assertCount(1, $resultsByName);
+        $this->assertEquals('Asep Kurniawan', $resultsByName->first()->name);
+
+        $resultsByEmail = $service->searchEmployee('rina.suryani');
+        $this->assertCount(1, $resultsByEmail);
+        $this->assertEquals('Rina Suryani', $resultsByEmail->first()->name);
+
+        $resultsByIdNumber = $service->searchEmployee('9876543210987654');
+        $this->assertCount(1, $resultsByIdNumber);
+        $this->assertEquals('Rina Suryani', $resultsByIdNumber->first()->name);
+    }
+
     public function test_destroy_employee_berhasil(): void
     {
         $employee = Employee::create([
