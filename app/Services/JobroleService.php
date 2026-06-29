@@ -37,4 +37,16 @@ class JobroleService
 
         return $jobrole;
     }
+
+    public function destroyJobrole($id)
+    {
+        $jobrole = Jobrole::findOrFail($id);
+        $deletedData = [
+            'id' => $jobrole->id,
+            'role' => $jobrole->role,
+        ];
+        $jobrole->delete();
+
+        return $deletedData;
+    }
 }
