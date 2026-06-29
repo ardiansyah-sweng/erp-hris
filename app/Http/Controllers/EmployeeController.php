@@ -69,13 +69,25 @@ class EmployeeController extends Controller
 
     public function show(Employee $employee)
     {
-        return response()->json([
-            'payload' => [
-                'statusCode' => 200,
-                'message' => 'Employee retrieved successfully!',
-                'data' => $employee
-            ]
-        ], 200);
+        $employee->load('jobrole');
+        
+        if (request()->wantsJson()) {
+            return response()->json([
+                'payload' => [
+                    'statusCode' => 200,
+                    'message' => 'Employee retrieved successfully!',
+                    'data' => $employee
+                ]
+            ], 200);
+        }
+        
+        return view('employee.detail', compact('employee'));
+    }
+
+    public function index()
+    {
+        $employees = Employee::with('jobrole')->get();
+        return view('employee.index', compact('employees'));
     }
 
     public function getCashiers()
