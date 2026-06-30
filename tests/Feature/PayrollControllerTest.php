@@ -15,6 +15,15 @@ class PayrollControllerTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // Nonaktifkan Vite agar view yang meng-extend layouts/app.blade.php
+        // tidak gagal mencari manifest (public/build/manifest.json) saat test.
+        $this->withoutVite();
+    }
+
     public function test_store_payroll_success()
     {
         $employee = Employee::create([
