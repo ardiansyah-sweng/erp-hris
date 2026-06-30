@@ -8,8 +8,9 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\LeaveRequestController;
 
-
+Route::get('/employees/status', [EmployeeController::class, 'indexByStatus']);
 Route::post('/test-jobrole', [JobroleController::class, 'store']);
+Route::get('/employees', [EmployeeController::class, 'index']);
 Route::post('/employees', [EmployeeController::class, 'store']);
 Route::get('/employees/{employee}', [EmployeeController::class, 'show']);
 
@@ -124,6 +125,8 @@ Route::get('/payroll/create', function () {
 })->name('payroll.create');
 
 Route::post('/payroll', [PayrollController::class, 'store']);
+// Route export WAJIB di atas '/payroll/{id}' agar 'export' tidak ditangkap sebagai id
+Route::get('/payroll/export', [PayrollController::class, 'export'])->name('payroll.export');
 Route::get('/payroll/{id}', [PayrollController::class, 'show']);
 Route::put('/payroll/{id}', [PayrollController::class, 'update']);
 Route::delete('/payroll/{id}', [PayrollController::class, 'destroy']);
