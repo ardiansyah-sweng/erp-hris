@@ -9,6 +9,7 @@ use App\Services\PayrollService;
 class PayrollController extends Controller
 {
     protected $payrollService;
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -77,5 +78,59 @@ class PayrollController extends Controller
         return view('payroll.index', compact('payrolls'));
     }
 
+    public function update(Request $request, int $id)
+    {
+        $validated = $request->validate([
+            'employee_id' => 'sometimes|integer|exists:employees,id',
+            'month' => 'sometimes|integer|between:1,12',
+            'year' => 'sometimes|integer|digits:4',
+            'basic_salary' => 'sometimes|numeric|min:0',
+            'allowances' => 'sometimes|numeric|min:0',
+            'deductions' => 'sometimes|numeric|min:0',
+            'status' => 'sometimes|string|in:pending,approved,paid',
+        ]);
 
+        $payroll = $this->payrollService->updatePayroll($id, $validated);
+
+        if (!$payroll) {
+            return response()->json([
+                'payload' => [
+                    'statusCode' => 404,
+                    'message' => 'Payroll not found',
+                    'data' => null
+                ]
+            ], 404);
+        }
+
+        return response()->json([
+            'payload' => [
+                'statusCode' => 200,
+                'message' => 'Payroll updated successfully!',
+                'data' => $payroll
+            ]
+        ], 200);
+    }
+
+    public function destroy(int $id)
+    {
+        $payroll = $this->payrollService->destroyPayroll($id);
+
+        if (!$payroll) {
+            return response()->json([
+                'payload' => [
+                    'statusCode' => 404,
+                    'message' => 'Payroll not found',
+                    'data' => null
+                ]
+            ], 404);
+        }
+
+        return response()->json([
+            'payload' => [
+                'statusCode' => 200,
+                'message' => 'Payroll deleted successfully!',
+                'data' => $payroll
+            ]
+        ], 200);
+    }
 }

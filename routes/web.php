@@ -1,8 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Models\Employee;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JobroleController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PayrollController;
 
 
@@ -14,9 +16,8 @@ Route::get('/detail-employee', function () {
     return view('employee.detail');
 });
 
-Route::get('/', function () {
-    return view('dashboard');
-});
+Route::get('/', [LoginController::class, 'showLoginForm']);
+Route::post('/login', [LoginController::class, 'login']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -162,8 +163,16 @@ Route::get('/leave-request/{id}', function ($id) {
     );
 })->name('leave_request.detail');
 
+Route::get('/payroll/create', function () {
+    $employees = Employee::orderBy('name')->get(['id', 'name']);
+
+    return view('payroll.create', compact('employees'));
+})->name('payroll.create');
+
 Route::post('/payroll', [PayrollController::class, 'store']);
 Route::get('/payroll/{id}', [PayrollController::class, 'show']);
+Route::put('/payroll/{id}', [PayrollController::class, 'update']);
+Route::delete('/payroll/{id}', [PayrollController::class, 'destroy']);
 
 // ABSENSI ROUTES
 Route::get('/absensi', function () {
@@ -175,6 +184,7 @@ Route::get('/absensi/detail', function () {
     return view('absensi.detail');
 })->name('absensi.detail');
 Route::resource('payroll', PayrollController::class);
+Route::resource('payroll', PayrollController::class)->except(['create']);
 Route::get('/leave-request/{id}/edit', function ($id) {
 
     $leaveRequest = [
