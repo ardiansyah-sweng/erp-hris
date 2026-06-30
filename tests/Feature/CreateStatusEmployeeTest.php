@@ -32,7 +32,7 @@ class CreateStatusEmployeeTest extends TestCase
             'role_id' => $role->id
         ]);
 
-        $response = $this->getJson('/employees/status-temp?status=Active');
+        $response = $this->getJson('/employees/status?status=Active');
 
         $response->assertStatus(200);
         
@@ -60,7 +60,7 @@ class CreateStatusEmployeeTest extends TestCase
             'role_id' => $role->id
         ]);
 
-        $response = $this->getJson('/employees/status-temp?status=Inactive');
+        $response = $this->getJson('/employees/status?status=Inactive');
 
         $response->assertStatus(200);
         
