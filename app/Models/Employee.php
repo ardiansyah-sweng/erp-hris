@@ -45,4 +45,14 @@ class Employee extends Model
     {
         return $this->hasMany(Payroll::class, 'employee_id');
     }
+
+    public function isActive()
+    {
+        return $this->status === 'active';
+    }
+
+    public function isInactive()
+    {
+        return $this->status === 'inactive';
+    }
 }
