@@ -43,7 +43,10 @@
     </div>
 
     <!-- Form -->
-    <form class="p-6 space-y-6">
+    <form action="{{ route('leave_request.store') }}"
+      method="POST"
+      class="p-6 space-y-6">
+    @csrf
 
         <!-- ID Karyawan -->
         <div>
@@ -54,6 +57,7 @@
             <input
                 type="text"
                 id="employee_id"
+                name="employee_id"
                 placeholder="Contoh: EMP001"
                 class="block w-full rounded-xl border-0 py-3 px-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm">
         </div>      
@@ -65,6 +69,7 @@
             </label>
             <input type="text"
                     id="employee_name"
+                    name="employee_name"
                     readonly
                    placeholder="Nama Karyawan akan muncul otomatis"
                    class="block w-full rounded-xl border-0 py-3 px-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm">
@@ -76,6 +81,7 @@
                 Tanggal Mulai
             </label>
             <input type="date"
+                    name="start_date"
                    class="block w-full rounded-xl border-0 py-3 px-4 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm">
         </div>
 
@@ -85,6 +91,7 @@
                 Tanggal Selesai
             </label>
             <input type="date"
+                    name="end_date"
                    class="block w-full rounded-xl border-0 py-3 px-4 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm">
         </div>
 
@@ -93,7 +100,8 @@
             <label class="block text-sm font-medium text-gray-700 mb-2">
                 Alasan
             </label>
-            <textarea rows="4"
+            <textarea name="reason"
+                      rows="4"
                       placeholder="Masukkan alasan pengajuan cuti"
                       class="block w-full rounded-xl border-0 py-3 px-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm"></textarea>
         </div>
