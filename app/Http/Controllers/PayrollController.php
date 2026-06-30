@@ -89,6 +89,20 @@ class PayrollController extends Controller
         return view('payroll.index', compact('payrolls'));
     }
 
+    public function filter(Request $request)
+    {
+        $validated = $request->validate([
+            'employee_id' => 'nullable|integer',
+            'month' => 'nullable|integer|between:1,12',
+            'year' => 'nullable|integer|digits:4',
+        ]);
+
+        $payrolls = $this->payrollService->filterPayroll(
+            $validated['employee_id'] ?? null,
+            $validated['month'] ?? null,
+            $validated['year'] ?? null
+        );
+    public function update(Request $request, int $id)
     /**
      * Export seluruh data penggajian ke file CSV (dapat dibuka di Excel).
      */
@@ -192,6 +206,15 @@ class PayrollController extends Controller
             ], 200);
         }
 
+        return response()->json([
+            'payload' => [
+                'statusCode' => 200,
+                'message' => 'Payroll filtered successfully!',
+                'data' => $payrolls
+                'message' => 'Payroll updated successfully!',
+                'data' => $payroll
+            ]
+        ], 200);
         return redirect()
             ->route('payroll.index')
             ->with('success', 'Data penggajian berhasil diperbarui.');

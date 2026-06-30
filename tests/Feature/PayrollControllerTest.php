@@ -113,6 +113,129 @@ class PayrollControllerTest extends TestCase
         $response->assertViewHas('payrolls');
     }
 
+    public function test_filter_payroll_by_employee_id()
+    {
+        $employee = Employee::create([
+            'name' => 'Filter Test Employee',
+            'email' => 'filter@gmail.com',
+            'phone_number' => '08123456789',
+            'place_of_birth' => 'Jakarta',
+            'date_of_birth' => '2000-01-01',
+            'address' => 'Jl. Filter',
+            'id_number' => '111111111',
+            'age' => 25,
+            'role_id' => 1,
+        ]);
+
+        Payroll::create([
+            'employee_id' => $employee->id,
+            'month' => 5,
+            'year' => 2026,
+            'basic_salary' => 5000000,
+            'allowances' => 1000000,
+            'deductions' => 500000,
+            'net_salary' => 5500000,
+        ]);
+
+        Payroll::create([
+            'employee_id' => $employee->id,
+            'month' => 6,
+            'year' => 2026,
+            'basic_salary' => 5000000,
+            'allowances' => 1000000,
+            'deductions' => 500000,
+            'net_salary' => 5500000,
+        ]);
+
+        $response = $this->getJson('/payroll/filter?employee_id=' . $employee->id);
+
+        $response->assertStatus(200);
+        $response->assertJson([
+            'payload' => [
+                'statusCode' => 200,
+                'message' => 'Payroll filtered successfully!',
+            ]
+        ]);
+    }
+
+    public function test_filter_payroll_by_month_and_year()
+    {
+        $employee1 = Employee::create([
+            'name' => 'Employee 1',
+            'email' => 'emp1@gmail.com',
+            'phone_number' => '08111111111',
+            'place_of_birth' => 'Jakarta',
+            'date_of_birth' => '2000-01-01',
+            'address' => 'Jl. Test 1',
+            'id_number' => '222222222',
+            'age' => 25,
+            'role_id' => 1,
+        ]);
+
+        $employee2 = Employee::create([
+            'name' => 'Employee 2',
+            'email' => 'emp2@gmail.com',
+            'phone_number' => '08222222222',
+            'place_of_birth' => 'Bandung',
+            'date_of_birth' => '2000-02-02',
+            'address' => 'Jl. Test 2',
+            'id_number' => '333333333',
+            'age' => 26,
+            'role_id' => 1,
+        ]);
+
+        Payroll::create([
+            'employee_id' => $employee1->id,
+            'month' => 5,
+            'year' => 2026,
+            'basic_salary' => 5000000,
+            'allowances' => 1000000,
+            'deductions' => 500000,
+            'net_salary' => 5500000,
+        ]);
+
+        Payroll::create([
+            'employee_id' => $employee2->id,
+            'month' => 5,
+            'year' => 2026,
+            'basic_salary' => 5000000,
+            'allowances' => 1000000,
+            'deductions' => 500000,
+            'net_salary' => 5500000,
+        ]);
+
+        Payroll::create([
+            'employee_id' => $employee1->id,
+            'month' => 6,
+            'year' => 2026,
+            'basic_salary' => 5000000,
+            'allowances' => 1000000,
+            'deductions' => 500000,
+            'net_salary' => 5500000,
+        ]);
+
+        $response = $this->getJson('/payroll/filter?month=5&year=2026');
+
+        $response->assertStatus(200);
+        $response->assertJson([
+            'payload' => [
+                'statusCode' => 200,
+                'message' => 'Payroll filtered successfully!',
+            ]
+        ]);
+    }
+
+    public function test_filter_payroll_returns_empty_when_no_match()
+    {
+        $response = $this->getJson('/payroll/filter?employee_id=999&month=12&year=2026');
+
+        $response->assertStatus(200);
+        $response->assertJson([
+            'payload' => [
+                'statusCode' => 200,
+                'message' => 'Payroll filtered successfully!',
+                'data' => []
+            ]
     public function test_export_payroll_to_csv(): void
     {
         // 1. Arrange: siapkan satu data payroll dengan nama karyawan yang jelas
