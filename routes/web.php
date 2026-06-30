@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Models\Employee;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JobroleController;
 use App\Http\Controllers\Auth\LoginController;
@@ -162,12 +163,20 @@ Route::get('/leave-request/{id}', function ($id) {
     );
 })->name('leave_request.detail');
 
+Route::get('/payroll/create', function () {
+    $employees = Employee::orderBy('name')->get(['id', 'name']);
+
+    return view('payroll.create', compact('employees'));
+})->name('payroll.create');
+
 Route::post('/payroll', [PayrollController::class, 'store']);
 // Route export WAJIB di atas '/payroll/{id}' agar 'export' tidak ditangkap sebagai id
 Route::get('/payroll/export', [PayrollController::class, 'export'])->name('payroll.export');
 Route::get('/payroll/{id}', [PayrollController::class, 'show']);
+Route::put('/payroll/{id}', [PayrollController::class, 'update']);
+Route::delete('/payroll/{id}', [PayrollController::class, 'destroy']);
 
-Route::resource('payroll', PayrollController::class);
+Route::resource('payroll', PayrollController::class)->except(['create']);
 Route::get('/leave-request/{id}/edit', function ($id) {
 
     $leaveRequest = [

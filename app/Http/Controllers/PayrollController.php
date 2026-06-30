@@ -10,6 +10,7 @@ use App\Services\PayrollService;
 class PayrollController extends Controller
 {
     protected $payrollService;
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -146,34 +147,76 @@ class PayrollController extends Controller
     }
 
     /**
-     * Memproses pembaruan data penggajian. Net salary dihitung ulang di server.
+     * Memproses pembaruan data penggajian.
+     *
+     * Logika perhitungan ulang net_salary terpusat di PayrollService::updatePayroll()
+     * (satu sumber kebenaran, dipakai juga oleh PR update berbasis service).
+     * Permintaan API (putJson) menerima respons JSON; permintaan dari form Edit
+     * (browser) diarahkan kembali ke halaman index dengan flash success.
      */
     public function update(Request $request, $id)
     {
-        $payroll = Payroll::findOrFail($id);
-
         $validated = $request->validate([
-            'employee_id'  => 'required|exists:employees,id',
-            'month'        => 'required|integer|min:1|max:12',
-            'year'         => 'required|integer|min:2000|max:2100',
-            'basic_salary' => 'required|numeric|min:0',
-            'allowances'   => 'nullable|numeric|min:0',
-            'deductions'   => 'nullable|numeric|min:0',
-            'status'       => 'nullable|string',
+            'employee_id' => 'sometimes|integer|exists:employees,id',
+            'month' => 'sometimes|integer|between:1,12',
+            'year' => 'sometimes|integer|digits:4',
+            'basic_salary' => 'sometimes|numeric|min:0',
+            'allowances' => 'sometimes|numeric|min:0',
+            'deductions' => 'sometimes|numeric|min:0',
+            'status' => 'sometimes|string|in:pending,approved,paid',
         ]);
 
-        $validated['allowances'] = $validated['allowances'] ?? 0;
-        $validated['deductions'] = $validated['deductions'] ?? 0;
+        $payroll = $this->payrollService->updatePayroll($id, $validated);
 
-        $validated['net_salary'] =
-            $validated['basic_salary']
-            + $validated['allowances']
-            - $validated['deductions'];
+        if (!$payroll) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'payload' => [
+                        'statusCode' => 404,
+                        'message' => 'Payroll not found',
+                        'data' => null
+                    ]
+                ], 404);
+            }
 
-        $payroll->update($validated);
+            abort(404);
+        }
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'payload' => [
+                    'statusCode' => 200,
+                    'message' => 'Payroll updated successfully!',
+                    'data' => $payroll
+                ]
+            ], 200);
+        }
 
         return redirect()
             ->route('payroll.index')
             ->with('success', 'Data penggajian berhasil diperbarui.');
+    }
+
+    public function destroy(int $id)
+    {
+        $payroll = $this->payrollService->destroyPayroll($id);
+
+        if (!$payroll) {
+            return response()->json([
+                'payload' => [
+                    'statusCode' => 404,
+                    'message' => 'Payroll not found',
+                    'data' => null
+                ]
+            ], 404);
+        }
+
+        return response()->json([
+            'payload' => [
+                'statusCode' => 200,
+                'message' => 'Payroll deleted successfully!',
+                'data' => $payroll
+            ]
+        ], 200);
     }
 }
