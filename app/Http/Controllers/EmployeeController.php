@@ -77,6 +77,26 @@ class EmployeeController extends Controller
             ]
         ], 200);
     }
+    
+    public function indexByStatus(Request $request)
+    {
+        $statusFilter = $request->query('status');
+
+        $employees = $this->employeeService->getEmployeesByStatus($statusFilter);
+
+        return response()->json([
+            'status' => 'success',
+            'statusFilter' => $statusFilter,
+            'employees' => $employees
+        ], 200);
+    }
+
+    public function index()
+    {
+        $employees = Employee::all();
+
+        return view('employee.index', compact('employees'));
+    }
 
     public function getCashiers()
     {
