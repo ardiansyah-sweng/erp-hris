@@ -85,7 +85,6 @@ class EmployeeController extends Controller
         return view('employee.index', compact('employees'));
     }
 
-
     public function getCashiers()
     {
         $cashierIds = DB::table('job_roles')
