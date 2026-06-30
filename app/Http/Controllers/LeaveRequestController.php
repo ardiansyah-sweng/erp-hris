@@ -21,10 +21,25 @@ class LeaveRequestController extends Controller
     {
         $leaveRequests = $this->leaveRequestService->getAllLeaveRequests();
 
-        return view(
-            'leave_request.index',
-            compact('leaveRequests')
-        );
+        return view('leave_request.index', compact('leaveRequests'));
+    }
+
+    /**
+     * Menyimpan pengajuan cuti baru
+     */
+    public function store(Request $request)
+    {
+        $this->leaveRequestService->createLeaveRequest([
+            'employee_id' => $request->employee_id,
+            'employee_name' => $request->employee_name,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'reason' => $request->reason,
+            'status' => 'Pending',
+            'submission_date' => now(),
+        ]);
+
+        return redirect()->route('leave_request.index');
     }
 
     /**
@@ -38,60 +53,48 @@ class LeaveRequestController extends Controller
             abort(404, 'Data pengajuan cuti tidak ditemukan');
         }
 
-        return view(
-            'leave_request.detail',
-            compact('leaveRequest')
-        );
+        return view('leave_request.detail', compact('leaveRequest'));
     }
-    public function store(Request $request)
-{
-    $this->leaveRequestService->createLeaveRequest([
-        'employee_id' => $request->employee_id,
-        'employee_name' => $request->employee_name,
-        'start_date' => $request->start_date,
-        'end_date' => $request->end_date,
-        'reason' => $request->reason,
-        'status' => 'Pending',
-        'submission_date' => now(),
-    ]);
 
-    return redirect()->route('leave_request.index');
-}
+    /**
+     * Menampilkan form edit pengajuan cuti
+     */
+    public function edit($id)
+    {
+        $leaveRequest = $this->leaveRequestService->getLeaveRequestDetail($id);
+
+        if (!$leaveRequest) {
+            abort(404, 'Data pengajuan cuti tidak ditemukan');
+        }
+
+        return view('leave_request.edit', compact('leaveRequest'));
+    }
+
+    /**
+     * Memperbarui data pengajuan cuti
+     */
     public function update(Request $request, $id)
-{
-    $leaveRequest = $this->leaveRequestService->updateLeaveRequest(
-        $id,
-        $request->all()
-    );
+    {
+        $leaveRequest = $this->leaveRequestService->updateLeaveRequest($id, $request->all());
 
-    if (!$leaveRequest) {
-        abort(404, 'Data pengajuan cuti tidak ditemukan');
+        if (!$leaveRequest) {
+            abort(404, 'Data pengajuan cuti tidak ditemukan');
+        }
+
+        return redirect()->route('leave_request.index');
     }
 
-    return redirect('/leave-request');
-}
-public function destroy($id)
-{
-    $deleted = $this->leaveRequestService->destroyLeaveRequest($id);
+    /**
+     * Menghapus data pengajuan cuti
+     */
+    public function destroy($id)
+    {
+        $deleted = $this->leaveRequestService->destroyLeaveRequest($id);
 
-    if (!$deleted) {
-        abort(404, 'Data pengajuan cuti tidak ditemukan');
+        if (!$deleted) {
+            abort(404, 'Data pengajuan cuti tidak ditemukan');
+        }
+
+        return redirect()->route('leave_request.index');
     }
-
-    return redirect('/leave-request');
-}
-public function edit($id)
-{
-    $leaveRequest = $this->leaveRequestService
-        ->getLeaveRequestDetail($id);
-
-    if (!$leaveRequest) {
-        abort(404);
-    }
-
-    return view(
-        'leave_request.edit',
-        compact('leaveRequest')
-    );
-}
 }
