@@ -45,7 +45,8 @@
     </div>
 
     <!-- Form -->
-    <form class="p-6 space-y-6">
+    <form action="{{ route('payroll.store') }}" method="POST" class="p-6 space-y-6">
+        @csrf
 
         <!-- Nama Karyawan -->
         <div>
@@ -53,11 +54,18 @@
                 Nama Karyawan
             </label>
 
-            <input
-                type="text"
-                id="employee_name"
-                placeholder="Contoh: Budi Santoso"
-                class="block w-full rounded-xl border-0 py-3 px-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm">
+            <select
+                id="employee_id"
+                name="employee_id"
+                required
+                class="block w-full rounded-xl border-0 py-3 px-4 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm bg-white">
+                <option value="">Pilih Karyawan</option>
+                @foreach($employees as $employee)
+                    <option value="{{ $employee->id }}" @selected(old('employee_id') == $employee->id)>
+                        {{ $employee->name }}
+                    </option>
+                @endforeach
+            </select>
         </div>
 
         <!-- Periode -->
@@ -69,25 +77,30 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <select
                     id="month"
+                    name="month"
+                    required
                     class="block w-full rounded-xl border-0 py-3 px-4 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm bg-white">
                     <option value="">Pilih Bulan</option>
-                    <option value="1">Januari</option>
-                    <option value="2">Februari</option>
-                    <option value="3">Maret</option>
-                    <option value="4">April</option>
-                    <option value="5">Mei</option>
-                    <option value="6">Juni</option>
-                    <option value="7">Juli</option>
-                    <option value="8">Agustus</option>
-                    <option value="9">September</option>
-                    <option value="10">Oktober</option>
-                    <option value="11">November</option>
-                    <option value="12">Desember</option>
+                    <option value="1" @selected(old('month') == 1)>Januari</option>
+                    <option value="2" @selected(old('month') == 2)>Februari</option>
+                    <option value="3" @selected(old('month') == 3)>Maret</option>
+                    <option value="4" @selected(old('month') == 4)>April</option>
+                    <option value="5" @selected(old('month') == 5)>Mei</option>
+                    <option value="6" @selected(old('month') == 6)>Juni</option>
+                    <option value="7" @selected(old('month') == 7)>Juli</option>
+                    <option value="8" @selected(old('month') == 8)>Agustus</option>
+                    <option value="9" @selected(old('month') == 9)>September</option>
+                    <option value="10" @selected(old('month') == 10)>Oktober</option>
+                    <option value="11" @selected(old('month') == 11)>November</option>
+                    <option value="12" @selected(old('month') == 12)>Desember</option>
                 </select>
 
                 <input
                     type="number"
                     id="year"
+                    name="year"
+                    value="{{ old('year') }}"
+                    required
                     placeholder="Contoh: 2026"
                     class="block w-full rounded-xl border-0 py-3 px-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm">
             </div>
@@ -102,7 +115,10 @@
             <input
                 type="number"
                 id="basic_salary"
+                name="basic_salary"
+                value="{{ old('basic_salary') }}"
                 min="0"
+                required
                 placeholder="Contoh: 5000000"
                 class="payroll-amount block w-full rounded-xl border-0 py-3 px-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm">
         </div>
@@ -116,6 +132,8 @@
             <input
                 type="number"
                 id="allowances"
+                name="allowances"
+                value="{{ old('allowances') }}"
                 min="0"
                 placeholder="Contoh: 500000"
                 class="payroll-amount block w-full rounded-xl border-0 py-3 px-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm">
@@ -130,6 +148,8 @@
             <input
                 type="number"
                 id="deductions"
+                name="deductions"
+                value="{{ old('deductions') }}"
                 min="0"
                 placeholder="Contoh: 150000"
                 class="payroll-amount block w-full rounded-xl border-0 py-3 px-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm">
@@ -138,7 +158,7 @@
         <!-- Total Bersih -->
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">
-                Total Bersih
+                Gaji Bersih
             </label>
 
             <input
@@ -157,11 +177,12 @@
 
             <select
                 id="status"
+                name="status"
                 class="block w-full rounded-xl border-0 py-3 px-4 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm bg-white">
                 <option value="">Pilih Status</option>
-                <option value="pending">Pending</option>
-                <option value="approved">Approved</option>
-                <option value="paid">Paid</option>
+                <option value="pending" @selected(old('status') == 'pending')>Pending</option>
+                <option value="approved" @selected(old('status') == 'approved')>Approved</option>
+                <option value="paid" @selected(old('status') == 'paid')>Paid</option>
             </select>
         </div>
 

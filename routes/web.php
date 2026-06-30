@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Models\Employee;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JobroleController;
 use App\Http\Controllers\PayrollController;
@@ -163,7 +164,9 @@ Route::get('/leave-request/{id}', function ($id) {
 })->name('leave_request.detail');
 
 Route::get('/payroll/create', function () {
-    return view('payroll.create');
+    $employees = Employee::orderBy('name')->get(['id', 'name']);
+
+    return view('payroll.create', compact('employees'));
 })->name('payroll.create');
 
 Route::post('/payroll', [PayrollController::class, 'store']);
