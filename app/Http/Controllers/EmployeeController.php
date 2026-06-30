@@ -78,7 +78,7 @@ class EmployeeController extends Controller
         ], 200);
     }
     
-    public function indexStatusTemp(Request $request)
+    public function indexByStatus(Request $request)
     {
         $statusFilter = $request->query('status');
 
