@@ -183,7 +183,7 @@
 </td>
 
 <td class="whitespace-nowrap px-3 py-4 text-sm">
-    <a href="{{ route('absensi.detail', $absen->id) }}"
+    <a href="{{ route('attendance.detail', $absen->id) }}"
        class="inline-flex items-center rounded-lg bg-indigo-50 px-3 py-2 text-xs font-semibold text-indigo-600 hover:bg-indigo-100 transition">
         Detail
     </a>

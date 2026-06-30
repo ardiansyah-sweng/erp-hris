@@ -30,7 +30,7 @@
             </p>
         </div>
 
-        <a href="{{ route('absensi.index') }}"
+        <a href="{{ route('attendance.index') }}"
            class="rounded-xl border border-gray-200 bg-white px-5 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition">
             ← Kembali
         </a>

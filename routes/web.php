@@ -172,12 +172,12 @@ Route::get('/payroll/{id}', [PayrollController::class, 'show']);
 Route::put('/payroll/{id}', [PayrollController::class, 'update']);
 Route::delete('/payroll/{id}', [PayrollController::class, 'destroy']);
 
-// ABSENSI ROUTES
-Route::get('/absensi', [AttendanceController::class, 'index'])
-    ->name('absensi.index');
+// ATTENDANCE ROUTES
+Route::get('/attendance', [AttendanceController::class, 'index'])
+    ->name('attendance.index');
 
-Route::get('/absensi/{id}', [AttendanceController::class, 'show'])
-    ->name('absensi.detail');
+Route::get('/attendance/{id}', [AttendanceController::class, 'show'])
+    ->name('attendance.detail');
 
 Route::resource('payroll', PayrollController::class);
 Route::resource('payroll', PayrollController::class)->except(['create']);
