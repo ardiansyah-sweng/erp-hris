@@ -170,9 +170,6 @@ Route::get('/absensi', function () {
     return view('absensi.index');
 })->name('absensi.index');
 
-Route::get('/absensi/create', function () {
-    return view('absensi.create');
-})->name('absensi.create');
 
 Route::get('/absensi/detail', function () {
     return view('absensi.detail');

@@ -99,11 +99,6 @@
 
     <div class="flex items-center gap-3">
 
-        <a href="{{ route('absensi.create') }}"
-           class="inline-flex items-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition">
-            + Tambah Absensi
-        </a>
-
         <div class="relative">
             <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                 <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
