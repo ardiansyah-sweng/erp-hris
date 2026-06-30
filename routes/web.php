@@ -6,6 +6,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JobroleController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PayrollController;
+use App\Http\Controllers\AttendanceController;
 
 
 Route::post('/test-jobrole', [JobroleController::class, 'store']);
@@ -96,9 +97,6 @@ Route::put('/employee/test-edit', function () {
     return "Tombol Update berhasil diklik! (Ini hanya simulasi, data belum tersimpan karena Controller Update asli belum disambungkan).";
 });
 Route::put('/employees/{id}', [EmployeeController::class, 'update']);
-Route::get('/absensi', function () {
-    return view('absensi.index');
-})->name('absensi.index');
 
 Route::get('/leave-request', function () {
     return view('leave_request.index');
@@ -175,14 +173,12 @@ Route::put('/payroll/{id}', [PayrollController::class, 'update']);
 Route::delete('/payroll/{id}', [PayrollController::class, 'destroy']);
 
 // ABSENSI ROUTES
-Route::get('/absensi', function () {
-    return view('absensi.index');
-})->name('absensi.index');
+Route::get('/absensi', [AttendanceController::class, 'index'])
+    ->name('absensi.index');
 
+Route::get('/absensi/{id}', [AttendanceController::class, 'show'])
+    ->name('absensi.detail');
 
-Route::get('/absensi/detail', function () {
-    return view('absensi.detail');
-})->name('absensi.detail');
 Route::resource('payroll', PayrollController::class);
 Route::resource('payroll', PayrollController::class)->except(['create']);
 Route::get('/leave-request/{id}/edit', function ($id) {

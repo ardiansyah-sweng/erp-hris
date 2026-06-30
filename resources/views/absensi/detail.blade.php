@@ -4,6 +4,18 @@
 
 @section('content')
 
+@php
+    $statusBadges = [
+        'present' => ['Hadir', 'bg-emerald-50 text-emerald-700 ring-emerald-600/20', 'bg-emerald-500'],
+        'late'    => ['Terlambat', 'bg-amber-50 text-amber-700 ring-amber-600/20', 'bg-amber-500'],
+        'absent'  => ['Tidak Hadir', 'bg-red-50 text-red-700 ring-red-600/20', 'bg-red-500'],
+        'sick'    => ['Sakit', 'bg-blue-50 text-blue-700 ring-blue-600/20', 'bg-blue-500'],
+        'leave'   => ['Cuti', 'bg-indigo-50 text-indigo-700 ring-indigo-600/20', 'bg-indigo-500'],
+    ];
+    [$statusLabel, $statusClass, $statusDot] = $statusBadges[$attendance->status]
+        ?? [$attendance->status, 'bg-gray-50 text-gray-700 ring-gray-600/20', 'bg-gray-500'];
+@endphp
+
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
     <!-- Header -->
@@ -30,11 +42,11 @@
         <!-- Header Card -->
         <div class="px-6 py-6 border-b border-gray-100">
             <h2 class="text-2xl font-bold text-gray-900">
-                Budi Santoso
+                {{ $attendance->employee->name ?? '-' }}
             </h2>
 
             <p class="text-gray-500 mt-1">
-                Software Engineer
+                {{ $attendance->employee->jobrole->role ?? '-' }}
             </p>
         </div>
 
@@ -47,7 +59,7 @@
                 </p>
 
                 <p class="mt-2 font-semibold text-gray-900">
-                    Budi Santoso
+                    {{ $attendance->employee->name ?? '-' }}
                 </p>
             </div>
 
@@ -57,7 +69,7 @@
                 </p>
 
                 <p class="mt-2 font-semibold text-gray-900">
-                    Software Engineer
+                    {{ $attendance->employee->jobrole->role ?? '-' }}
                 </p>
             </div>
 
@@ -67,7 +79,7 @@
                 </p>
 
                 <p class="mt-2 font-semibold text-gray-900">
-                    10 Juni 2026
+                    {{ $attendance->date?->format('d F Y') ?? '-' }}
                 </p>
             </div>
 
@@ -77,9 +89,9 @@
                 </p>
 
                 <div class="mt-2">
-                    <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
-                        <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
-                        Hadir
+                    <span class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-semibold ring-1 ring-inset {{ $statusClass }}">
+                        <span class="h-2 w-2 rounded-full {{ $statusDot }}"></span>
+                        {{ $statusLabel }}
                     </span>
                 </div>
             </div>
@@ -90,7 +102,7 @@
                 </p>
 
                 <p class="mt-2 font-semibold text-gray-900">
-                    08:00
+                    {{ $attendance->check_in ? substr($attendance->check_in, 0, 5) : '-' }}
                 </p>
             </div>
 
@@ -100,7 +112,7 @@
                 </p>
 
                 <p class="mt-2 font-semibold text-gray-900">
-                    17:00
+                    {{ $attendance->check_out ? substr($attendance->check_out, 0, 5) : '-' }}
                 </p>
             </div>
 
