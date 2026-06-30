@@ -18,6 +18,9 @@ Route::get('/detail-employee', function () {
 Route::get('/', [LoginController::class, 'showLoginForm']);
 Route::post('/login', [LoginController::class, 'login']);
 
+Route::post('/logout', [LoginController::class, 'logout'])
+    ->name('logout');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 });
