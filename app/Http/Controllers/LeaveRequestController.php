@@ -17,11 +17,12 @@ class LeaveRequestController extends Controller
     /**
      * Menampilkan seluruh data pengajuan cuti
      */
-    public function index()
+    public function index(Request $request)
     {
-        $leaveRequests = $this->leaveRequestService->getAllLeaveRequests();
+        $search = $request->input('search');
+        $leaveRequests = $this->leaveRequestService->getAllLeaveRequests($search);
 
-        return view('leave_request.index', compact('leaveRequests'));
+        return view('leave_request.index', compact('leaveRequests', 'search'));
     }
 
     /**

@@ -6,9 +6,15 @@ use App\Models\LeaveRequest;
 
 class LeaveRequestService
 {
-    public function getAllLeaveRequests()
+    public function getAllLeaveRequests(?string $search = null)
     {
-        return LeaveRequest::all();
+        return LeaveRequest::query()
+            ->when($search, function ($query) use ($search) {
+                $query->where('employee_name', 'like', "%{$search}%")
+                    ->orWhere('employee_id', 'like', "%{$search}%");
+            })
+            ->latest()
+            ->get();
     }
 
     public function getLeaveRequestDetail($id)

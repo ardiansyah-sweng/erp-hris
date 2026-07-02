@@ -31,6 +31,18 @@ class LeaveRequestControllerTest extends TestCase
         $response->assertSee('Budi Santoso');
     }
 
+    public function test_index_dapat_mencari_pengajuan_berdasarkan_nama()
+    {
+        LeaveRequest::factory()->create(['employee_name' => 'Budi Santoso']);
+        LeaveRequest::factory()->create(['employee_name' => 'Siti Aminah']);
+
+        $response = $this->get(route('leave_request.index', ['search' => 'Budi']));
+
+        $response->assertStatus(200);
+        $response->assertSee('Budi Santoso');
+        $response->assertDontSee('Siti Aminah');
+    }
+
     public function test_store_menyimpan_pengajuan_cuti_baru()
     {
         $payload = [

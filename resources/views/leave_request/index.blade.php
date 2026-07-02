@@ -43,7 +43,7 @@
                 Daftar Pengajuan Cuti
             </h3>
 
-            <div class="relative">
+            <form method="GET" action="{{ route('leave_request.index') }}" class="relative">
 
                 <div class="absolute inset-y-0 left-0 flex items-center pl-3">
                     <svg class="h-4 w-4 text-gray-400"
@@ -58,10 +58,12 @@
                 </div>
 
                 <input type="text"
-                    placeholder="Cari pengajuan..."
+                    name="search"
+                    value="{{ $search ?? '' }}"
+                    placeholder="Cari nama / ID karyawan..."
                     class="block w-full rounded-xl border-0 py-2 pl-10 pr-3 text-gray-900 ring-1 ring-gray-200 focus:ring-2 focus:ring-indigo-600 sm:text-sm">
 
-            </div>
+            </form>
 
         </div>
 
@@ -181,7 +183,7 @@
 
                     <tr>
 
-                        <td colspan="6" class="py-16 text-center">
+                        <td colspan="7" class="py-16 text-center">
 
                             <div class="flex flex-col items-center">
 
@@ -196,13 +198,28 @@
                                         d="M8 7V3m8 4V3m-9 8h10m-11 9h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2v11a2 2 0 002 2z"/>
                                 </svg>
 
-                                <h3 class="text-sm font-semibold text-gray-900">
-                                    Belum ada Pengajuan Cuti
-                                </h3>
+                                @if(!empty($search))
 
-                                <p class="mt-1 text-sm text-gray-500">
-                                    Belum ada data pengajuan cuti yang tersedia.
-                                </p>
+                                    <h3 class="text-sm font-semibold text-gray-900">
+                                        Tidak ada hasil untuk "{{ $search }}"
+                                    </h3>
+
+                                    <p class="mt-1 text-sm text-gray-500">
+                                        Coba kata kunci lain atau
+                                        <a href="{{ route('leave_request.index') }}" class="text-indigo-600 hover:underline">reset pencarian</a>.
+                                    </p>
+
+                                @else
+
+                                    <h3 class="text-sm font-semibold text-gray-900">
+                                        Belum ada Pengajuan Cuti
+                                    </h3>
+
+                                    <p class="mt-1 text-sm text-gray-500">
+                                        Belum ada data pengajuan cuti yang tersedia.
+                                    </p>
+
+                                @endif
 
                             </div>
 
