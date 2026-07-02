@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Employee;
 use App\Models\LeaveRequest;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -41,6 +42,18 @@ class LeaveRequestControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('Budi Santoso');
         $response->assertDontSee('Siti Aminah');
+    }
+
+    public function test_create_menampilkan_form_dengan_daftar_karyawan_dari_database()
+    {
+        Employee::factory()->create(['name' => 'Karyawan Uji']);
+
+        $response = $this->get(route('leave_request.create'));
+
+        $response->assertStatus(200);
+        $response->assertViewIs('leave_request.create');
+        $response->assertViewHas('employees');
+        $response->assertSee('Karyawan Uji');
     }
 
     public function test_store_menyimpan_pengajuan_cuti_baru()

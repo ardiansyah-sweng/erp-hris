@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Employee;
 use App\Services\LeaveRequestService;
 use Illuminate\Http\Request;
 
@@ -23,6 +24,16 @@ class LeaveRequestController extends Controller
         $leaveRequests = $this->leaveRequestService->getAllLeaveRequests($search);
 
         return view('leave_request.index', compact('leaveRequests', 'search'));
+    }
+
+    /**
+     * Menampilkan form tambah pengajuan cuti
+     */
+    public function create()
+    {
+        $employees = Employee::orderBy('name')->get(['id', 'name']);
+
+        return view('leave_request.create', compact('employees'));
     }
 
     /**

@@ -48,19 +48,25 @@
       class="p-6 space-y-6">
     @csrf
 
-        <!-- ID Karyawan -->
+        <!-- Karyawan (diambil dari tabel employees) -->
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">
-                ID Karyawan
+                Karyawan
             </label>
 
-            <input
-                type="text"
+            <select
                 id="employee_id"
                 name="employee_id"
-                placeholder="Contoh: EMP001"
-                class="block w-full rounded-xl border-0 py-3 px-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm">
-        </div>      
+                required
+                class="block w-full rounded-xl border-0 py-3 px-4 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm">
+                <option value="">-- Pilih Karyawan --</option>
+                @foreach($employees as $employee)
+                    <option value="{{ $employee->id }}" data-name="{{ $employee->name }}">
+                        {{ $employee->id }} - {{ $employee->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
 
         <!-- Nama Karyawan -->
         <div>
@@ -128,25 +134,13 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
-    const employees = {
-        'EMP001': 'Budi Santoso',
-        'EMP002': 'Siti Aminah',
-        'EMP003': 'Andi Wijaya'
-    };
-
-    const employeeId = document.getElementById('employee_id');
+    const employeeSelect = document.getElementById('employee_id');
     const employeeName = document.getElementById('employee_name');
 
-    employeeId.addEventListener('keyup', function () {
-
-        const id = this.value.toUpperCase();
-
-        if (employees[id]) {
-            employeeName.value = employees[id];
-        } else {
-            employeeName.value = '';
-        }
-
+    // Saat karyawan dipilih, isi otomatis nama dari data-name (asal tabel employees)
+    employeeSelect.addEventListener('change', function () {
+        const selected = this.options[this.selectedIndex];
+        employeeName.value = selected.getAttribute('data-name') || '';
     });
 
 });

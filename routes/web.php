@@ -106,9 +106,9 @@ Route::get('/leave-request',
     [LeaveRequestController::class, 'index'])
     ->name('leave_request.index');
 
-Route::get('/leave-request/create', function () {
-    return view('leave_request.create');
-})->name('leave_request.create');
+Route::get('/leave-request/create',
+    [LeaveRequestController::class, 'create'])
+    ->name('leave_request.create');
 
 Route::post('/leave-request',
     [LeaveRequestController::class, 'store'])
