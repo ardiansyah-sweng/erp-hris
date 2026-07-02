@@ -1,12 +1,15 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Models\Employee;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JobroleController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PayrollController;
 
+Route::get('/employees/status', [EmployeeController::class, 'indexByStatus']);
 Route::post('/test-jobrole', [JobroleController::class, 'store']);
+Route::get('/employees', [EmployeeController::class, 'index']);
 Route::post('/employees', [EmployeeController::class, 'store']);
 Route::get('/employees/{employee}', [EmployeeController::class, 'show']);
 
@@ -49,6 +52,14 @@ Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy']);
 Route::get('/dashboard', function () {
     return view('dashboard');
 });
+
+Route::get('/profile', function () {
+    return view('profile.index');
+})->name('profile.index');
+
+Route::get('/settings', function () {
+    return view('settings.index');
+})->name('settings.index');
 
 // ROUTE EDIT JOB ROLE
 Route::get('/job-roles/{id}/edit', function ($id) {
@@ -153,5 +164,43 @@ Route::get('/leave-request/{id}', function ($id) {
     );
 })->name('leave_request.detail');
 
+Route::get('/payroll/create', function () {
+    $employees = Employee::orderBy('name')->get(['id', 'name']);
+
+    return view('payroll.create', compact('employees'));
+})->name('payroll.create');
+
 Route::post('/payroll', [PayrollController::class, 'store']);
+// Route export WAJIB di atas '/payroll/{id}' agar 'export' tidak ditangkap sebagai id
+Route::get('/payroll/export', [PayrollController::class, 'export'])->name('payroll.export');
 Route::get('/payroll/{id}', [PayrollController::class, 'show']);
+Route::put('/payroll/{id}', [PayrollController::class, 'update']);
+Route::delete('/payroll/{id}', [PayrollController::class, 'destroy']);
+
+Route::resource('payroll', PayrollController::class)->except(['create']);
+Route::get('/leave-request/{id}/edit', function ($id) {
+
+    $leaveRequest = [
+        'id' => $id,
+        'employee_id' => 'EMP001',
+        'employee_name' => 'Susanti Wijaya',
+        'start_date' => '2026-06-10',
+        'end_date' => '2026-06-12',
+        'reason' => 'Liburan keluarga',
+        'status' => 'Pending',
+    ];
+
+    return view(
+        'leave_request.edit',
+        compact('leaveRequest')
+    );
+
+})->name('leave_request.edit');
+
+Route::put('/leave-request/{id}', function ($id) {
+
+    return redirect()
+        ->route('leave_request.index')
+        ->with('success', 'Data cuti berhasil diperbarui.');
+
+})->name('leave_request.update');
