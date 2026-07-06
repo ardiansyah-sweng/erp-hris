@@ -9,3 +9,39 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+/* ==== Dark Mode (fitur baru, toggle manual via class .dark di <html>) ==== */
+.dark body {
+    background-color: #0f172a;
+    color: #e2e8f0;
+}
+
+.dark aside,
+.dark .bg-white {
+    background-color: #1e293b !important;
+    color: #e2e8f0 !important;
+}
+
+.dark .bg-gray-50 {
+    background-color: #0f172a !important;
+}
+
+.dark .text-gray-900 {
+    color: #f1f5f9 !important;
+}
+
+.dark .text-gray-600,
+.dark .text-gray-500,
+.dark .text-gray-400 {
+    color: #94a3b8 !important;
+}
+
+.dark .border-gray-100,
+.dark .border-gray-200 {
+    border-color: #334155 !important;
+}
+
+.dark input {
+    background-color: #1e293b !important;
+    color: #e2e8f0 !important;
+    border-color: #334155 !important;
+}
