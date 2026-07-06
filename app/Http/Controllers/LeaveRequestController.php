@@ -97,4 +97,11 @@ class LeaveRequestController extends Controller
             ->route('leave_request.index')
             ->with('success', 'Data cuti berhasil diperbarui.');
     }
+
+    public function destroy($id)
+    {
+    return redirect()
+        ->route('leave_request.index')
+        ->with('success', 'Data berhasil dihapus (simulasi).');
+    }
 }

@@ -166,10 +166,19 @@
                                     Edit
                                 </a>
                                 
-                                <a href="#"
-                                    class="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg">
-                                    Hapus
-                                </a>
+                                <form action="{{ route('leave_request.destroy', $request['id']) }}"
+                                    method="POST"
+                                    onsubmit="return confirm('Yakin ingin menghapus pengajuan ini?')">
+
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button type="submit"
+                                        class="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg">
+                                        Hapus
+                                    </button>
+
+                                </form>
 
                             </div>
 

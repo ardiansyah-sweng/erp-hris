@@ -148,6 +148,9 @@ Route::get('/leave-request/{id}/edit', [LeaveRequestController::class, 'edit'])
 Route::put('/leave-request/{id}', [LeaveRequestController::class, 'update'])
     ->name('leave_request.update');
 
+Route::delete('/leave-request/{id}', [LeaveRequestController::class, 'destroy'])
+    ->name('leave_request.destroy');
+
 Route::get('/leave-request/{id}', function ($id) {
 
     $leaveRequest = [
