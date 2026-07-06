@@ -15,7 +15,43 @@
         <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Manajemen Karyawan</h1>
         <p class="mt-1 text-sm text-gray-500">Kelola dan pantau data karyawan perusahaan.</p>
     </div>
+
+    <form action="{{ route('employees.import') }}" method="POST" enctype="multipart/form-data" class="mt-4 sm:mt-0 flex items-center gap-3">
+        @csrf
+
+        <input 
+            type="file" 
+            name="csv_file" 
+            accept=".csv"
+            required
+            class="block text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+        >
+
+        <button 
+            type="submit"
+            class="inline-flex items-center rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700">
+            Import CSV
+        </button>
+    </form>
 </div>
+
+@if(session('success'))
+    <div class="mb-6 rounded-xl bg-emerald-50 border border-emerald-200 px-4 py-3 text-sm font-medium text-emerald-700">
+        {{ session('success') }}
+    </div>
+@endif
+
+@if(session('error'))
+    <div class="mb-6 rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm font-medium text-red-700">
+        {{ session('error') }}
+    </div>
+@endif
+
+@if($errors->any())
+    <div class="mb-6 rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm font-medium text-red-700">
+        {{ $errors->first() }}
+    </div>
+@endif
 
 <!-- Stat Cards -->
 <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8">
