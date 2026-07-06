@@ -21,7 +21,10 @@ Route::get('/', [LoginController::class, 'showLoginForm']);
 Route::post('/login', [LoginController::class, 'login']);
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $leaveRequestService = app(\App\Services\LeaveRequestService::class);
+    $leaveBalance = $leaveRequestService->getLeaveBalance('EMP001');
+
+    return view('dashboard', compact('leaveBalance'));
 });
 
 Route::post('/job-roles', [JobroleController::class, 'store'])
@@ -97,49 +100,24 @@ Route::put('/employee/test-edit', function () {
     return "Tombol Update berhasil diklik! (Ini hanya simulasi, data belum tersimpan karena Controller Update asli belum disambungkan).";
 });
 Route::put('/employees/{id}', [EmployeeController::class, 'update']);
+
 Route::get('/absensi', function () {
     return view('absensi.index');
 })->name('absensi.index');
 
 Route::get('/leave-request', function () {
-    return view('leave_request.index');
-});
+    $leaveRequestService = app(\App\Services\LeaveRequestService::class);
 
-Route::get('/leave-request', function () {
-    $dummyLeaveRequests = [
-        [
-            'id' => '1',
-            'employee_id' => 'EMP001',
-            'employee_name' => 'Susanti Wijaya',
-            'start_date' => '2026-06-10',
-            'end_date' => '2026-06-12',
-            'reason' => 'Liburan keluarga',
-            'status' => 'Pending',
-        ],
-        [
-            'id' => '2',
-            'employee_id' => 'EMP002',
-            'employee_name' => 'Budi Santoso',
-            'start_date' => '2026-06-15',
-            'end_date' => '2026-06-18',
-            'reason' => 'Keperluan pribadi',
-            'status' => 'Approved',
-        ],
-        [
-            'id' => '3',
-            'employee_id' => 'EMP003',
-            'employee_name' => 'Andi Wijaya',
-            'start_date' => '2026-06-20',
-            'end_date' => '2026-06-22',
-            'reason' => 'Kunjungan keluarga',
-            'status' => 'Rejected',
-        ],
-    ];
-    return view(
-        'leave_request.index',
-        compact('dummyLeaveRequests')
-    );
+    $dummyLeaveRequests = \App\Models\LeaveRequest::orderByDesc('start_date')->get()
+        ->map(function ($request) use ($leaveRequestService) {
+            $balance = $leaveRequestService->getLeaveBalance($request->employee_id);
+            $request->remaining_days = $balance['remaining_days'];
+            return $request;
+        });
+
+    return view('leave_request.index', compact('dummyLeaveRequests'));
 })->name('leave_request.index');
+
 
 Route::get('/leave-request/create', function () {
     return view('leave_request.create');

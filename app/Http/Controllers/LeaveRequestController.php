@@ -43,4 +43,16 @@ class LeaveRequestController extends Controller
             compact('leaveRequest')
         );
     }
+    public function balance(Request $request, $employeeId)
+{
+    $year = $request->query('year');
+
+    $balance = $this->leaveRequestService->getLeaveBalance($employeeId, $year);
+
+    return response()->json([
+        'status' => 'success',
+        'data' => $balance,
+    ]);
+}
+
 }
