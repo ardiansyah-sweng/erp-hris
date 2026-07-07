@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('evaluator_id')->nullable()->constrained('users')->cascadeOnDelete();
             $table->date('evaluation_date');
             $table->integer('score');
+            $table->json('criteria_scores')->nullable();
             $table->text('feedback')->nullable();
             $table->timestamps();
         });
