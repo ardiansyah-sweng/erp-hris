@@ -7,6 +7,9 @@ use App\Http\Controllers\JobroleController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\LeaveRequestController;
+use App\Http\Controllers\AuditLogController;
+use App\Http\Controllers\AttendanceController;
+
 
 Route::get('/employees/status', [EmployeeController::class, 'indexByStatus']);
 Route::post('/test-jobrole', [JobroleController::class, 'store']);
@@ -86,9 +89,6 @@ Route::put('/employee/test-edit', function () {
     return "Tombol Update berhasil diklik! (Ini hanya simulasi, data belum tersimpan karena Controller Update asli belum disambungkan).";
 });
 Route::put('/employees/{id}', [EmployeeController::class, 'update']);
-Route::get('/absensi', function () {
-    return view('absensi.index');
-})->name('absensi.index');
 
 Route::get('/leave-request', [LeaveRequestController::class, 'index'])
     ->name('leave_request.index');
@@ -124,4 +124,14 @@ Route::get('/payroll/{id}', [PayrollController::class, 'show']);
 Route::put('/payroll/{id}', [PayrollController::class, 'update']);
 Route::delete('/payroll/{id}', [PayrollController::class, 'destroy']);
 
+// ATTENDANCE ROUTES
+Route::get('/attendance', [AttendanceController::class, 'index'])
+    ->name('attendance.index');
+
+Route::get('/attendance/{id}', [AttendanceController::class, 'show'])
+    ->name('attendance.detail');
+
+Route::resource('payroll', PayrollController::class);
 Route::resource('payroll', PayrollController::class)->except(['create']);
+
+Route::get('/system-audit-temp', [AuditLogController::class, 'indexTemp'])->name('system.audit.temp');
