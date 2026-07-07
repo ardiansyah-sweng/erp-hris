@@ -6,10 +6,25 @@ use Illuminate\Http\Request;
 use App\Models\Payroll;
 use App\Models\Employee;
 use App\Services\PayrollService;
+use Illuminate\Support\Facades\DB; 
 
 class PayrollController extends Controller
 {
     protected $payrollService;
+
+    public function __construct(PayrollService $payrollService)
+    {
+        $this->payrollService = $payrollService;
+    }
+
+    public function index()
+    {
+        // 1. Mengambil seluruh data payroll yang sudah diproses oleh Service layer
+        $payrolls = $this->payrollService->getAllPayroll();
+
+        // 2. Mengirim data ke view 'payroll.index' menggunakan compact
+        return view('payroll.index', compact('payrolls'));
+    }
 
     public function store(Request $request)
     {
@@ -33,6 +48,17 @@ class PayrollController extends Controller
 
         $payroll = Payroll::create($validated);
 
+        // ==========================================
+        // 🌟 INJEKSI LOG: UNTUK AKSI CREATE
+        // ==========================================
+        DB::table('activity_logs')->insert([
+            'user_email'  => auth()->user()->email ?? 'admin@erphris.com',
+            'action'      => 'CREATE',
+            'module'      => 'Payroll',
+            'description' => 'Membuat data payroll baru untuk ID Karyawan: ' . $payroll->employee_id . ' (Net: ' . $validated['net_salary'] . ')',
+            'created_at'  => now()
+        ]);
+
         return response()->json([
             'payload' => [
                 'statusCode' => 201,
@@ -46,7 +72,6 @@ class PayrollController extends Controller
     {
         $payroll = Payroll::with('employee.jobrole')->find($id);
 
-        // Permintaan API (mis. getJson) tetap menerima respons JSON seperti semula
         if ($request->expectsJson()) {
             if (!$payroll) {
                 return response()->json([
@@ -67,7 +92,6 @@ class PayrollController extends Controller
             ], 200);
         }
 
-        // Permintaan dari browser menampilkan halaman detail slip gaji
         if (!$payroll) {
             abort(404);
         }
@@ -75,69 +99,6 @@ class PayrollController extends Controller
         return view('payroll.show', compact('payroll'));
     }
 
-    public function __construct(PayrollService $payrollService)
-    {
-        $this->payrollService = $payrollService;
-    }
-
-    public function index()
-    {
-        // 1. Mengambil seluruh data payroll yang sudah diproses oleh Service layer
-        $payrolls = $this->payrollService->getAllPayroll();
-
-        // 2. Mengirim data ke view 'payroll.index' menggunakan compact
-        return view('payroll.index', compact('payrolls'));
-    }
-
-    /**
-     * Export seluruh data penggajian ke file CSV (dapat dibuka di Excel).
-     */
-    public function export()
-    {
-        $payrolls = $this->payrollService->getAllPayroll();
-        $payrolls->load('employee.jobrole'); // muat jabatan untuk kolom CSV
-
-        $fileName = 'penggajian_' . now()->format('Y-m-d') . '.csv';
-
-        $headers = [
-            'Content-Type'        => 'text/csv; charset=UTF-8',
-            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
-        ];
-
-        $columns = ['No', 'Nama Karyawan', 'Jabatan', 'Bulan', 'Tahun',
-            'Gaji Pokok', 'Tunjangan', 'Potongan', 'Gaji Bersih', 'Status'];
-
-        $callback = function () use ($payrolls, $columns) {
-            $output = fopen('php://output', 'w');
-
-            // BOM UTF-8 agar Excel membaca karakter dengan benar
-            fwrite($output, "\xEF\xBB\xBF");
-            fputcsv($output, $columns);
-
-            foreach ($payrolls as $index => $payroll) {
-                fputcsv($output, [
-                    $index + 1,
-                    $payroll->employee->name ?? '-',
-                    $payroll->employee->jobrole->role ?? '-',
-                    $payroll->month,
-                    $payroll->year,
-                    $payroll->basic_salary,
-                    $payroll->allowances,
-                    $payroll->deductions,
-                    $payroll->net_salary,
-                    $payroll->status,
-                ]);
-            }
-
-            fclose($output);
-        };
-
-        return response()->stream($callback, 200, $headers);
-    }
-
-    /**
-     * Menampilkan form edit data penggajian.
-     */
     public function edit($id)
     {
         $payroll = Payroll::with('employee')->findOrFail($id);
@@ -146,14 +107,6 @@ class PayrollController extends Controller
         return view('payroll.edit', compact('payroll', 'employees'));
     }
 
-    /**
-     * Memproses pembaruan data penggajian.
-     *
-     * Logika perhitungan ulang net_salary terpusat di PayrollService::updatePayroll()
-     * (satu sumber kebenaran, dipakai juga oleh PR update berbasis service).
-     * Permintaan API (putJson) menerima respons JSON; permintaan dari form Edit
-     * (browser) diarahkan kembali ke halaman index dengan flash success.
-     */
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
@@ -181,6 +134,17 @@ class PayrollController extends Controller
 
             abort(404);
         }
+
+        // ==========================================
+        // 🌟 INJEKSI LOG: UNTUK AKSI UPDATE
+        // ==========================================
+        DB::table('activity_logs')->insert([
+            'user_email'  => auth()->user()->email ?? 'admin@erphris.com',
+            'action'      => 'UPDATE',
+            'module'      => 'Payroll',
+            'description' => 'Memperbarui rincian data payroll ID: ' . $id . ' (Status: ' . ($payroll->status ?? 'updated') . ')',
+            'created_at'  => now()
+        ]);
 
         if ($request->expectsJson()) {
             return response()->json([
@@ -211,6 +175,17 @@ class PayrollController extends Controller
             ], 404);
         }
 
+        // ==========================================
+        // 🌟 INJEKSI LOG: UNTUK AKSI DELETE
+        // ==========================================
+        DB::table('activity_logs')->insert([
+            'user_email'  => auth()->user()->email ?? 'admin@erphris.com',
+            'action'      => 'DELETE',
+            'module'      => 'Payroll',
+            'description' => 'Menghapus permanen data payroll ID: ' . $id . ' dari sistem.',
+            'created_at'  => now()
+        ]);
+
         return response()->json([
             'payload' => [
                 'statusCode' => 200,
@@ -218,5 +193,47 @@ class PayrollController extends Controller
                 'data' => $payroll
             ]
         ], 200);
+    }
+
+    public function export()
+    {
+        $payrolls = $this->payrollService->getAllPayroll();
+        $payrolls->load('employee.jobrole');
+
+        $fileName = 'penggajian_' . now()->format('Y-m-d') . '.csv';
+
+        $headers = [
+            'Content-Type'        => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+        ];
+
+        $columns = ['No', 'Nama Karyawan', 'Jabatan', 'Bulan', 'Tahun',
+            'Gaji Pokok', 'Tunjangan', 'Potongan', 'Gaji Bersih', 'Status'];
+
+        $callback = function () use ($payrolls, $columns) {
+            $output = fopen('php://output', 'w');
+
+            fwrite($output, "\xEF\xBB\xBF");
+            fputcsv($output, $columns);
+
+            foreach ($payrolls as $index => $payroll) {
+                fputcsv($output, [
+                    $index + 1,
+                    $payroll->employee->name ?? '-',
+                    $payroll->employee->jobrole->role ?? '-',
+                    $payroll->month,
+                    $payroll->year,
+                    $payroll->basic_salary,
+                    $payroll->allowances,
+                    $payroll->deductions,
+                    $payroll->net_salary,
+                    $payroll->status,
+                ]);
+            }
+
+            fclose($output);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 }
