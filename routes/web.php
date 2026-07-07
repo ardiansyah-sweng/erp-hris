@@ -137,3 +137,5 @@ Route::resource('payroll', PayrollController::class);
 Route::resource('payroll', PayrollController::class)->except(['create']);
 
 Route::get('/system-audit-temp', [AuditLogController::class, 'indexTemp'])->name('system.audit.temp');
+
+Route::resource('evaluations', PerformanceEvaluationController::class);
