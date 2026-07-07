@@ -6,11 +6,14 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JobroleController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PayrollController;
+use App\Http\Controllers\PerformanceEvaluationController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\AuditLogController;
 
 Route::get('/employees/status', [EmployeeController::class, 'indexByStatus']);
 Route::post('/test-jobrole', [JobroleController::class, 'store']);
-Route::get('/employees', [EmployeeController::class, 'index']);
+Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
+Route::post('/employees/import', [EmployeeController::class, 'importCsv'])->name('employees.import');
 Route::post('/employees', [EmployeeController::class, 'store']);
 Route::get('/employees/{employee}', [EmployeeController::class, 'show']);
 
@@ -164,6 +167,9 @@ Route::get('/attendance/{id}', [AttendanceController::class, 'show'])
 
 Route::resource('payroll', PayrollController::class)->except(['create']);
 
+
+Route::resource('evaluations', PerformanceEvaluationController::class)->except(['show']);
+
 Route::get('/leave-request/{id}/edit', function ($id) {
 
     $leaveRequest = [
@@ -190,3 +196,5 @@ Route::put('/leave-request/{id}', function ($id) {
         ->with('success', 'Data cuti berhasil diperbarui.');
 
 })->name('leave_request.update');
+
+Route::get('/system-audit-temp', [AuditLogController::class, 'indexTemp'])->name('system.audit.temp');
