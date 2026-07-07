@@ -5,7 +5,8 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JobroleController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PayrollController;
-
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SettingController;
 
 Route::post('/test-jobrole', [JobroleController::class, 'store']);
 Route::post('/employees', [EmployeeController::class, 'store']);
@@ -54,13 +55,37 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 });
 
-Route::get('/profile', function () {
-    return view('profile.index');
-})->name('profile.index');
+Route::middleware('auth')->group(function () {
 
-Route::get('/settings', function () {
-    return view('settings.index');
-})->name('settings.index');
+    // PROFILE
+    Route::get('/profile', [ProfileController::class, 'index'])
+        ->name('profile.index');
+
+    Route::put('/profile', [ProfileController::class, 'update'])
+        ->name('profile.update');
+
+
+    // DELETE FOTO PROFILE
+    Route::delete('/profile/photo', [ProfileController::class, 'destroyPhoto'])
+        ->name('profile.photo.delete');
+
+
+    // SETTINGS
+    Route::get('/settings', function () {
+        return view('settings.index');
+    })->name('settings.index');
+
+
+    Route::put('/settings',
+        [SettingController::class, 'update']
+    )->name('settings.update');
+
+
+    Route::put('/settings/password',
+        [SettingController::class, 'updatePassword']
+    )->name('settings.password');
+
+});
 
 // ROUTE EDIT JOB ROLE
 Route::get('/job-roles/{id}/edit', function ($id) {

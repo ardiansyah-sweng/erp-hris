@@ -175,29 +175,26 @@
                 <!-- Logout -->
                 <div class="p-2">
 
-                    <form action="{{ route('logout') }}" method="POST">
-                        @csrf
+                    <button
+                        type="button"
+                        onclick="openLogoutModal()"
+                        class="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-600 rounded-xl hover:bg-red-50 transition-colors duration-200">
 
-                        <button
-                            type="button"
-                            onclick="openLogoutModal()"
-                            class="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-600 rounded-xl hover:bg-red-50 transition-colors duration-200">
+                        <svg class="w-5 h-5 text-gray-500"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="1.5"
+                                d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"/>
+                        </svg>
 
-                            <svg class="w-5 h-5 text-gray-500"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="1.5"
-                                    d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"/>
-                            </svg>
+                        Keluar
 
-                            Keluar
-                        </button>
-                    </form>
+                    </button>
 
-                </div>                    
+                </div>                   
             </div>
         </div>
     </aside>

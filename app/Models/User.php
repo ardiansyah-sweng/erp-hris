@@ -20,7 +20,16 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     // udah aku ganti jadi seperti ini
-    protected $fillable = ['name', 'email', 'password'];
+    protected $fillable = [
+        'name',
+        'email',
+        'profile_photo',
+        'language',
+        'theme',
+        'email_notification',
+        'leave_notification',
+        'payroll_notification',
+    ];
     protected $hidden = ['password', 'remember_token'];
 
     /**
