@@ -182,7 +182,11 @@ Route::get('/attendance', [AttendanceController::class, 'index'])
 Route::get('/attendance/{id}', [AttendanceController::class, 'show'])
     ->name('attendance.detail');
 
+
 Route::resource('payroll', PayrollController::class);
+Route::get('/attendance-recap', [AttendanceController::class, 'recap'])
+    ->name('attendance.recap');
+
 Route::resource('payroll', PayrollController::class)->except(['create']);
 Route::get('/leave-request/{id}/edit', function ($id) {
 
