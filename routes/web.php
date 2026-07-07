@@ -6,6 +6,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JobroleController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PayrollController;
+use App\Http\Controllers\PerformanceEvaluationController;
 
 Route::get('/employees/status', [EmployeeController::class, 'indexByStatus']);
 Route::post('/test-jobrole', [JobroleController::class, 'store']);
@@ -178,6 +179,7 @@ Route::put('/payroll/{id}', [PayrollController::class, 'update']);
 Route::delete('/payroll/{id}', [PayrollController::class, 'destroy']);
 
 Route::resource('payroll', PayrollController::class)->except(['create']);
+Route::resource('evaluations', PerformanceEvaluationController::class)->except(['show']);
 Route::get('/leave-request/{id}/edit', function ($id) {
 
     $leaveRequest = [
