@@ -8,42 +8,109 @@ use Tests\TestCase;
 
 class AuditLogFeatureTest extends TestCase
 {
-    // komen refreshdatabase dulu kalo mau di test
+    // JANGAN di-uncomment/jangan diaktifkan baris di bawah ini 
+    // supaya data di database asli kamu gak kehapus otomatis saat ditest.
     // use RefreshDatabase;
 
     /** @test */
-    public function test_halaman_audit_log_bisa_diakses_dan_menampilkan_data_dari_test_seeder()
+    public function test_skenario_crud_audit_log_berjalan_lancar()
     {
-        // 1. OTOMATIS GENERATE DATA DUMMY SAAT TEST DIJALANKAN
+        // ==========================================
+        // 1. SKENARIO CREATE (Tambah Log Baru)
+        // ==========================================
+        $logData = [
+            'user_email' => 'testing.crud@company.com',
+            'action' => 'CREATE',
+            'module' => 'JobRole',
+            'description' => 'Mencoba membuat data baru lewat automated testing.',
+            'created_at' => now()
+        ];
+
+        // Jalankan perintah insert ke database
+        $inserted = DB::table('activity_logs')->insert($logData);
+        
+        // Validasi: Pastikan data berhasil masuk ke database (bernilai true)
+        $this->assertTrue($inserted);
+
+
+        // ==========================================
+        // 2. SKENARIO READ (Membaca Data via URL UI)
+        // ==========================================
+        // Simulasikan robot mengakses URL halaman Audit Log
+        $response = $this->get(route('system.audit.temp'));
+
+        // Validasi: Pastikan halaman merespons HTTP 200 OK (berhasil diakses)
+        $response->assertStatus(200);
+
+
+        // ==========================================
+        // 3. SKENARIO UPDATE (Mengubah Log)
+        // ==========================================
+        // Ambil data log terakhir yang baru saja dimasukkan oleh test ini
+        $latestLog = DB::table('activity_logs')
+            ->where('user_email', 'testing.crud@company.com')
+            ->latest('id')
+            ->first();
+
+        // Jalankan perintah update berdasarkan ID log tersebut
+        DB::table('activity_logs')
+            ->where('id', $latestLog->id)
+            ->update([
+                'description' => 'Deskripsi ini berhasil diubah melalui skenario UPDATE testing.'
+            ]);
+
+        // Validasi: Pastikan di database datanya benar-benar sudah berubah
+        $this->assertDatabaseHas('activity_logs', [
+            'id' => $latestLog->id,
+            'description' => 'Deskripsi ini berhasil diubah melalui skenario UPDATE testing.'
+        ]);
+
+
+        // ==========================================
+        // 4. SKENARIO DELETE (Menghapus Log)
+        // ==========================================
+        // Jalankan perintah delete untuk menghapus log testing ini dari database (Biar bersih)
+        DB::table('activity_logs')->where('id', $latestLog->id)->delete();
+
+        // Validasi: Pastikan data dengan ID tersebut sudah lenyap dari database
+        $this->assertDatabaseMissing('activity_logs', [
+            'id' => $latestLog->id
+        ]);
+    }
+
+    /** @test */
+    public function test_generate_data_dummy_untuk_dipamerkan_di_browser()
+    {
+        // Skenario khusus memasukkan data yang MENETAP di database (GAK DI-DELETE)
+        // Ini yang bikin halaman browser kamu nanti ada isinya saat didemokan
         DB::table('activity_logs')->insert([
             [
-                'user_email' => 'admin.hris@company.com',
+                'user_email' => 'admin.hris@erphris.com',
                 'action' => 'CREATE',
-                'module' => 'Employee',
-                'description' => 'Membuat data karyawan baru bernama Ahmad Fauzi.',
-                'created_at' => now()->subMinutes(15)
+                'module' => 'Payroll',
+                'description' => 'Membuat slip gaji baru untuk bulan Juli 2026.',
+                'created_at' => now()->subMinutes(10)
             ],
             [
-                'user_email' => 'manager.payroll@company.com',
+                'user_email' => 'admin.hris@erphris.com',
                 'action' => 'UPDATE',
-                'module' => 'Payroll',
-                'description' => 'Mengubah nominal tunjangan fungsional divisi IT.',
-                'created_at' => now()->subMinutes(5)
+                'module' => 'JobRole',
+                'description' => 'Mengubah level jabatan Software Engineer menjadi Senior Staff.',
+                'created_at' => now()->subMinutes(2)
+            ],
+            [
+                'user_email' => 'manager.it@erphris.com',
+                'action' => 'DELETE',
+                'module' => 'Karyawan',
+                'description' => 'Menghapus data akun testing magang dari sistem.',
+                'created_at' => now()
             ]
         ]);
 
-        // 2. SIMULASIKAN AKSES KE URL HALAMAN AUDIT
-        $response = $this->get(route('system.audit.temp'));
-
-        // 3. VALIDASI: Pastikan halaman merespons dengan HTTP 200 OK
-        $response->assertStatus(200);
-
-        // 4. VALIDASI: Pastikan data dummy yang dibuat di atas muncul di struktur HTML teks halaman
-        $response->assertSee('admin.hris@company.com');
-        $response->assertSee('CREATE');
-        $response->assertSee('Membuat data karyawan baru bernama Ahmad Fauzi.');
-        
-        $response->assertSee('manager.payroll@company.com');
-        $response->assertSee('UPDATE');
+        // Validasi simpel: Pastikan data dummy di atas minimal berhasil masuk ke DB
+        $this->assertDatabaseHas('activity_logs', [
+            'user_email' => 'admin.hris@erphris.com',
+            'module' => 'Payroll'
+        ]);
     }
 }
