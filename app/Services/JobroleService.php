@@ -32,19 +32,39 @@ class JobroleService
    
     public static function parseJobrole(Jobrole $jobrole)
     {
+        // Try to parse legacy JSON data in 'role' column for backward compatibility
         $roleValue = $jobrole->getRawOriginal('role') ?? $jobrole->role;
         $decoded = json_decode($roleValue, true);
         if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
-            $jobrole->setAttribute('role', $decoded['role'] ?? '');
-            $jobrole->setAttribute('name', $decoded['role'] ?? '');
-            $jobrole->setAttribute('department', $decoded['department'] ?? '-');
-            $jobrole->setAttribute('level', $decoded['level'] ?? '-');
-            $jobrole->setAttribute('status', $decoded['status'] ?? 'Active');
+            // Legacy JSON format — extract values if separate columns are empty
+            if (empty($jobrole->name)) {
+                $jobrole->setAttribute('name', $decoded['role'] ?? '');
+            }
+            if (empty($jobrole->department) || $jobrole->department === '-') {
+                $jobrole->setAttribute('department', $decoded['department'] ?? '-');
+            }
+            if (empty($jobrole->level) || $jobrole->level === '-') {
+                $jobrole->setAttribute('level', $decoded['level'] ?? '-');
+            }
+            if (empty($jobrole->status)) {
+                $jobrole->setAttribute('status', $decoded['status'] ?? 'Active');
+            }
+            // Set role to the readable name
+            $jobrole->setAttribute('role', $decoded['role'] ?? $roleValue);
         } else {
-            $jobrole->setAttribute('name', $roleValue);
-            $jobrole->setAttribute('department', '-');
-            $jobrole->setAttribute('level', '-');
-            $jobrole->setAttribute('status', 'Active');
+            // Non-JSON role — use role value as name if name is empty
+            if (empty($jobrole->name)) {
+                $jobrole->setAttribute('name', $roleValue);
+            }
+            if (empty($jobrole->department)) {
+                $jobrole->setAttribute('department', '-');
+            }
+            if (empty($jobrole->level)) {
+                $jobrole->setAttribute('level', '-');
+            }
+            if (empty($jobrole->status)) {
+                $jobrole->setAttribute('status', 'Active');
+            }
         }
         return $jobrole;
     }
@@ -52,9 +72,13 @@ class JobroleService
     public function createJobrole(array $data)
     {
         $jobrole = Jobrole::create([
-            'role' => $data['role']
+            'role' => $data['name'] ?? $data['role'],
+            'name' => $data['name'] ?? $data['role'],
+            'department' => $data['department'] ?? '-',
+            'level' => $data['level'] ?? '-',
+            'status' => $data['status'] ?? 'Active',
         ]);
-        return self::parseJobrole($jobrole);
+        return $jobrole;
     }
 
    
@@ -84,23 +108,26 @@ class JobroleService
         $jobrole = Jobrole::findOrFail($id);
 
         $jobrole->update([
-            'role' => $data['role']
+            'role' => $data['name'] ?? $data['role'],
+            'name' => $data['name'] ?? $data['role'],
+            'department' => $data['department'] ?? $jobrole->department,
+            'level' => $data['level'] ?? $jobrole->level,
+            'status' => $data['status'] ?? $jobrole->status,
         ]);
 
-        return self::parseJobrole($jobrole);
+        return $jobrole;
     }
 
     public function destroyJobrole($id)
     {
         $jobrole = Jobrole::findOrFail($id);
-        $parsed = self::parseJobrole($jobrole);
         $deletedData = [
-            'id' => $parsed->id,
-            'role' => $parsed->role,
-            'name' => $parsed->name,
-            'department' => $parsed->department,
-            'level' => $parsed->level,
-            'status' => $parsed->status,
+            'id' => $jobrole->id,
+            'role' => $jobrole->role,
+            'name' => $jobrole->name,
+            'department' => $jobrole->department,
+            'level' => $jobrole->level,
+            'status' => $jobrole->status,
         ];
         $jobrole->delete();
 

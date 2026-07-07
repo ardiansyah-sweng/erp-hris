@@ -38,18 +38,11 @@ class JobroleController extends Controller
         ]);
 
         try {
-            $roleValue = $validated['name'];
-            if (!$request->is('test-jobrole') || $request->has('department')) {
-                $roleValue = json_encode([
-                    'role' => $validated['name'],
-                    'department' => $request->input('department') ?: '-',
-                    'level' => $request->input('level') ?: '-',
-                    'status' => $request->input('status') ?: 'Active',
-                ]);
-            }
-
             $jobrole = $this->jobroleService->createJobrole([
-                'role' => $roleValue,
+                'name' => $validated['name'],
+                'department' => $request->input('department') ?: '-',
+                'level' => $request->input('level') ?: '-',
+                'status' => $request->input('status') ?: 'Active',
             ]);
 
             if ($request->wantsJson() || $request->expectsJson() || $request->is('test-jobrole') || $request->is('api/*')) {
@@ -113,18 +106,11 @@ class JobroleController extends Controller
         ]);
 
         try {
-            $roleValue = $validated['name'];
-            if (!$request->is('test-jobrole') || $request->has('department')) {
-                $roleValue = json_encode([
-                    'role' => $validated['name'],
-                    'department' => $request->input('department') ?: '-',
-                    'level' => $request->input('level') ?: '-',
-                    'status' => $request->input('status') ?: 'Active',
-                ]);
-            }
-
             $jobrole = $this->jobroleService->updateJobrole($id, [
-                'role' => $roleValue,
+                'name' => $validated['name'],
+                'department' => $request->input('department') ?: '-',
+                'level' => $request->input('level') ?: '-',
+                'status' => $request->input('status') ?: 'Active',
             ]);
 
             if ($request->wantsJson() || $request->expectsJson()) {
