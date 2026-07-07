@@ -6,5 +6,9 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\LeaveRequestController;
 
 Route::get('/cashiers', [EmployeeController::class, 'getCashiers']);
+
 Route::get('/attendances', [AttendanceController::class, 'index']);
 Route::get('/leave-requests/{employeeId}/balance', [LeaveRequestController::class, 'balance']);
+
+Route::get('/attendances', [AttendanceController::class, 'apiIndex']);
+

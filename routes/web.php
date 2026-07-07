@@ -6,6 +6,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JobroleController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PayrollController;
+use App\Http\Controllers\AttendanceController;
 
 Route::get('/employees/status', [EmployeeController::class, 'indexByStatus']);
 Route::post('/test-jobrole', [JobroleController::class, 'store']);
@@ -52,10 +53,6 @@ Route::get('/job-roles/{id}', [JobroleController::class, 'show']);
 
 Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy']);
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-});
-
 Route::get('/profile', function () {
     return view('profile.index');
 })->name('profile.index');
@@ -101,9 +98,12 @@ Route::put('/employee/test-edit', function () {
 });
 Route::put('/employees/{id}', [EmployeeController::class, 'update']);
 
+
 Route::get('/absensi', function () {
     return view('absensi.index');
 })->name('absensi.index');
+
+
 
 Route::get('/leave-request', function () {
     $leaveRequestService = app(\App\Services\LeaveRequestService::class);
@@ -155,7 +155,15 @@ Route::get('/payroll/{id}', [PayrollController::class, 'show']);
 Route::put('/payroll/{id}', [PayrollController::class, 'update']);
 Route::delete('/payroll/{id}', [PayrollController::class, 'destroy']);
 
+// ATTENDANCE ROUTES
+Route::get('/attendance', [AttendanceController::class, 'index'])
+    ->name('attendance.index');
+
+Route::get('/attendance/{id}', [AttendanceController::class, 'show'])
+    ->name('attendance.detail');
+
 Route::resource('payroll', PayrollController::class)->except(['create']);
+
 Route::get('/leave-request/{id}/edit', function ($id) {
 
     $leaveRequest = [
