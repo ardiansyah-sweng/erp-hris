@@ -22,12 +22,21 @@ class AttendanceController extends Controller
 
     /**
      * Menampilkan halaman daftar absensi.
+     * Bisa difilter berdasarkan tanggal dan status (fitur baru - Laelatun).
      */
-    public function index()
+    public function index(Request $request)
     {
-        $attendances = Attendance::with('employee.jobrole')
-            ->orderByDesc('date')
-            ->get();
+        $query = Attendance::with('employee.jobrole');
+
+        if ($request->filled('date')) {
+            $query->whereDate('date', $request->query('date'));
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->query('status'));
+        }
+
+        $attendances = $query->orderByDesc('date')->get();
 
         return view('absensi.index', compact('attendances'));
     }

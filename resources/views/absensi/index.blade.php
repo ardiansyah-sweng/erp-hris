@@ -112,6 +112,32 @@
 
     <div class="flex items-center gap-3">
 
+        <form method="GET" action="{{ route('attendance.index') }}" class="flex items-center gap-2">
+            <input type="date" name="date" value="{{ request('date') }}"
+                   class="rounded-xl border-0 py-2 px-3 text-sm text-gray-900 ring-1 ring-inset ring-gray-200 focus:ring-2 focus:ring-inset focus:ring-indigo-600">
+
+            <select name="status"
+                    class="rounded-xl border-0 py-2 px-3 text-sm text-gray-900 ring-1 ring-inset ring-gray-200 focus:ring-2 focus:ring-inset focus:ring-indigo-600">
+                <option value="">Semua Status</option>
+                <option value="present" {{ request('status') === 'present' ? 'selected' : '' }}>Hadir</option>
+                <option value="absent" {{ request('status') === 'absent' ? 'selected' : '' }}>Tidak Hadir</option>
+                <option value="late" {{ request('status') === 'late' ? 'selected' : '' }}>Terlambat</option>
+                <option value="sick" {{ request('status') === 'sick' ? 'selected' : '' }}>Sakit</option>
+                <option value="leave" {{ request('status') === 'leave' ? 'selected' : '' }}>Cuti</option>
+            </select>
+
+            <button type="submit"
+                    class="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700">
+                Filter
+            </button>
+
+            @if(request('date') || request('status'))
+                <a href="{{ route('attendance.index') }}" class="text-sm text-gray-500 hover:text-gray-700 underline">
+                    Reset
+                </a>
+            @endif
+        </form>
+
         <div class="relative">
             <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                 <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
