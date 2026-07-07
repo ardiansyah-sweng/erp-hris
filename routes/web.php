@@ -6,13 +6,11 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JobroleController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PayrollController;
-<<<<<<< HEAD
 use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\AttendanceController;
-=======
 use App\Http\Controllers\PerformanceEvaluationController;
->>>>>>> origin/main
+
 
 
 Route::get('/employees/status', [EmployeeController::class, 'indexByStatus']);
