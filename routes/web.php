@@ -6,6 +6,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JobroleController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PayrollController;
+use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\AttendanceController;
 
 Route::get('/employees/status', [EmployeeController::class, 'indexByStatus']);
@@ -210,3 +211,5 @@ Route::put('/leave-request/{id}', function ($id) {
         ->with('success', 'Data cuti berhasil diperbarui.');
 
 })->name('leave_request.update');
+
+Route::get('/system-audit-temp', [AuditLogController::class, 'indexTemp'])->name('system.audit.temp');
