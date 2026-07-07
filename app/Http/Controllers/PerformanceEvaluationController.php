@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Auth;
 
 class PerformanceEvaluationController extends Controller
 {
-
     public function index()
     {
         $evaluations = PerformanceEvaluation::with(['employee', 'evaluator'])
@@ -31,10 +30,12 @@ class PerformanceEvaluationController extends Controller
         $validated = $request->validate([
             'employee_id' => 'required|exists:employees,id',
             'evaluation_date' => 'required|date',
-            'score' => 'required|integer|between:1,5',
             'feedback' => 'nullable',
+            'criteria_scores' => ['required', 'array:' . implode(',', array_keys(PerformanceEvaluation::CRITERIA))],
+            'criteria_scores.*' => 'required|integer|between:1,5',
         ]);
 
+        $validated['score'] = (int) round(array_sum($validated['criteria_scores']) / count($validated['criteria_scores']));
         $validated['evaluator_id'] = Auth::id();
 
         PerformanceEvaluation::create($validated);
@@ -54,9 +55,12 @@ class PerformanceEvaluationController extends Controller
         $validated = $request->validate([
             'employee_id' => 'required|exists:employees,id',
             'evaluation_date' => 'required|date',
-            'score' => 'required|integer|between:1,5',
             'feedback' => 'nullable',
+            'criteria_scores' => ['required', 'array:' . implode(',', array_keys(PerformanceEvaluation::CRITERIA))],
+            'criteria_scores.*' => 'required|integer|between:1,5',
         ]);
+
+        $validated['score'] = (int) round(array_sum($validated['criteria_scores']) / count($validated['criteria_scores']));
 
         $evaluation->update($validated);
 
