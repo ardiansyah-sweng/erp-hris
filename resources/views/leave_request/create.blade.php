@@ -43,7 +43,8 @@
     </div>
 
     <!-- Form -->
-    <form class="p-6 space-y-6">
+    <form action="{{ route('leave_request.store') }}" method="POST" class="p-6 space-y-6">
+    @csrf
 
         <!-- ID Karyawan -->
         <div>
@@ -53,7 +54,9 @@
 
             <input
                 type="text"
+                name="employee_id"
                 id="employee_id"
+                value="{{ old('employee_id') }}"
                 placeholder="Contoh: EMP001"
                 class="block w-full rounded-xl border-0 py-3 px-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm">
         </div>      
@@ -63,11 +66,14 @@
             <label class="block text-sm font-medium text-gray-700 mb-2">
                 Nama Karyawan
             </label>
-            <input type="text"
-                    id="employee_name"
-                    readonly
-                   placeholder="Nama Karyawan akan muncul otomatis"
-                   class="block w-full rounded-xl border-0 py-3 px-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm">
+            <input
+                type="text"
+                name="employee_name"
+                id="employee_name"
+                value="{{ old('employee_name') }}"
+                readonly
+                placeholder="Nama Karyawan akan muncul otomatis"
+                class="block w-full rounded-xl border-0 py-3 px-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm">
         </div>
 
         <!-- Tanggal Mulai -->
@@ -75,8 +81,11 @@
             <label class="block text-sm font-medium text-gray-700 mb-2">
                 Tanggal Mulai
             </label>
-            <input type="date"
-                   class="block w-full rounded-xl border-0 py-3 px-4 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm">
+            <input
+                type="date"
+                name="start_date"
+                value="{{ old('start_date') }}"
+                class="block w-full rounded-xl border-0 py-3 px-4 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm">
         </div>
 
         <!-- Tanggal Selesai -->
@@ -84,8 +93,11 @@
             <label class="block text-sm font-medium text-gray-700 mb-2">
                 Tanggal Selesai
             </label>
-            <input type="date"
-                   class="block w-full rounded-xl border-0 py-3 px-4 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm">
+            <input
+                type="date"
+                name="end_date"
+                value="{{ old('end_date') }}"
+                class="block w-full rounded-xl border-0 py-3 px-4 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm">
         </div>
 
         <!-- Alasan -->
@@ -93,10 +105,39 @@
             <label class="block text-sm font-medium text-gray-700 mb-2">
                 Alasan
             </label>
-            <textarea rows="4"
-                      placeholder="Masukkan alasan pengajuan cuti"
-                      class="block w-full rounded-xl border-0 py-3 px-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm"></textarea>
+            <textarea
+                name="reason"
+                rows="4"
+                placeholder="Masukkan alasan pengajuan cuti"
+                class="block w-full rounded-xl border-0 py-3 px-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm">{{ old('reason') }}</textarea>
         </div>
+
+        <div>
+
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+            Status
+        </label>
+
+        <select name="status"
+            class="block w-full rounded-xl border-0 py-3 px-4 text-gray-900 ring-1 ring-gray-300 focus:ring-2 focus:ring-indigo-600">
+
+            <option value="Pending"
+                {{ old('status') == 'Pending' ? 'selected' : '' }}>
+                Pending
+            </option>
+
+            <option value="Approved"
+                {{ old('status') == 'Approved' ? 'selected' : '' }}>
+                Approved
+            </option>
+
+            <option value="Rejected"
+                {{ old('status') == 'Rejected' ? 'selected' : '' }}>
+                Rejected
+            </option>
+
+        </select>
+    </div>
 
         <!-- Tombol -->
         <div class="flex justify-end gap-3 pt-5 border-t border-gray-100">
@@ -120,11 +161,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
-    const employees = {
-        'EMP001': 'Budi Santoso',
-        'EMP002': 'Siti Aminah',
-        'EMP003': 'Andi Wijaya'
-    };
+    const employees = @json($employees->pluck('name', 'id_number'));
 
     const employeeId = document.getElementById('employee_id');
     const employeeName = document.getElementById('employee_name');

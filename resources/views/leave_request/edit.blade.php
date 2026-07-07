@@ -21,7 +21,7 @@
             </h3>
         </div>
 
-        <form action="{{ route('leave_request.update', $leaveRequest['id']) }}" method="POST" class="p-6 space-y-5">
+        <form action="{{ route('leave_request.update', $leaveRequest->id) }}" method="POST" class="p-6 space-y-5">
             @csrf
             @method('PUT')
 
@@ -30,7 +30,7 @@
                     ID Karyawan
                 </label>
                 <input type="text" name="employee_id"
-                    value="{{ old('employee_id', $leaveRequest['employee_id']) }}"
+                    value="{{ old('employee_id', $leaveRequest->employee_id) }}"    
                     class="block w-full rounded-xl border-0 py-2.5 px-4 text-gray-900 ring-1 ring-gray-200 focus:ring-2 focus:ring-indigo-600 sm:text-sm">
             </div>
 
@@ -39,7 +39,7 @@
                     Nama Karyawan
                 </label>
                 <input type="text" name="employee_name"
-                    value="{{ old('employee_name', $leaveRequest['employee_name']) }}"
+                    value="{{ old('employee_name', $leaveRequest->employee_name) }}"    
                     class="block w-full rounded-xl border-0 py-2.5 px-4 text-gray-900 ring-1 ring-gray-200 focus:ring-2 focus:ring-indigo-600 sm:text-sm">
             </div>
 
@@ -49,7 +49,7 @@
                         Tanggal Mulai
                     </label>
                     <input type="date" name="start_date"
-                        value="{{ old('start_date', $leaveRequest['start_date']) }}"
+                        value="{{ old('start_date', optional($leaveRequest->start_date)->format('Y-m-d')) }}"
                         class="block w-full rounded-xl border-0 py-2.5 px-4 text-gray-900 ring-1 ring-gray-200 focus:ring-2 focus:ring-indigo-600 sm:text-sm">
                 </div>
 
@@ -58,7 +58,7 @@
                         Tanggal Selesai
                     </label>
                     <input type="date" name="end_date"
-                        value="{{ old('end_date', $leaveRequest['end_date']) }}"
+                        value="{{ old('end_date', optional($leaveRequest->end_date)->format('Y-m-d')) }}"
                         class="block w-full rounded-xl border-0 py-2.5 px-4 text-gray-900 ring-1 ring-gray-200 focus:ring-2 focus:ring-indigo-600 sm:text-sm">
                 </div>
             </div>
@@ -68,7 +68,7 @@
                     Alasan
                 </label>
                 <textarea name="reason" rows="4"
-                    class="block w-full rounded-xl border-0 py-2.5 px-4 text-gray-900 ring-1 ring-gray-200 focus:ring-2 focus:ring-indigo-600 sm:text-sm">{{ old('reason', $leaveRequest['reason']) }}</textarea>
+                    class="block w-full rounded-xl border-0 py-2.5 px-4 text-gray-900 ring-1 ring-gray-200 focus:ring-2 focus:ring-indigo-600 sm:text-sm">{{ old('reason', $leaveRequest->reason) }}</textarea>
             </div>
 
             <div>
@@ -77,15 +77,22 @@
                 </label>
                 <select name="status"
                     class="block w-full rounded-xl border-0 py-2.5 px-4 text-gray-900 ring-1 ring-gray-200 focus:ring-2 focus:ring-indigo-600 sm:text-sm">
-                    <option value="Pending" {{ $leaveRequest['status'] == 'Pending' ? 'selected' : '' }}>
+
+                    <option value="Pending"
+                        {{ old('status', $leaveRequest->status) == 'Pending' ? 'selected' : '' }}>
                         Pending
                     </option>
-                    <option value="Approved" {{ $leaveRequest['status'] == 'Approved' ? 'selected' : '' }}>
+
+                    <option value="Approved"
+                        {{ old('status', $leaveRequest->status) == 'Approved' ? 'selected' : '' }}>
                         Approved
                     </option>
-                    <option value="Rejected" {{ $leaveRequest['status'] == 'Rejected' ? 'selected' : '' }}>
+
+                    <option value="Rejected"
+                        {{ old('status', $leaveRequest->status) == 'Rejected' ? 'selected' : '' }}>
                         Rejected
                     </option>
+
                 </select>
             </div>
 
