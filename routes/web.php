@@ -7,6 +7,8 @@ use App\Http\Controllers\JobroleController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\PerformanceEvaluationController;
+use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\AuditLogController;
 
 Route::get('/employees/status', [EmployeeController::class, 'indexByStatus']);
 Route::post('/test-jobrole', [JobroleController::class, 'store']);
@@ -187,6 +189,9 @@ Route::get('/attendance/{id}', [AttendanceController::class, 'show'])
 Route::resource('payroll', PayrollController::class);
 Route::get('/attendance-recap', [AttendanceController::class, 'recap'])
     ->name('attendance.recap');
+
+Route::get('/attendance-recap/pdf', [AttendanceController::class, 'recapPdf'])
+    ->name('attendance.recap.pdf');
 
 Route::resource('payroll', PayrollController::class)->except(['create']);
 Route::resource('evaluations', PerformanceEvaluationController::class)->except(['show']);

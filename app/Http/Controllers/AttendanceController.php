@@ -76,4 +76,36 @@ class AttendanceController extends Controller
 
         return view('absensi.recap', compact('recap', 'startDate', 'endDate'));
     }
+
+    /**
+     * Cetak PDF rekap presensi per periode (fitur baru - Laelatun).
+     */
+    public function recapPdf(Request $request)
+    {
+        $startDate = $request->query('start_date', now()->subDays(7)->toDateString());
+        $endDate = $request->query('end_date', now()->toDateString());
+
+        $recap = Attendance::whereBetween('date', [$startDate, $endDate])
+            ->selectRaw('employee_id, status, COUNT(*) as total')
+            ->groupBy('employee_id', 'status')
+            ->get()
+            ->groupBy('employee_id')
+            ->map(function ($rows, $employeeId) {
+                $summary = ['present' => 0, 'absent' => 0, 'late' => 0, 'sick' => 0, 'leave' => 0];
+                foreach ($rows as $row) {
+                    $summary[$row->status] = (int) $row->total;
+                }
+                $employee = \App\Models\Employee::find($employeeId);
+                return [
+                    'employee_name' => $employee->name ?? '-',
+                    'summary' => $summary,
+                    'total_records' => array_sum($summary),
+                ];
+            })
+            ->values();
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('absensi.recap-pdf', compact('recap', 'startDate', 'endDate'));
+
+        return $pdf->download('rekap-presensi-' . $startDate . '-sd-' . $endDate . '.pdf');
+    }
 }

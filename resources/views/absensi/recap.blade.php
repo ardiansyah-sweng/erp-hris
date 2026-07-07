@@ -10,6 +10,16 @@
             <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Rekap Presensi per Periode</h1>
             <p class="mt-1 text-sm text-gray-500">Ringkasan kehadiran karyawan berdasarkan rentang tanggal.</p>
         </div>
+        <div class="mt-4 sm:mt-0 flex gap-3">
+            <a href="{{ route('attendance.recap.pdf', ['start_date' => $startDate, 'end_date' => $endDate]) }}"
+                class="inline-flex items-center justify-center rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700 transition-all">
+                Cetak PDF
+            </a>
+            <a href="{{ route('attendance.index') }}"
+                class="inline-flex items-center justify-center rounded-xl bg-gray-100 px-5 py-2.5 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-200 transition-all">
+                Kembali
+            </a>
+        </div>
     </div>
 
     <!-- Filter -->
