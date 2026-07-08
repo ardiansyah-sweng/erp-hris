@@ -57,9 +57,7 @@
                 </div>
             </div>
             
-            <div class="mt-3 text-center text-muted">
-                <small>Tugas View Edit: Muhammad falih tlyasa | Proyek ERP RPL-PKPL </small>
-            </div>
+            <!-- Tugas View Edit: Muhammad falih tiyasa | Proyek ERP RPL-PKPL -->
         </div>
     </div>
 </div>
