@@ -55,4 +55,8 @@ class Employee extends Model
     {
         return $this->status === 'inactive';
     }
+    public function attendances()
+{
+    return $this->hasMany(Attendance::class);
+}
 }
