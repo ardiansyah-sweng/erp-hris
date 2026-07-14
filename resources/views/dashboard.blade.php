@@ -67,7 +67,7 @@
     <p class="mt-1 text-sm text-gray-500">Selamat datang kembali! Berikut ringkasan kondisi SDM perusahaan hari ini.</p>
 </div>
 
-<!-- Stat Cards (data dari controller, BUKAN dummy) -->
+<!-- Stat Cards -->
 <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4 mb-8">
     @foreach($stats as $stat)
     @php $c = $colorMap[$stat['color']]; @endphp
