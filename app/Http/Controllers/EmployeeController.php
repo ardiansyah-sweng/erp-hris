@@ -92,13 +92,11 @@ class EmployeeController extends Controller
         ], 200);
     }
 
-    public function index(Request $request)
+    public function index()
     {
-        $sort = $request->get('sort', 'asc');
+        $employees = Employee::all();
 
-        $employees = Employee::orderBy('name', $sort)->get();
-
-        return view('employee.index', compact('employees', 'sort'));
+        return view('employee.index', compact('employees'));
     }
 
     public function getCashiers()
