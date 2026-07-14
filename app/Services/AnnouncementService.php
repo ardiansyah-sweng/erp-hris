@@ -2,36 +2,43 @@
 
 namespace App\Services;
 
+use App\Models\Announcement;
+use Illuminate\Database\Eloquent\Collection;
+
 class AnnouncementService
 {
-    public function getAllAnnouncements()
+    public function getAllAnnouncements(): Collection
     {
-        return [
-            [
-                'id' => 1,
-                'title' => 'Libur Nasional',
-                'content' => 'Perusahaan libur pada tanggal 17 Agustus.',
-                'publish_date' => '2026-08-17',
-                'status' => 'Aktif',
-            ],
-            [
-                'id' => 2,
-                'title' => 'Maintenance Server',
-                'content' => 'ERP akan maintenance pukul 22.00 WIB.',
-                'publish_date' => '2026-08-20',
-                'status' => 'Aktif',
-            ],
-        ];
+        return Announcement::latest()->get();
     }
 
-    public function getAnnouncementById($id)
+    public function getAnnouncementById(int $id): ?Announcement
     {
-        foreach ($this->getAllAnnouncements() as $announcement) {
-            if ($announcement['id'] == $id) {
-                return $announcement;
-            }
-        }
+        return Announcement::find($id);
+    }
 
-        return null;
+    public function createAnnouncement(array $data): Announcement
+    {
+        return Announcement::create($data);
+    }
+
+    public function updateAnnouncement(int $id, array $data): ?Announcement
+    {
+        $announcement = Announcement::find($id);
+        if (!$announcement) {
+            return null;
+        }
+        $announcement->update($data);
+        return $announcement;
+    }
+
+    public function deleteAnnouncement(int $id): ?Announcement
+    {
+        $announcement = Announcement::find($id);
+        if (!$announcement) {
+            return null;
+        }
+        $announcement->delete();
+        return $announcement;
     }
 }
