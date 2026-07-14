@@ -21,6 +21,7 @@ class Employee extends Model
         'id_number',
         'age',
         'role_id',
+        'status',
     ];
     
     protected $casts = [
@@ -43,5 +44,15 @@ class Employee extends Model
     public function payrolls()
     {
         return $this->hasMany(Payroll::class, 'employee_id');
+    }
+
+    public function isActive()
+    {
+        return $this->status === 'active';
+    }
+
+    public function isInactive()
+    {
+        return $this->status === 'inactive';
     }
 }

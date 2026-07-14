@@ -1,16 +1,25 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Models\Employee;
+use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JobroleController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PayrollController;
+use App\Http\Controllers\PerformanceEvaluationController;
+use App\Http\Controllers\AnnouncementController;
 
+Route::get('/employees/status', [EmployeeController::class, 'indexByStatus']);
 Route::post('/test-jobrole', [JobroleController::class, 'store']);
 Route::get('/employees', [EmployeeController::class, 'index'])->name('employee.index');
 Route::get('/employees/create', function () {
     $jobroles = \App\Models\Jobrole::all();
     return view('employee.create', compact('jobroles'));
 })->name('employee.create');
+Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
+Route::post('/employees/import', [EmployeeController::class, 'importCsv'])->name('employees.import');
 Route::post('/employees', [EmployeeController::class, 'store']);
 Route::get('/employees/{employee}', [EmployeeController::class, 'show']);
 
@@ -18,9 +27,8 @@ Route::get('/detail-employee', function () {
     return view('employee.detail');
 });
 
-Route::get('/', function () {
-    return view('dashboard');
-});
+Route::get('/', [LoginController::class, 'showLoginForm']);
+Route::post('/login', [LoginController::class, 'login']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -54,6 +62,14 @@ Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy']);
 Route::get('/dashboard', function () {
     return view('dashboard');
 });
+
+Route::get('/profile', function () {
+    return view('profile.index');
+})->name('profile.index');
+
+Route::get('/settings', function () {
+    return view('settings.index');
+})->name('settings.index');
 
 // ROUTE EDIT JOB ROLE
 Route::get('/job-roles/{id}/edit', function ($id) {
@@ -91,9 +107,6 @@ Route::put('/employee/test-edit', function () {
     return "Tombol Update berhasil diklik! (Ini hanya simulasi, data belum tersimpan karena Controller Update asli belum disambungkan).";
 });
 Route::put('/employees/{id}', [EmployeeController::class, 'update']);
-Route::get('/absensi', function () {
-    return view('absensi.index');
-})->name('absensi.index');
 
 Route::get('/leave-request', function () {
     return view('leave_request.index');
@@ -158,5 +171,72 @@ Route::get('/leave-request/{id}', function ($id) {
     );
 })->name('leave_request.detail');
 
+Route::get('/payroll/create', function () {
+    $employees = Employee::orderBy('name')->get(['id', 'name']);
+
+    return view('payroll.create', compact('employees'));
+})->name('payroll.create');
+
 Route::post('/payroll', [PayrollController::class, 'store']);
+// Route export WAJIB di atas '/payroll/{id}' agar 'export' tidak ditangkap sebagai id
+Route::get('/payroll/export', [PayrollController::class, 'export'])->name('payroll.export');
 Route::get('/payroll/{id}', [PayrollController::class, 'show']);
+Route::put('/payroll/{id}', [PayrollController::class, 'update']);
+Route::delete('/payroll/{id}', [PayrollController::class, 'destroy']);
+
+// ATTENDANCE ROUTES
+Route::get('/attendance', [AttendanceController::class, 'index'])
+    ->name('attendance.index');
+
+Route::get('/attendance/{id}', [AttendanceController::class, 'show'])
+    ->name('attendance.detail');
+
+
+Route::resource('payroll', PayrollController::class);
+Route::get('/attendance-recap', [AttendanceController::class, 'recap'])
+    ->name('attendance.recap');
+
+Route::resource('payroll', PayrollController::class)->except(['create']);
+Route::resource('evaluations', PerformanceEvaluationController::class)->except(['show']);
+Route::get('/leave-request/{id}/edit', function ($id) {
+
+    $leaveRequest = [
+        'id' => $id,
+        'employee_id' => 'EMP001',
+        'employee_name' => 'Susanti Wijaya',
+        'start_date' => '2026-06-10',
+        'end_date' => '2026-06-12',
+        'reason' => 'Liburan keluarga',
+        'status' => 'Pending',
+    ];
+
+    return view(
+        'leave_request.edit',
+        compact('leaveRequest')
+    );
+
+})->name('leave_request.edit');
+
+Route::put('/leave-request/{id}', function ($id) {
+
+    return redirect()
+        ->route('leave_request.index')
+        ->with('success', 'Data cuti berhasil diperbarui.');
+
+})->name('leave_request.update');
+
+Route::get('/system-audit-temp', [AuditLogController::class, 'indexTemp'])->name('system.audit.temp');
+
+Route::prefix('announcement')->group(function () {
+
+    Route::get(
+        '/',
+        [AnnouncementController::class, 'index']
+    )->name('announcement.index');
+
+    Route::get(
+        '/{id}',
+        [AnnouncementController::class, 'show']
+    )->name('announcement.show');
+
+});
