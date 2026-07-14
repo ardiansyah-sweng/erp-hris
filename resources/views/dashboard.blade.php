@@ -5,13 +5,6 @@
 @section('content')
 
 @php
-    $stats = [
-        ['label' => 'Total Karyawan Aktif', 'value' => 128, 'sub' => '+3 bulan ini', 'color' => 'indigo', 'icon' => 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z'],
-        ['label' => 'Karyawan Cuti Hari Ini', 'value' => 7, 'sub' => 'dari 128 karyawan', 'color' => 'amber', 'icon' => 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'],
-        ['label' => 'Total Job Role', 'value' => 24, 'sub' => '6 departemen', 'color' => 'blue', 'icon' => 'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10'],
-        ['label' => 'Karyawan Baru Bulan Ini', 'value' => 5, 'sub' => 'April 2026', 'color' => 'emerald', 'icon' => 'M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z'],
-    ];
-
     $attendanceData = [
         ['day' => 'Sen', 'hadir' => 118, 'total' => 128],
         ['day' => 'Sel', 'hadir' => 121, 'total' => 128],
@@ -78,7 +71,8 @@
 <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4 mb-8">
     @foreach($stats as $stat)
     @php $c = $colorMap[$stat['color']]; @endphp
-    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex flex-col gap-3 hover:-translate-y-1 transition-transform duration-300">
+    <div onclick="openDetailModal('{{ $stat['type'] }}', '{{ $stat['label'] }}')"
+         class="cursor-pointer bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex flex-col gap-3 hover:-translate-y-1 hover:shadow-md transition-all duration-300">
         <div class="flex items-center justify-between">
             <p class="text-sm font-medium text-gray-500">{{ $stat['label'] }}</p>
             <div class="p-2.5 rounded-xl {{ $c['bg'] }} {{ $c['text'] }}">
@@ -94,6 +88,54 @@
     </div>
     @endforeach
 </div>
+
+<!-- Modal Detail -->
+<div id="detailModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg max-h-[80vh] flex flex-col">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+            <h3 id="modalTitle" class="text-base font-semibold text-gray-900">Detail</h3>
+            <button onclick="closeDetailModal()" class="text-gray-400 hover:text-gray-600">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <div id="modalBody" class="overflow-y-auto px-6 py-4 flex-1">
+            <p class="text-sm text-gray-400 text-center py-8">Memuat data...</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Semua data detail sudah dikirim langsung dari controller saat halaman dimuat.
+    // Tidak perlu fetch/AJAX lagi -- ini menghindari isu "gagal memuat data".
+    const detailData = @json($detailData);
+
+    function openDetailModal(type, label) {
+        const modal = document.getElementById('detailModal');
+        const body = document.getElementById('modalBody');
+        document.getElementById('modalTitle').textContent = label;
+        modal.classList.remove('hidden');
+
+        const items = detailData[type] || [];
+
+        if (items.length === 0) {
+            body.innerHTML = '<p class="text-sm text-gray-400 text-center py-8">Tidak ada data.</p>';
+            return;
+        }
+
+        body.innerHTML = `<ul class="divide-y divide-gray-50">` + items.map(item => `
+            <li class="py-3">
+                <p class="text-sm font-semibold text-gray-900">${item.name ?? item.role ?? '-'}</p>
+                <p class="text-xs text-gray-400">${item.status ?? ''}</p>
+            </li>
+        `).join('') + `</ul>`;
+    }
+
+    function closeDetailModal() {
+        document.getElementById('detailModal').classList.add('hidden');
+    }
+</script>
 
 <!-- Charts Row -->
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
