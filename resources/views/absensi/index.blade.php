@@ -38,6 +38,12 @@
             <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Manajemen Absensi</h1>
             <p class="mt-1 text-sm text-gray-500">Kelola dan pantau kehadiran karyawan perusahaan.</p>
         </div>
+        <div class="mt-4 sm:mt-0">
+            <a href="{{ route('attendance.recap') }}"
+                class="inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 transition-all">
+                Rekap per Periode
+            </a>
+        </div>
     </div>
 
     <!-- Stat Cards -->

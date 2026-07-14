@@ -2,17 +2,18 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Models\Employee;
+use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JobroleController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\PerformanceEvaluationController;
-use App\Http\Controllers\AttendanceController;
-use App\Http\Controllers\AuditLogController;
-
+use App\Http\Controllers\AnnouncementController;
 Route::get('/employees/status', [EmployeeController::class, 'indexByStatus']);
 Route::post('/test-jobrole', [JobroleController::class, 'store']);
-Route::get('/employees', [EmployeeController::class, 'index']);
+Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
+Route::post('/employees/import', [EmployeeController::class, 'importCsv'])->name('employees.import');
 Route::post('/employees', [EmployeeController::class, 'store']);
 Route::get('/employees/{employee}', [EmployeeController::class, 'show']);
 
@@ -184,7 +185,11 @@ Route::get('/attendance', [AttendanceController::class, 'index'])
 Route::get('/attendance/{id}', [AttendanceController::class, 'show'])
     ->name('attendance.detail');
 
+
 Route::resource('payroll', PayrollController::class);
+Route::get('/attendance-recap', [AttendanceController::class, 'recap'])
+    ->name('attendance.recap');
+
 Route::resource('payroll', PayrollController::class)->except(['create']);
 Route::resource('evaluations', PerformanceEvaluationController::class)->except(['show']);
 Route::get('/leave-request/{id}/edit', function ($id) {
@@ -215,3 +220,17 @@ Route::put('/leave-request/{id}', function ($id) {
 })->name('leave_request.update');
 
 Route::get('/system-audit-temp', [AuditLogController::class, 'indexTemp'])->name('system.audit.temp');
+
+Route::prefix('announcement')->group(function () {
+
+    Route::get(
+        '/',
+        [AnnouncementController::class, 'index']
+    )->name('announcement.index');
+
+    Route::get(
+        '/{id}',
+        [AnnouncementController::class, 'show']
+    )->name('announcement.show');
+
+});
