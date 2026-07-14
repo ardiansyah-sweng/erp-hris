@@ -9,7 +9,6 @@
     $aktif = $allEmployees; // sesuaikan jika ada kolom status
 @endphp
 
-<!-- Header -->
 <div class="sm:flex sm:items-center sm:justify-between mb-8">
     <div>
         <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Manajemen Karyawan</h1>
@@ -90,16 +89,14 @@
 
 </div>
 
-<!-- Tabel -->
 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-300">
 
     <div class="px-6 py-5 border-b border-gray-100 flex justify-between items-center">
         <h3 class="text-base font-semibold text-gray-900">Daftar Karyawan</h3>
 
-        <!-- Search Autocomplete -->
         <div class="relative" id="searchWrapper">
             <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                 </svg>
             </div>
@@ -110,7 +107,6 @@
                 class="block w-72 rounded-xl border-0 py-2 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm bg-gray-50/50"
                 placeholder="Cari karyawan...">
 
-            <!-- Dropdown Suggestion -->
             <div id="searchDropdown"
                  class="absolute left-0 right-0 top-full mt-1 z-50 hidden bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
             </div>
@@ -127,6 +123,7 @@
                     <th class="px-3 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-widest">No HP</th>
                     <th class="px-3 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-widest">Tempat Lahir</th>
                     <th class="px-3 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-widest">Tanggal Lahir</th>
+                    <th class="py-4 pl-3 pr-6 text-center text-xs font-semibold text-gray-500 uppercase tracking-widest">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-100 bg-white" id="tableBody">
@@ -139,7 +136,7 @@
                             <div class="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 text-indigo-700 text-xs font-bold flex-shrink-0">
                                 {{ strtoupper(substr($employee->name, 0, 1)) }}
                             </div>
-                            <span class="text-sm font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors">
+                            <span class="text-sm font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors cursor-pointer" onclick="openProfileModal({{ json_encode($employee) }})">
                                 {{ $employee->name }}
                             </span>
                         </div>
@@ -150,10 +147,19 @@
                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-600">
                         {{ \Carbon\Carbon::parse($employee->date_of_birth)->format('d-m-Y') }}
                     </td>
+                    <td class="whitespace-nowrap py-4 pl-3 pr-6 text-center text-sm">
+                        <a href="{{ url('/employee/test-edit') }}?id={{ $employee->id }}" 
+                           class="inline-flex items-center gap-1 text-xs font-bold text-amber-600 hover:text-amber-900 bg-amber-50 hover:bg-amber-100 px-3 py-1.5 rounded-xl transition-all duration-200 shadow-sm">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                            </svg>
+                            Edit
+                        </a>
+                    </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" class="py-16 text-center">
+                    <td colspan="7" class="py-16 text-center">
                         <h3 class="text-sm font-semibold text-gray-900">Belum ada data karyawan</h3>
                         <p class="mt-1 text-sm text-gray-500">Belum ada karyawan yang terdaftar.</p>
                     </td>
@@ -169,7 +175,6 @@
 
 </div>
 
-<!-- Modal List Karyawan (dari stat card) -->
 <div id="employeeModal" class="fixed inset-0 z-50 hidden bg-black/40">
     <div class="absolute inset-y-0 right-0 w-full lg:w-[70%] bg-white shadow-2xl overflow-y-auto">
         <div class="sticky top-0 bg-white z-10 px-8 py-6 border-b flex justify-between items-center">
@@ -186,9 +191,8 @@
     </div>
 </div>
 
-<!-- Modal Profil Karyawan (dari search / klik card) -->
 <div id="profileModal" class="fixed inset-0 z-50 hidden bg-black/40 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden relative">
 
         <div class="bg-indigo-600 px-6 py-8 text-center relative">
             <button onclick="closeProfileModal()"
@@ -217,6 +221,16 @@
                 <p class="text-xs text-gray-400 mb-1">Tanggal Lahir</p>
                 <p id="profileDob" class="text-sm font-semibold text-gray-800"></p>
             </div>
+            
+            <div class="col-span-2 mt-2">
+                <a id="profileEditBtn" href="#" 
+                   class="w-full inline-flex justify-center items-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-600 px-4 py-3 text-sm font-bold text-white shadow-sm transition-all">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                    </svg>
+                    Edit Data Karyawan Ini
+                </a>
+            </div>
         </div>
 
     </div>
@@ -232,6 +246,9 @@ const modalTitles = {
     total: 'Total Seluruh Karyawan',
     aktif: 'Karyawan Aktif',
 };
+
+// Base URL edit halaman
+const editBaseUrl = "{{ url('/employee/test-edit') }}";
 
 // ── Modal List (stat card) ──────────────────────────────────────────────────
 function openEmployeeModal(type) {
@@ -251,16 +268,25 @@ function openEmployeeModal(type) {
             : '-';
         var itemJson = JSON.stringify(item).replace(/"/g, '&quot;');
 
-        content.innerHTML += '<div class="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md transition cursor-pointer" onclick="closeEmployeeModal(); openProfileModal(' + itemJson + ')">'
-            + '<div class="flex items-center gap-3 mb-4">'
+        // Ditambahkan tombol edit kecil di dalam card modal agar fleksibel
+        content.innerHTML += '<div class="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md transition flex flex-col justify-between">'
+            + '<div>'
+            + '<div class="flex items-center justify-between gap-2 mb-4" onclick="closeEmployeeModal(); openProfileModal(' + itemJson + ')">'
+            + '<div class="flex items-center gap-3">'
             + '<div class="w-12 h-12 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-sm flex-shrink-0">' + initials + '</div>'
-            + '<div><p class="font-bold text-gray-900">' + item.name + '</p><p class="text-sm text-gray-500">' + (item.email || '') + '</p></div>'
+            + '<div><p class="font-bold text-gray-900 hover:text-indigo-600 transition">' + item.name + '</p><p class="text-sm text-gray-500">' + (item.email || '') + '</p></div>'
             + '</div>'
-            + '<div class="grid grid-cols-2 gap-3 text-xs">'
+            + '</div>'
+            + '<div class="grid grid-cols-2 gap-3 text-xs mb-4">'
             + '<div class="bg-gray-50 rounded-xl p-3"><p class="text-gray-400">No HP</p><p class="font-semibold text-gray-700 mt-1">' + (item.phone_number || '-') + '</p></div>'
             + '<div class="bg-gray-50 rounded-xl p-3"><p class="text-gray-400">Tempat Lahir</p><p class="font-semibold text-gray-700 mt-1">' + (item.place_of_birth || '-') + '</p></div>'
             + '<div class="bg-gray-50 rounded-xl p-3 col-span-2"><p class="text-gray-400">Tanggal Lahir</p><p class="font-semibold text-gray-700 mt-1">' + dob + '</p></div>'
-            + '</div></div>';
+            + '</div>'
+            + '</div>'
+            + '<a href="' + editBaseUrl + '?id=' + item.id + '" class="w-full text-center inline-flex justify-center items-center gap-1.5 text-xs font-bold text-amber-700 bg-amber-50 hover:bg-amber-100 py-2.5 rounded-xl transition">'
+            + '⚙️ Edit Karyawan'
+            + '</a>'
+            + '</div>';
     });
 
     modal.classList.remove('hidden');
@@ -283,6 +309,9 @@ function openProfileModal(item) {
     document.getElementById('profilePhone').innerText  = item.phone_number || '-';
     document.getElementById('profilePob').innerText    = item.place_of_birth || '-';
     document.getElementById('profileDob').innerText    = dob;
+    
+    // Set link tombol edit di dalam modal profil secara dinamis
+    document.getElementById('profileEditBtn').href = editBaseUrl + '?id=' + item.id;
 
     document.getElementById('profileModal').classList.remove('hidden');
 }
