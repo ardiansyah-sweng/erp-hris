@@ -35,6 +35,12 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::post('/logout', [LoginController::class, 'logout'])
     ->name('logout');
+Route::middleware('guest')->group(function () {
+    Route::get('/', [LoginController::class, 'showLoginForm']);
+    Route::post('/login', [LoginController::class, 'login']);
+});
+
+Route::middleware('auth')->group(function () {
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -278,5 +284,7 @@ Route::prefix('announcement')->group(function () {
         '/{id}',
         [AnnouncementController::class, 'show']
     )->name('announcement.show');
+
+});
 
 });
