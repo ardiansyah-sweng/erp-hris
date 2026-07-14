@@ -1,9 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Models\Employee;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JobroleController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PayrollController;
+use App\Http\Controllers\AttendanceController;
 
 if (app()->runningUnitTests()) {
     \App\Models\Jobrole::created(function ($jobrole) {
@@ -11,7 +14,10 @@ if (app()->runningUnitTests()) {
     });
 }
 
+Route::get('/employees/status', [EmployeeController::class, 'indexByStatus']);
+
 Route::post('/test-jobrole', [JobroleController::class, 'store']);
+Route::get('/employees', [EmployeeController::class, 'index']);
 Route::post('/employees', [EmployeeController::class, 'store']);
 Route::get('/employees/{employee}', [EmployeeController::class, 'show']);
 
@@ -19,9 +25,8 @@ Route::get('/detail-employee', function () {
     return view('employee.detail');
 });
 
-Route::get('/', function () {
-    return view('dashboard');
-});
+Route::get('/', [LoginController::class, 'showLoginForm']);
+Route::post('/login', [LoginController::class, 'login']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -30,13 +35,7 @@ Route::get('/dashboard', function () {
 Route::post('/job-roles', [JobroleController::class, 'store'])
     ->name('jobrole.store');
 
-Route::post('/employees', [EmployeeController::class, 'store']);
-
 Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy']);
-
-Route::get('/detail-employee', function () {
-    return view('employee.detail');
-});
 
 Route::get('/job-roles', [JobroleController::class, 'index'])
     ->name('jobrole.index');
@@ -62,10 +61,8 @@ Route::put('/job-roles/{id}', [JobroleController::class, 'update'])
 Route::delete('/job-roles/{id}', [JobroleController::class, 'destroy'])
     ->name('jobrole.destroy');
 
-
 // ROUTE TEST EDIT EMPLOYEE
 Route::get('/employee/test-edit', function () {
-
     $employee = (object) [
         'id' => 1,
         'name' => 'Budi Setiawan',
@@ -80,6 +77,7 @@ Route::get('/employee/test-edit', function () {
 Route::put('/employee/test-edit', function () {
     return "Tombol Update berhasil diklik! (Ini hanya simulasi, data belum tersimpan karena Controller Update asli belum disambungkan).";
 });
+
 Route::put('/employees/{id}', function (\Illuminate\Http\Request $request, $id, \App\Services\EmployeeService $employeeService) {
     $employee = $employeeService->updateEmployee($id, $request->all());
     if (!$employee) {
@@ -99,13 +97,10 @@ Route::put('/employees/{id}', function (\Illuminate\Http\Request $request, $id, 
         ]
     ], 200);
 });
+
 Route::get('/absensi', function () {
     return view('absensi.index');
 })->name('absensi.index');
-
-Route::get('/leave-request', function () {
-    return view('leave_request.index');
-});
 
 Route::get('/leave-request', function () {
     $dummyLeaveRequests = [
@@ -148,7 +143,6 @@ Route::get('/leave-request/create', function () {
 });
 
 Route::get('/leave-request/{id}', function ($id) {
-
     $leaveRequest = [
         'id' => $id,
         'employee_id' => 'EMP001',
@@ -166,17 +160,50 @@ Route::get('/leave-request/{id}', function ($id) {
     );
 })->name('leave_request.detail');
 
-Route::get('/payroll', [PayrollController::class, 'index'])->name('payroll.index');
-Route::post('/payroll', [PayrollController::class, 'store']);
-Route::get('/payroll/{id}', [PayrollController::class, 'show'])->name('payroll.show');
-
-Route::get('/payroll/{id}/edit', function ($id) {
-    return 'Edit Payroll';
-})->name('payroll.edit');
-
 Route::get('/payroll/create', function () {
-    return 'Create Payroll';
+    $employees = Employee::orderBy('name')->get(['id', 'name']);
+
+    return view('payroll.create', compact('employees'));
 })->name('payroll.create');
+
+Route::post('/payroll', [PayrollController::class, 'store']);
+// Route export WAJIB di atas '/payroll/{id}' agar 'export' tidak ditangkap sebagai id
+Route::get('/payroll/export', [PayrollController::class, 'export'])->name('payroll.export');
+Route::get('/payroll/{id}', [PayrollController::class, 'show']);
+Route::put('/payroll/{id}', [PayrollController::class, 'update']);
+Route::delete('/payroll/{id}', [PayrollController::class, 'destroy']);
+
+// ATTENDANCE ROUTES
+Route::get('/attendance', [AttendanceController::class, 'index'])
+    ->name('attendance.index');
+
+Route::get('/attendance/{id}', [AttendanceController::class, 'show'])
+    ->name('attendance.detail');
+
+Route::resource('payroll', PayrollController::class)->except(['create']);
+
+Route::get('/leave-request/{id}/edit', function ($id) {
+    $leaveRequest = [
+        'id' => $id,
+        'employee_id' => 'EMP001',
+        'employee_name' => 'Susanti Wijaya',
+        'start_date' => '2026-06-10',
+        'end_date' => '2026-06-12',
+        'reason' => 'Liburan keluarga',
+        'status' => 'Pending',
+    ];
+
+    return view(
+        'leave_request.edit',
+        compact('leaveRequest')
+    );
+})->name('leave_request.edit');
+
+Route::put('/leave-request/{id}', function ($id) {
+    return redirect()
+        ->route('leave_request.index')
+        ->with('success', 'Data cuti berhasil diperbarui.');
+})->name('leave_request.update');
 
 Route::get('/profile', function () {
     return view('profile.index');

@@ -22,6 +22,7 @@ public function up(): void
         $table->string('id_number');
         $table->integer('age')->default(0);
         $table->unsignedBigInteger('role_id');
+        $table->string('status')->default('active');
         $table->timestamps();
     });
 }
