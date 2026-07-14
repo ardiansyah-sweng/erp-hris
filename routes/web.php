@@ -9,6 +9,8 @@ use App\Http\Controllers\JobroleController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\PerformanceEvaluationController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AnnouncementController;
 
 Route::get('/employees/status', [EmployeeController::class, 'indexByStatus']);
 Route::post('/test-jobrole', [JobroleController::class, 'store']);
@@ -60,6 +62,12 @@ Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy']);
 Route::get('/dashboard', function () {
     return view('dashboard');
 });
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+});
+
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::get('/profile', function () {
     return view('profile.index');
@@ -224,3 +232,17 @@ Route::put('/leave-request/{id}', function ($id) {
 })->name('leave_request.update');
 
 Route::get('/system-audit-temp', [AuditLogController::class, 'indexTemp'])->name('system.audit.temp');
+
+Route::prefix('announcement')->group(function () {
+
+    Route::get(
+        '/',
+        [AnnouncementController::class, 'index']
+    )->name('announcement.index');
+
+    Route::get(
+        '/{id}',
+        [AnnouncementController::class, 'show']
+    )->name('announcement.show');
+
+});
