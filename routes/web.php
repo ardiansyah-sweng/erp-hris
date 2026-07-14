@@ -34,6 +34,11 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
+    Route::get('/employees/create', function () {
+        $jobroles = \App\Models\Jobrole::all();
+        return view('employee.create', compact('jobroles'));
+    })->name('employee.create');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 });

@@ -34,13 +34,17 @@ class EmployeeController extends Controller
 
         $employee = Employee::create($validated);
 
-        return response()->json([
-            'payload' => [
-                'statusCode' => 201,
-                'message' => 'Employee created successfully!',
-                'data' => $employee
-            ]
-        ], 201);
+        if ($request->wantsJson()) {
+            return response()->json([
+                'payload' => [
+                    'statusCode' => 201,
+                    'message' => 'Employee created successfully!',
+                    'data' => $employee
+                ]
+            ], 201);
+        }
+
+        return redirect('/employees')->with('success', 'Karyawan berhasil ditambahkan!');
     }
 
     public function destroy(Employee $employee)
