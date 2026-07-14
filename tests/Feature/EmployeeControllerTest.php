@@ -67,6 +67,18 @@ class EmployeeControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
+    public function test_show_employee_view_successfully()
+    {
+        $this->withoutVite();
+        $employee = Employee::factory()->create();
+
+        $response = $this->get("/employees/{$employee->id}");
+
+        $response->assertStatus(200);
+        $response->assertViewIs('employee.detail');
+        $response->assertViewHas('employee');
+    }
+
     public function test_get_cashiers_returns_json()
     {
         $response = $this->get('/api/cashiers');
