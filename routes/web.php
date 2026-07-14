@@ -9,6 +9,7 @@ use App\Http\Controllers\JobroleController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\PerformanceEvaluationController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AnnouncementController;
 
 Route::get('/employees/status', [EmployeeController::class, 'indexByStatus']);
@@ -57,6 +58,12 @@ Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy']);
 Route::get('/dashboard', function () {
     return view('dashboard');
 });
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+});
+
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::get('/profile', function () {
     return view('profile.index');
