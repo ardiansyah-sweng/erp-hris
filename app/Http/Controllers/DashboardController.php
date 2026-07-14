@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
-use App\Models\JobRole;
+use App\Models\Jobrole;
 
 class DashboardController extends Controller
 {
@@ -11,7 +11,7 @@ class DashboardController extends Controller
     {
         $totalAktif = Employee::where('status', 'active')->count();
         $totalCuti  = Employee::where('status', 'cuti')->count();
-        $totalJobRole = JobRole::count();
+        $totalJobRole = Jobrole::count();
 
         $karyawanBaru = Employee::whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
@@ -62,7 +62,7 @@ class DashboardController extends Controller
                 ->select('id', 'name', 'role_id', 'status')
                 ->get(),
 
-            'jobrole' => JobRole::select('id', 'role')->get(),
+            'jobrole' => Jobrole::select('id', 'role')->get(),
 
             'baru' => Employee::whereMonth('created_at', now()->month)
                 ->whereYear('created_at', now()->year)

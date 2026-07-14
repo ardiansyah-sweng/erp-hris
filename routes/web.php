@@ -11,6 +11,7 @@ use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\PerformanceEvaluationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AnnouncementController;
+use App\Http\Controllers\LeaveRequestController;
 
 
 Route::get('/employees/status', [EmployeeController::class, 'indexByStatus']);
@@ -163,6 +164,10 @@ Route::get('/leave-request/create', function () {
     return view('leave_request.create');
 });
 
+// Trigger kirim email reminder cuti pending dari web (dulu cuma bisa lewat: php artisan email:reminder-cuti)
+Route::post('/leave-request/send-reminder', [LeaveRequestController::class, 'sendReminder'])
+    ->name('leave_request.send-reminder');
+
 Route::get('/leave-request/{id}', function ($id) {
 
     $leaveRequest = [
@@ -259,4 +264,3 @@ Route::prefix('announcement')->group(function () {
 });
 
 });
-

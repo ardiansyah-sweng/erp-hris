@@ -43,4 +43,23 @@ class LeaveRequestController extends Controller
             compact('leaveRequest')
         );
     }
+
+    /**
+     * Kirim email reminder untuk seluruh pengajuan cuti yang masih pending.
+     * Dipanggil dari tombol di halaman web (bukan lagi harus lewat `php artisan email:reminder-cuti`).
+     */
+    public function sendReminder()
+    {
+        $jumlah = $this->leaveRequestService->sendPendingLeaveReminder();
+
+        if ($jumlah === 0) {
+            return redirect()
+                ->route('leave_request.index')
+                ->with('info', 'Tidak ada pengajuan cuti yang pending, reminder tidak dikirim.');
+        }
+
+        return redirect()
+            ->route('leave_request.index')
+            ->with('success', "Email reminder berhasil dikirim untuk {$jumlah} pengajuan cuti.");
+    }
 }
