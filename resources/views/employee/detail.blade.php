@@ -17,7 +17,7 @@
         <div class="mt-4 sm:mt-0 flex items-center gap-3">
             <a href="{{ route('employees.edit', $employee->id) }}"
                class="inline-flex items-center gap-2 rounded-xl bg-amber-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-amber-600 transition-colors shadow-sm">
-                ✏️ Edit Data
+                Edit Data
             </a>
             <a href="{{ route('employees.index') }}"
                class="inline-flex items-center gap-2 rounded-xl border border-gray-300 bg-white px-5 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors shadow-sm">
