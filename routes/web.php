@@ -246,9 +246,34 @@ Route::prefix('announcement')->group(function () {
     )->name('announcement.index');
 
     Route::get(
+        '/create',
+        [AnnouncementController::class, 'create']
+    )->name('announcement.create');
+
+    Route::post(
+        '/',
+        [AnnouncementController::class, 'store']
+    )->name('announcement.store');
+
+    Route::get(
         '/{id}',
         [AnnouncementController::class, 'show']
     )->name('announcement.show');
+
+    Route::get(
+        '/{id}/edit',
+        [AnnouncementController::class, 'edit']
+    )->name('announcement.edit');
+
+    Route::put(
+        '/{announcement}',
+        [AnnouncementController::class, 'update']
+    )->name('announcement.update');
+
+    Route::delete(
+        '/{announcement}',
+        [AnnouncementController::class, 'destroy']
+    )->name('announcement.destroy');
 
 });
 
