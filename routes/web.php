@@ -16,6 +16,8 @@ Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.
 Route::post('/employees/import', [EmployeeController::class, 'importCsv'])->name('employees.import');
 Route::post('/employees', [EmployeeController::class, 'store']);
 Route::get('/employees/{employee}', [EmployeeController::class, 'show'])->name('employees.show');
+Route::get('/employees/{employee}/edit', [EmployeeController::class, 'edit'])->name('employees.edit');
+Route::put('/employees/{employee}', [EmployeeController::class, 'update'])->name('employees.update');
 
 Route::get('/detail-employee', function () {
     $employee = Employee::first() ?? new Employee();

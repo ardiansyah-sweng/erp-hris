@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Employee;
+use App\Models\Jobrole;
 use App\Services\EmployeeService;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -83,7 +84,35 @@ class EmployeeController extends Controller
         $employee->load('jobrole');
         return view('employee.detail', compact('employee'));
     }
-    
+
+    public function edit(Employee $employee)
+    {
+        $jobroles = Jobrole::orderBy('role')->get();
+        return view('employee.edit', compact('employee', 'jobroles'));
+    }
+
+    public function update(Request $request, Employee $employee)
+    {
+        $validated = $request->validate([
+            'name'          => 'required|string|max:255',
+            'email'         => 'required|email|unique:employees,email,' . $employee->id,
+            'phone_number'  => 'required|string|max:20',
+            'place_of_birth'=> 'required|string|max:100',
+            'date_of_birth' => 'required|date',
+            'address'       => 'required|string',
+            'id_number'     => 'required|string|max:20',
+            'role_id'       => 'required|integer|exists:job_roles,id',
+            'status'        => 'required|in:active,inactive',
+        ]);
+
+        $validated['age'] = \Carbon\Carbon::parse($validated['date_of_birth'])->age;
+
+        $employee->update($validated);
+
+        return redirect()->route('employees.show', $employee->id)
+            ->with('success', 'Data karyawan berhasil diperbarui.');
+    }
+
     public function indexByStatus(Request $request)
     {
         $statusFilter = $request->query('status');
