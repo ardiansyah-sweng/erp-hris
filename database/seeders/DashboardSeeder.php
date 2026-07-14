@@ -3,36 +3,26 @@
 namespace Database\Seeders;
 
 use App\Models\Employee;
-use App\Models\JobRole;
+use App\Models\Jobrole;
 use Illuminate\Database\Seeder;
 
 class DashboardSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Job Roles
-        $roles = [
-            'Software Engineer',
-            'Data Analyst',
-            'HR Specialist',
-            'Finance Officer',
-            'QA Engineer',
-            'Product Designer',
-            'DevOps Engineer',
-            'Business Analyst',
-            'UI/UX Designer',
-            'Marketing Specialist',
-        ];
-
-        $roleIds = [];
-        foreach ($roles as $roleName) {
-            $role = JobRole::firstOrCreate(['role' => $roleName]);
-            $roleIds[] = $role->id;
+        if (Jobrole::count() === 0) {
+            $this->call(JobroleSeeder::class);
         }
 
-        echo "Role IDs: " . implode(',', $roleIds) . PHP_EOL;
+        $roleIds = Jobrole::pluck('id')->toArray();
 
-        // 2. Employees dalam jumlah lebih banyak (30 orang) dengan variasi status dan tanggal masuk
+        if (empty($roleIds)) {
+            echo "Tidak ada job role tersedia, seeder dihentikan." . PHP_EOL;
+            return;
+        }
+
+        echo "Role IDs dipakai: " . implode(',', $roleIds) . PHP_EOL;
+
         $namaDepan = [
             'Ahmad', 'Siti', 'Rizky', 'Laila', 'Hendra', 'Rina', 'Budi', 'Dewi', 'Fajar', 'Citra',
             'Doni', 'Mega', 'Yusuf', 'Nita', 'Bagas', 'Putri', 'Agus', 'Sri', 'Eko', 'Wulan',
@@ -44,12 +34,12 @@ class DashboardSeeder extends Seeder
             'Rahayu', 'Fauzi', 'Putra', 'Utami', 'Nugroho', 'Lestari', 'Permadi', 'Suryani', 'Hidayat', 'Puspita',
         ];
 
-        $statuses = ['active', 'active', 'active', 'active', 'cuti']; // ~80% active, 20% cuti
+        $statuses = ['active', 'active', 'active', 'active', 'cuti'];
 
         for ($i = 0; $i < 30; $i++) {
             $nama = $namaDepan[$i % count($namaDepan)] . ' ' . $namaBelakang[$i % count($namaBelakang)] . ' ' . ($i + 1);
             $status = $statuses[array_rand($statuses)];
-            $createdAt = now()->subDays(rand(0, 400)); // sebar dari hari ini sampai ~13 bulan lalu
+            $createdAt = now()->subDays(rand(0, 400));
 
             try {
                 Employee::create([
