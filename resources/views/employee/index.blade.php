@@ -312,13 +312,7 @@ function openProfileModal(item) {
     document.getElementById('profilePhone').innerText  = item.phone_number || '-';
     document.getElementById('profilePob').innerText    = item.place_of_birth || '-';
     document.getElementById('profileDob').innerText    = dob;
-<<<<<<< HEAD
     document.getElementById('profileDetailLink').href  = '/employees/' + item.id;
-=======
-    
-    // Set link tombol edit di dalam modal profil secara dinamis
-    document.getElementById('profileEditBtn').href = editBaseUrl + '?id=' + item.id;
->>>>>>> 598af924a8678b6e1d20ceb488021ad6e590ef88
 
     document.getElementById('profileModal').classList.remove('hidden');
 }
