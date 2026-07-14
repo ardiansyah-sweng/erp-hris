@@ -17,10 +17,13 @@ Route::post('/test-jobrole', [JobroleController::class, 'store']);
 Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
 Route::post('/employees/import', [EmployeeController::class, 'importCsv'])->name('employees.import');
 Route::post('/employees', [EmployeeController::class, 'store']);
-Route::get('/employees/{employee}', [EmployeeController::class, 'show']);
+Route::get('/employees/{employee}', [EmployeeController::class, 'show'])->name('employees.show');
+Route::get('/employees/{employee}/edit', [EmployeeController::class, 'edit'])->name('employees.edit');
+Route::put('/employees/{employee}', [EmployeeController::class, 'update'])->name('employees.update');
 
 Route::get('/detail-employee', function () {
-    return view('employee.detail');
+    $employee = Employee::first() ?? new Employee();
+    return view('employee.detail', compact('employee'));
 });
 
 Route::get('/', [LoginController::class, 'showLoginForm']);
@@ -38,7 +41,8 @@ Route::post('/employees', [EmployeeController::class, 'store']);
 Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy']);
 
 Route::get('/detail-employee', function () {
-    return view('employee.detail');
+    $employee = Employee::first() ?? new Employee();
+    return view('employee.detail', compact('employee'));
 });
 
 Route::get('/job-roles', function () {

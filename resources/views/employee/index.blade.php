@@ -123,7 +123,7 @@
                     <th class="px-3 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-widest">No HP</th>
                     <th class="px-3 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-widest">Tempat Lahir</th>
                     <th class="px-3 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-widest">Tanggal Lahir</th>
-                    <th class="py-4 pl-3 pr-6 text-center text-xs font-semibold text-gray-500 uppercase tracking-widest">Aksi</th>
+                    <th class="px-3 py-4 text-center text-xs font-semibold text-gray-500 uppercase tracking-widest">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-100 bg-white" id="tableBody">
@@ -147,13 +147,9 @@
                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-600">
                         {{ \Carbon\Carbon::parse($employee->date_of_birth)->format('d-m-Y') }}
                     </td>
-                    <td class="whitespace-nowrap py-4 pl-3 pr-6 text-center text-sm">
-                        <a href="{{ url('/employee/test-edit') }}?id={{ $employee->id }}" 
-                           class="inline-flex items-center gap-1 text-xs font-bold text-amber-600 hover:text-amber-900 bg-amber-50 hover:bg-amber-100 px-3 py-1.5 rounded-xl transition-all duration-200 shadow-sm">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                            </svg>
-                            Edit
+                    <td class="whitespace-nowrap px-3 py-4 text-center text-sm font-medium">
+                        <a href="{{ route('employees.show', $employee->id) }}" class="inline-flex items-center rounded-xl bg-indigo-50 px-3 py-1.5 text-xs font-semibold text-indigo-600 hover:bg-indigo-100 transition-colors">
+                            Detail
                         </a>
                     </td>
                 </tr>
@@ -233,6 +229,13 @@
             </div>
         </div>
 
+        <!-- Footer Modal -->
+        <div class="px-6 py-4 bg-gray-50 border-t flex justify-end">
+            <a id="profileDetailLink" href="#" class="inline-flex items-center rounded-xl bg-indigo-600 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-indigo-700 transition-colors">
+                Detail Selengkapnya
+            </a>
+        </div>
+
     </div>
 </div>
 
@@ -309,9 +312,7 @@ function openProfileModal(item) {
     document.getElementById('profilePhone').innerText  = item.phone_number || '-';
     document.getElementById('profilePob').innerText    = item.place_of_birth || '-';
     document.getElementById('profileDob').innerText    = dob;
-    
-    // Set link tombol edit di dalam modal profil secara dinamis
-    document.getElementById('profileEditBtn').href = editBaseUrl + '?id=' + item.id;
+    document.getElementById('profileDetailLink').href  = '/employees/' + item.id;
 
     document.getElementById('profileModal').classList.remove('hidden');
 }
