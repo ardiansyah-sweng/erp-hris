@@ -68,15 +68,20 @@ class EmployeeController extends Controller
         }
     }
 
-    public function show(Employee $employee)
+    public function show(Request $request, Employee $employee)
     {
-        return response()->json([
-            'payload' => [
-                'statusCode' => 200,
-                'message' => 'Employee retrieved successfully!',
-                'data' => $employee
-            ]
-        ], 200);
+        if ($request->wantsJson()) {
+            return response()->json([
+                'payload' => [
+                    'statusCode' => 200,
+                    'message' => 'Employee retrieved successfully!',
+                    'data' => $employee
+                ]
+            ], 200);
+        }
+
+        $employee->load('jobrole');
+        return view('employee.detail', compact('employee'));
     }
     
     public function indexByStatus(Request $request)

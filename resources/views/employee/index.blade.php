@@ -127,6 +127,7 @@
                     <th class="px-3 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-widest">No HP</th>
                     <th class="px-3 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-widest">Tempat Lahir</th>
                     <th class="px-3 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-widest">Tanggal Lahir</th>
+                    <th class="px-3 py-4 text-center text-xs font-semibold text-gray-500 uppercase tracking-widest">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-100 bg-white" id="tableBody">
@@ -150,10 +151,15 @@
                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-600">
                         {{ \Carbon\Carbon::parse($employee->date_of_birth)->format('d-m-Y') }}
                     </td>
+                    <td class="whitespace-nowrap px-3 py-4 text-center text-sm font-medium">
+                        <a href="{{ route('employees.show', $employee->id) }}" class="inline-flex items-center rounded-xl bg-indigo-50 px-3 py-1.5 text-xs font-semibold text-indigo-600 hover:bg-indigo-100 transition-colors">
+                            Detail
+                        </a>
+                    </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" class="py-16 text-center">
+                    <td colspan="7" class="py-16 text-center">
                         <h3 class="text-sm font-semibold text-gray-900">Belum ada data karyawan</h3>
                         <p class="mt-1 text-sm text-gray-500">Belum ada karyawan yang terdaftar.</p>
                     </td>
@@ -217,6 +223,13 @@
                 <p class="text-xs text-gray-400 mb-1">Tanggal Lahir</p>
                 <p id="profileDob" class="text-sm font-semibold text-gray-800"></p>
             </div>
+        </div>
+
+        <!-- Footer Modal -->
+        <div class="px-6 py-4 bg-gray-50 border-t flex justify-end">
+            <a id="profileDetailLink" href="#" class="inline-flex items-center rounded-xl bg-indigo-600 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-indigo-700 transition-colors">
+                Detail Selengkapnya
+            </a>
         </div>
 
     </div>
@@ -283,6 +296,7 @@ function openProfileModal(item) {
     document.getElementById('profilePhone').innerText  = item.phone_number || '-';
     document.getElementById('profilePob').innerText    = item.place_of_birth || '-';
     document.getElementById('profileDob').innerText    = dob;
+    document.getElementById('profileDetailLink').href  = '/employees/' + item.id;
 
     document.getElementById('profileModal').classList.remove('hidden');
 }
