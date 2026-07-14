@@ -9,8 +9,6 @@ use App\Http\Controllers\JobroleController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\LeaveRequestController;
-use App\Http\Controllers\AuditLogController;
-use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\PerformanceEvaluationController;
 use App\Http\Controllers\AnnouncementController;
 
