@@ -2,13 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Models\Employee;
+use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JobroleController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\PerformanceEvaluationController;
-use App\Http\Controllers\AttendanceController;
-use App\Http\Controllers\AuditLogController;
 
 Route::get('/employees/status', [EmployeeController::class, 'indexByStatus']);
 Route::post('/test-jobrole', [JobroleController::class, 'store']);
@@ -164,6 +164,11 @@ Route::get('/attendance', [AttendanceController::class, 'index'])
 
 Route::get('/attendance/{id}', [AttendanceController::class, 'show'])
     ->name('attendance.detail');
+
+
+Route::resource('payroll', PayrollController::class);
+Route::get('/attendance-recap', [AttendanceController::class, 'recap'])
+    ->name('attendance.recap');
 
 Route::resource('payroll', PayrollController::class)->except(['create']);
 
