@@ -32,6 +32,8 @@ class EmployeeController extends Controller
             'role_id' => 'required|integer',
         ]);
 
+        $validated['age'] = Carbon::parse($validated['date_of_birth'])->age;
+
         $employee = Employee::create($validated);
 
         if ($request->wantsJson()) {

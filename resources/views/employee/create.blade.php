@@ -53,7 +53,7 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Usia</label>
-                    <input type="number" name="age" value="{{ old('age') }}" min="0" class="mt-1 block w-full rounded-md border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-200">
+                    <input type="number" name="age" id="age" value="{{ old('age') }}" min="0" readonly class="mt-1 block w-full rounded-md border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-200 bg-gray-50 cursor-not-allowed">
                 </div>
 
                 <div>
@@ -80,3 +80,34 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const dateInput = document.querySelector('input[name="date_of_birth"]');
+        const ageInput = document.getElementById('age');
+
+        function calculateAge() {
+            if (!dateInput.value) {
+                ageInput.value = '';
+                return;
+            }
+            const dob = new Date(dateInput.value);
+            const today = new Date();
+            let age = today.getFullYear() - dob.getFullYear();
+            const monthDiff = today.getMonth() - dob.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+                age--;
+            }
+            ageInput.value = age >= 0 ? age : '';
+        }
+
+        dateInput.addEventListener('change', calculateAge);
+        dateInput.addEventListener('input', calculateAge);
+
+        if (dateInput.value) {
+            calculateAge();
+        }
+    });
+</script>
+@endpush
