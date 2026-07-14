@@ -50,20 +50,18 @@
                         <hr>
 
                         <div class="d-flex justify-content-between">
-                            <a href="#" class="btn btn-secondary">Batal</a>
+                            <a href="/employees" class="btn btn-secondary">Batal</a>
                             <button type="submit" class="btn btn-success">Update Data</button>
                         </div>
                     </form>
                 </div>
             </div>
             
-            <div class="mt-3 text-center text-muted">
-                <small>Tugas View Edit: Muhammad falih tlyasa | Proyek ERP RPL-PKPL </small>
-            </div>
+            <!-- Tugas View Edit: Muhammad falih tiyasa | Proyek ERP RPL-PKPL -->
         </div>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html> 
+</html>
