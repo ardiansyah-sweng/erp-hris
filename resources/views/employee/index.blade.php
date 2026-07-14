@@ -1,37 +1,46 @@
 @extends('layouts.app')
 
-@section('title', 'Karyawan - ERP HRIS')
+@section('title', 'Daftar Karyawan')
 
 @section('content')
 
 @php
     $allEmployees = collect($employees);
-    $aktif = $allEmployees; // sesuaikan jika ada kolom status
+    $aktif = $allEmployees;
 @endphp
 
+<!-- Header -->
 <div class="sm:flex sm:items-center sm:justify-between mb-8">
     <div>
         <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Manajemen Karyawan</h1>
         <p class="mt-1 text-sm text-gray-500">Kelola dan pantau data karyawan perusahaan.</p>
     </div>
 
-    <form action="{{ route('employees.import') }}" method="POST" enctype="multipart/form-data" class="mt-4 sm:mt-0 flex items-center gap-3">
-        @csrf
+    <div class="mt-4 sm:mt-0 flex items-center gap-3">
+        <a href="/employees/create" class="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            Tambah Karyawan
+        </a>
+        <form action="{{ route('employees.import') }}" method="POST" enctype="multipart/form-data" class="flex items-center gap-3">
+            @csrf
 
-        <input 
-            type="file" 
-            name="csv_file" 
-            accept=".csv"
-            required
-            class="block text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
-        >
+            <input 
+                type="file" 
+                name="csv_file" 
+                accept=".csv"
+                required
+                class="block text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+            >
 
-        <button 
-            type="submit"
-            class="inline-flex items-center rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700">
-            Import CSV
-        </button>
-    </form>
+            <button 
+                type="submit"
+                class="inline-flex items-center rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700">
+                Import CSV
+            </button>
+        </form>
+    </div>
 </div>
 
 @if(session('success'))
@@ -232,157 +241,7 @@
                 </a>
             </div>
         </div>
-
     </div>
 </div>
-
-<script>
-const employeeData = {
-    total: @json($allEmployees->values()),
-    aktif: @json($aktif->values()),
-};
-
-const modalTitles = {
-    total: 'Total Seluruh Karyawan',
-    aktif: 'Karyawan Aktif',
-};
-
-// Base URL edit halaman
-const editBaseUrl = "{{ url('/employee/test-edit') }}";
-
-// ── Modal List (stat card) ──────────────────────────────────────────────────
-function openEmployeeModal(type) {
-    const modal    = document.getElementById('employeeModal');
-    const title    = document.getElementById('modalTitle');
-    const subtitle = document.getElementById('modalSubtitle');
-    const content  = document.getElementById('modalContent');
-
-    title.innerText    = modalTitles[type];
-    subtitle.innerText = employeeData[type].length + ' karyawan ditemukan';
-    content.innerHTML  = '';
-
-    employeeData[type].forEach(function(item) {
-        var initials = item.name.split(' ').map(function(w){ return w[0]; }).join('').substring(0, 2).toUpperCase();
-        var dob = item.date_of_birth
-            ? new Date(item.date_of_birth).toLocaleDateString('id-ID', {day:'2-digit', month:'long', year:'numeric'})
-            : '-';
-        var itemJson = JSON.stringify(item).replace(/"/g, '&quot;');
-
-        // Ditambahkan tombol edit kecil di dalam card modal agar fleksibel
-        content.innerHTML += '<div class="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md transition flex flex-col justify-between">'
-            + '<div>'
-            + '<div class="flex items-center justify-between gap-2 mb-4" onclick="closeEmployeeModal(); openProfileModal(' + itemJson + ')">'
-            + '<div class="flex items-center gap-3">'
-            + '<div class="w-12 h-12 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-sm flex-shrink-0">' + initials + '</div>'
-            + '<div><p class="font-bold text-gray-900 hover:text-indigo-600 transition">' + item.name + '</p><p class="text-sm text-gray-500">' + (item.email || '') + '</p></div>'
-            + '</div>'
-            + '</div>'
-            + '<div class="grid grid-cols-2 gap-3 text-xs mb-4">'
-            + '<div class="bg-gray-50 rounded-xl p-3"><p class="text-gray-400">No HP</p><p class="font-semibold text-gray-700 mt-1">' + (item.phone_number || '-') + '</p></div>'
-            + '<div class="bg-gray-50 rounded-xl p-3"><p class="text-gray-400">Tempat Lahir</p><p class="font-semibold text-gray-700 mt-1">' + (item.place_of_birth || '-') + '</p></div>'
-            + '<div class="bg-gray-50 rounded-xl p-3 col-span-2"><p class="text-gray-400">Tanggal Lahir</p><p class="font-semibold text-gray-700 mt-1">' + dob + '</p></div>'
-            + '</div>'
-            + '</div>'
-            + '<a href="' + editBaseUrl + '?id=' + item.id + '" class="w-full text-center inline-flex justify-center items-center gap-1.5 text-xs font-bold text-amber-700 bg-amber-50 hover:bg-amber-100 py-2.5 rounded-xl transition">'
-            + '⚙️ Edit Karyawan'
-            + '</a>'
-            + '</div>';
-    });
-
-    modal.classList.remove('hidden');
-}
-
-function closeEmployeeModal() {
-    document.getElementById('employeeModal').classList.add('hidden');
-}
-
-// ── Modal Profil ────────────────────────────────────────────────────────────
-function openProfileModal(item) {
-    var initials = item.name.split(' ').map(function(w){ return w[0]; }).join('').substring(0, 2).toUpperCase();
-    var dob = item.date_of_birth
-        ? new Date(item.date_of_birth).toLocaleDateString('id-ID', {day:'2-digit', month:'long', year:'numeric'})
-        : '-';
-
-    document.getElementById('profileAvatar').innerText = initials;
-    document.getElementById('profileName').innerText   = item.name;
-    document.getElementById('profileEmail').innerText  = item.email || '-';
-    document.getElementById('profilePhone').innerText  = item.phone_number || '-';
-    document.getElementById('profilePob').innerText    = item.place_of_birth || '-';
-    document.getElementById('profileDob').innerText    = dob;
-    
-    // Set link tombol edit di dalam modal profil secara dinamis
-    document.getElementById('profileEditBtn').href = editBaseUrl + '?id=' + item.id;
-
-    document.getElementById('profileModal').classList.remove('hidden');
-}
-
-function closeProfileModal() {
-    document.getElementById('profileModal').classList.add('hidden');
-}
-
-// ── Search Autocomplete ─────────────────────────────────────────────────────
-var searchInput    = document.getElementById('searchInput');
-var searchDropdown = document.getElementById('searchDropdown');
-var allData        = @json($allEmployees->values());
-
-function highlightMatch(text, query) {
-    var regex = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
-    return text.replace(regex, '<strong class="text-indigo-600 font-bold">$1</strong>');
-}
-
-searchInput.addEventListener('input', function() {
-    var query = this.value.trim().toLowerCase();
-
-    // filter baris tabel
-    document.querySelectorAll('.employee-row').forEach(function(row) {
-        row.style.display = row.dataset.name.includes(query) ? '' : 'none';
-    });
-
-    if (query.length === 0) {
-        searchDropdown.classList.add('hidden');
-        return;
-    }
-
-    var matched = allData.filter(function(e) {
-        return e.name.toLowerCase().includes(query);
-    });
-
-    if (matched.length === 0) {
-        searchDropdown.innerHTML = '<div class="px-4 py-3 text-sm text-gray-400 text-center">Karyawan tidak ditemukan</div>';
-        searchDropdown.classList.remove('hidden');
-        return;
-    }
-
-    searchDropdown.innerHTML = matched.map(function(item) {
-        var initials    = item.name.split(' ').map(function(w){ return w[0]; }).join('').substring(0, 2).toUpperCase();
-        var highlighted = highlightMatch(item.name, query);
-        var itemJson    = JSON.stringify(item).replace(/"/g, '&quot;');
-        return '<div class="flex items-center gap-3 px-4 py-3 hover:bg-indigo-50 cursor-pointer border-b border-gray-50 last:border-0 transition-colors" onclick="selectEmployee(' + itemJson + ')">'
-            + '<div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 text-xs font-bold flex items-center justify-center flex-shrink-0">' + initials + '</div>'
-            + '<div><p class="text-sm text-gray-800">' + highlighted + '</p><p class="text-xs text-gray-400">' + (item.email || '') + '</p></div>'
-            + '</div>';
-    }).join('');
-
-    searchDropdown.classList.remove('hidden');
-});
-
-function selectEmployee(item) {
-    searchInput.value = item.name;
-    searchDropdown.classList.add('hidden');
-    openProfileModal(item);
-}
-
-// tutup dropdown klik di luar
-document.addEventListener('click', function(e) {
-    if (!document.getElementById('searchWrapper').contains(e.target)) {
-        searchDropdown.classList.add('hidden');
-    }
-});
-
-// tutup profil modal klik backdrop
-document.getElementById('profileModal').addEventListener('click', function(e) {
-    if (e.target === this) closeProfileModal();
-});
-</script>
-
 @endsection
+

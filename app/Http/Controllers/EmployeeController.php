@@ -33,13 +33,17 @@ class EmployeeController extends Controller
 
         $employee = Employee::create($validated);
 
-        return response()->json([
-            'payload' => [
-                'statusCode' => 201,
-                'message' => 'Employee created successfully!',
-                'data' => $employee
-            ]
-        ], 201);
+        if ($request->wantsJson()) {
+            return response()->json([
+                'payload' => [
+                    'statusCode' => 201,
+                    'message' => 'Employee created successfully!',
+                    'data' => $employee
+                ]
+            ], 201);
+        }
+
+        return redirect('/employees')->with('success', 'Karyawan berhasil ditambahkan!');
     }
 
     public function destroy(Employee $employee)
@@ -70,13 +74,25 @@ class EmployeeController extends Controller
 
     public function show(Employee $employee)
     {
-        return response()->json([
-            'payload' => [
-                'statusCode' => 200,
-                'message' => 'Employee retrieved successfully!',
-                'data' => $employee
-            ]
-        ], 200);
+        $employee->load('jobrole');
+        
+        if (request()->wantsJson()) {
+            return response()->json([
+                'payload' => [
+                    'statusCode' => 200,
+                    'message' => 'Employee retrieved successfully!',
+                    'data' => $employee
+                ]
+            ], 200);
+        }
+        
+        return view('employee.detail', compact('employee'));
+    }
+
+    public function index()
+    {
+        $employees = Employee::with('jobrole')->get();
+        return view('employee.index', compact('employees'));
     }
     
     public function indexByStatus(Request $request)
@@ -90,13 +106,6 @@ class EmployeeController extends Controller
             'statusFilter' => $statusFilter,
             'employees' => $employees
         ], 200);
-    }
-
-    public function index()
-    {
-        $employees = Employee::all();
-
-        return view('employee.index', compact('employees'));
     }
 
     public function getCashiers()
