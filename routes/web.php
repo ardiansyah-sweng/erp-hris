@@ -9,6 +9,7 @@ use App\Http\Controllers\JobroleController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\PerformanceEvaluationController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/employees/status', [EmployeeController::class, 'indexByStatus']);
 Route::post('/test-jobrole', [JobroleController::class, 'store']);
@@ -24,9 +25,8 @@ Route::get('/detail-employee', function () {
 Route::get('/', [LoginController::class, 'showLoginForm']);
 Route::post('/login', [LoginController::class, 'login']);
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-});
+// Route dashboard sekarang lewat DashboardController, bukan closure lagi
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::post('/job-roles', [JobroleController::class, 'store'])
     ->name('jobrole.store');
@@ -52,10 +52,6 @@ Route::delete('/job-roles/{jobrole}', [JobroleController::class, 'destroy']);
 Route::get('/job-roles/{id}', [JobroleController::class, 'show']);
 
 Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy']);
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-});
 
 Route::get('/profile', function () {
     return view('profile.index');
@@ -101,10 +97,6 @@ Route::put('/employee/test-edit', function () {
     return "Tombol Update berhasil diklik! (Ini hanya simulasi, data belum tersimpan karena Controller Update asli belum disambungkan).";
 });
 Route::put('/employees/{id}', [EmployeeController::class, 'update']);
-
-Route::get('/leave-request', function () {
-    return view('leave_request.index');
-});
 
 Route::get('/leave-request', function () {
     $dummyLeaveRequests = [
