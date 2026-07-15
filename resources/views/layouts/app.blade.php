@@ -312,6 +312,46 @@
         </div>
 
     </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal"
+        class="fixed inset-0 z-[999] hidden items-center justify-center bg-black/40 backdrop-blur-sm">
+
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
+
+            <div class="flex justify-center mb-4">
+                <div class="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center">
+                    <svg class="w-7 h-7 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                            d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </div>
+            </div>
+
+            <h2 class="text-xl font-bold text-center text-gray-900">Hapus Data</h2>
+            <p class="mt-2 text-sm text-center text-gray-500">
+                Apakah Anda yakin ingin menghapus job role ini?
+            </p>
+
+            <div class="flex justify-end gap-3 mt-8">
+                <button onclick="closeDeleteModal()"
+                    class="px-5 py-2 rounded-xl border border-gray-200 hover:bg-gray-100">
+                    Batal
+                </button>
+
+                <form id="deleteForm" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit"
+                        class="px-5 py-2 rounded-xl bg-red-600 text-white hover:bg-red-700">
+                        Hapus
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
     @stack('scripts')
 
     <script>
@@ -348,6 +388,23 @@
             modal.classList.remove('flex');
             modal.classList.add('hidden');
         }
+
+        function openDeleteModal(actionUrl) {
+            document.getElementById('deleteForm').action = actionUrl;
+            const modal = document.getElementById('deleteModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeDeleteModal() {
+            const modal = document.getElementById('deleteModal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+
+        document.getElementById('deleteModal').addEventListener('click', function(e) {
+            if (e.target === this) closeDeleteModal();
+        });
     </script>
 
 </body>

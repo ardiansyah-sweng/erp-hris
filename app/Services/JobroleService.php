@@ -10,7 +10,10 @@ class JobroleService
     public function createJobrole(array $data)
     {
         return Jobrole::create([
-            'role' => $data['role']
+            'role'       => $data['role'],
+            'department' => $data['department'] ?? null,
+            'level'      => $data['level'] ?? null,
+            'status'     => $data['status'] ?? 'Active',
         ]);
     }
 
@@ -31,9 +34,7 @@ class JobroleService
     {
         $jobrole = Jobrole::findOrFail($id);
 
-        $jobrole->update([
-            'role' => $data['role']
-        ]);
+        $jobrole->update($data);
 
         return $jobrole;
     }

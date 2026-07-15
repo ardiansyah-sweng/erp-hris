@@ -1,14 +1,3 @@
-@php
-    // Data Dummy Sementara untuk Job Role
-    $dummyJobRoles = [
-        ['id' => 1, 'name' => 'Software Engineer', 'department' => 'IT', 'level' => 'Staff', 'status' => 'Active'],
-        ['id' => 2, 'name' => 'Data Analyst', 'department' => 'Data', 'level' => 'Senior', 'status' => 'Active'],
-        ['id' => 3, 'name' => 'HR Manager', 'department' => 'Human Resources', 'level' => 'Manager', 'status' => 'On Leave'],
-        ['id' => 4, 'name' => 'Quality Assurance', 'department' => 'IT', 'level' => 'Staff', 'status' => 'Active'],
-        ['id' => 5, 'name' => 'Product Manager', 'department' => 'Product', 'level' => 'Manager', 'status' => 'Active'],
-    ];
-@endphp
-
 @extends('layouts.app')
 
 @section('title', 'Job Role - ERP HRIS')
@@ -50,7 +39,7 @@
                 <p class="text-sm font-medium text-gray-500">Total Job Role</p>
             </div>
             <div class="flex items-baseline gap-2">
-                <p class="text-3xl font-bold text-gray-900">{{ count($dummyJobRoles) }}</p>
+                <p class="text-3xl font-bold text-gray-900">{{ count($jobroles) }}</p>
                 <span class="text-sm text-emerald-600 font-medium">role aktif</span>
             </div>
         </div>
@@ -84,28 +73,27 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100 bg-white">
-                    <!--yang di dummyJobRoles diganti sesuai variabel di Controller nya-->
-                    @forelse($dummyJobRoles as $role)
+                    @forelse($jobroles as $role)
                         <tr class="hover:bg-indigo-50/40 transition-colors duration-150 group">
                             <td class="whitespace-nowrap py-4 pl-6 pr-3 text-sm font-medium text-gray-900">{{ $loop->iteration }}</td>
                             <td class="whitespace-nowrap px-3 py-4">
-                                <div class="text-sm font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors">{{ $role['name'] }}</div>
+                                <div class="text-sm font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors">{{ $role->role }}</div>
                             </td>
                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-600">
                                 <div class="flex items-center gap-1.5">
                                     <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                                     </svg>
-                                    {{ $role['department'] }}
+                                    {{ $role->department }}
                                 </div>
                             </td>
                             <td class="whitespace-nowrap px-3 py-4 text-sm">
                                 <span class="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-semibold text-blue-700 ring-1 ring-inset ring-blue-700/10">
-                                    {{ $role['level'] }}
+                                    {{ $role->level }}
                                 </span>
                             </td>
                             <td class="whitespace-nowrap px-3 py-4 text-sm">
-                                @if($role['status'] == 'Active')
+                                @if($role->status == 'Active')
                                     <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
                                         <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
                                         Aktif
@@ -121,9 +109,7 @@
                             
                                 <div class="flex justify-end gap-3">
 
-                                    <a href="{{ route('jobrole.edit', $role['id']) }}" class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg flex items-center gap-1 transition-colors">
-
-                                    <a href="/job-roles/{{ $role['id'] }}" 
+                                    <a href="/job-roles/{{ $role->id }}" 
                                     class="text-sky-600 hover:text-sky-900 bg-sky-50 hover:bg-sky-100 px-3 py-1.5 rounded-lg flex items-center gap-1 transition-colors">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -131,18 +117,20 @@
                                         </svg>
                                         Detail
                                     </a>
-                                    <a href="{{ route('jobrole.edit', $role['id']) }}" class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg flex items-center gap-1 transition-colors">
+                                    <a href="{{ route('jobrole.edit', $role->id) }}" class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg flex items-center gap-1 transition-colors">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
                                         </svg>
                                         Edit
                                     </a>
-                                    <a href="#"class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg flex items-center gap-1 transition-colors">
+                                    <button type="button"
+                                        onclick="openDeleteModal('{{ route('jobrole.destroy', $role->id) }}')"
+                                        class="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg flex items-center gap-1 transition-colors">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                                         </svg>
                                         Hapus
-                                    </a>
+                                    </button>
                                 </div>
                             </td>
                         </tr>

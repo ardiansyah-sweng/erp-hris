@@ -12,6 +12,9 @@ class Jobrole extends Model
     protected $table = 'job_roles';
 
     protected $fillable = [
-        'role'
+        'role',
+        'department',
+        'level',
+        'status',
     ];
 }

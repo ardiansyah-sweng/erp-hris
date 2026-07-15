@@ -18,23 +18,38 @@ class JobroleSeeder extends Seeder
     public function run(): void
     {
         Jobrole::create([
-            'role' => 'Software Engineer'
+            'role'       => 'Software Engineer',
+            'department' => 'IT',
+            'level'      => 'Staff',
+            'status'     => 'Active',
         ]);
 
         Jobrole::create([
-            'role' => 'Data Analyst'
+            'role'       => 'Data Analyst',
+            'department' => 'Data',
+            'level'      => 'Senior',
+            'status'     => 'Active',
         ]);
 
         Jobrole::create([
-            'role' => 'HR Manager'
+            'role'       => 'HR Manager',
+            'department' => 'Human Resources',
+            'level'      => 'Manager',
+            'status'     => 'Active',
         ]);
 
         Jobrole::create([
-            'role' => 'Quality Assurance'
+            'role'       => 'Quality Assurance',
+            'department' => 'IT',
+            'level'      => 'Staff',
+            'status'     => 'Active',
         ]);
 
         Jobrole::create([
-            'role' => 'Product Manager'
+            'role'       => 'Product Manager',
+            'department' => 'Product',
+            'level'      => 'Manager',
+            'status'     => 'Active',
         ]);
     }
 }
