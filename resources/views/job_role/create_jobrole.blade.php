@@ -37,70 +37,22 @@
 
             <!-- Nama Role -->
             <div class="mb-6">
-                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">
                     Nama Role
                 </label>
 
                 <input
                     type="text"
                     name="name"
+                    id="name"
                     placeholder="Contoh: Software Engineer"
-                    class="w-full px-4 py-3 rounded-xl border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                    class="w-full px-4 py-3 rounded-xl border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 @error('name') ring-red-500 @enderror"
+                    value="{{ old('name') }}"
                 >
 
-                <p class="mt-2 text-xs text-gray-400">
-                    Masukkan nama posisi pekerjaan.
-                </p>
-            </div>
-
-            <!-- Departemen -->
-            <div class="mb-6">
-                <label class="block text-sm font-semibold text-gray-700 mb-2">
-                    Departemen
-                </label>
-
-                <select
-                    name="department"
-                    class="w-full rounded-xl border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                >
-                    <option value="">Pilih Departemen</option>
-                    <option value="IT">IT</option>
-                    <option value="Data">Data</option>
-                    <option value="Human Resources">Human Resources</option>
-                    <option value="Product">Product</option>
-                </select>
-            </div>
-
-            <!-- Level -->
-            <div class="mb-6">
-                <label class="block text-sm font-semibold text-gray-700 mb-2">
-                    Level
-                </label>
-
-                <select
-                    name="level"
-                    class="w-full rounded-xl border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                >
-                    <option value="">Pilih Level</option>
-                    <option value="Staff">Staff</option>
-                    <option value="Senior">Senior</option>
-                    <option value="Manager">Manager</option>
-                </select>
-            </div>
-
-            <!-- Status -->
-            <div class="mb-8">
-                <label class="block text-sm font-semibold text-gray-700 mb-2">
-                    Status
-                </label>
-
-                <select
-                    name="status"
-                    class="w-full rounded-xl border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                >
-                    <option value="Active">Aktif</option>
-                    <option value="On Leave">Cuti</option>
-                </select>
+                @error('name')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
             </div>
 
             <!-- Tombol -->

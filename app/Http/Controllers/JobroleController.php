@@ -2,66 +2,93 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\JobroleService;
 use Illuminate\Http\Request;
-use App\Models\Jobrole;
-use Exception;
 
 class JobroleController extends Controller
 {
+    protected $jobroleService;
+
+    public function __construct(JobroleService $jobroleService)
+    {
+        $this->jobroleService = $jobroleService;
+    }
+
+    public function index()
+    {
+        $jobroles = $this->jobroleService->getAllJobrole();
+        return view('job_role.index', compact('jobroles'));
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
         ]);
 
-        $jobrole = Jobrole::create([
+        $jobrole = $this->jobroleService->createJobrole([
             'role' => $validated['name'],
         ]);
 
-        return response()->json([
-            'message' => 'Data berhasil disimpan',
-            'data' => $jobrole
-        ], 201);
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => 'Data berhasil disimpan',
+                'data' => $jobrole
+            ], 201);
+        }
+
+        return redirect()
+            ->route('jobrole.index')
+            ->with('success', 'Job role berhasil ditambahkan.');
     }
 
-    public function destroy(Jobrole $jobrole)
+    public function show($id)
+    {
+        $jobrole = $this->jobroleService->showJobrole($id);
+        return view('job_role.detail', compact('jobrole'));
+    }
+
+    public function edit($id)
+    {
+        $jobrole = $this->jobroleService->showJobrole($id);
+        return view('job_role.edit', compact('jobrole'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        $jobrole = $this->jobroleService->updateJobrole($id, [
+            'role' => $validated['name'],
+        ]);
+
+        return redirect()
+            ->route('jobrole.index')
+            ->with('success', 'Job role berhasil diperbarui.');
+    }
+
+    public function destroy($id)
     {
         try {
-            $jobrole->delete();
+            $this->jobroleService->deleteJobrole($id);
 
             return response()->json([
                 'payload' => [
                     'statusCode' => 200,
                     'message' => 'Job role deleted successfully!',
-                    'data' => [
-                        'id' => $jobrole->id,
-                        'role' => $jobrole->role,
-                    ]
+                    'data' => ['id' => $id]
                 ]
             ], 200);
 
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'payload' => [
                     'statusCode' => 500,
                     'message' => 'Gagal menghapus data job role.',
-                    'error' => $e->getMessage()
                 ]
             ], 500);
         }
-    }
-    
-    public function show($id)
-    {
-        $dummyData = [
-            1 => (object)['id' => 1, 'name' => 'Software Engineer',  'department' => 'IT',               'level' => 'Staff',   'status' => 'Active',   'created_at' => '2025-01-01 08:00:00', 'updated_at' => '2025-04-10 10:00:00'],
-            2 => (object)['id' => 2, 'name' => 'Data Analyst',       'department' => 'Data',             'level' => 'Senior',  'status' => 'Active',   'created_at' => '2025-01-01 08:00:00', 'updated_at' => '2025-04-10 10:00:00'],
-            3 => (object)['id' => 3, 'name' => 'HR Manager',         'department' => 'Human Resources',  'level' => 'Manager', 'status' => 'On Leave', 'created_at' => '2025-01-01 08:00:00', 'updated_at' => '2025-04-10 10:00:00'],
-            4 => (object)['id' => 4, 'name' => 'Quality Assurance',  'department' => 'IT',               'level' => 'Staff',   'status' => 'Active',   'created_at' => '2025-01-01 08:00:00', 'updated_at' => '2025-04-10 10:00:00'],
-            5 => (object)['id' => 5, 'name' => 'Product Manager',    'department' => 'Product',          'level' => 'Manager', 'status' => 'Active',   'created_at' => '2025-01-01 08:00:00', 'updated_at' => '2025-04-10 10:00:00'],
-        ];
- 
-        $jobrole = $dummyData[$id] ?? abort(404);
-        return view('job_role.detail', compact('jobrole'));
     }
 }
