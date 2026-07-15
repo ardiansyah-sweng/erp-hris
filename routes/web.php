@@ -159,68 +159,11 @@ Route::put('/employee/test-edit', function () {
 });
 Route::put('/employees/{id}', [EmployeeController::class, 'update']);
 
-Route::get('/leave-request', function () {
-    return view('leave_request.index');
-});
-
-Route::get('/leave-request', function () {
-    $dummyLeaveRequests = [
-        [
-            'id' => '1',
-            'employee_id' => 'EMP001',
-            'employee_name' => 'Susanti Wijaya',
-            'start_date' => '2026-06-10',
-            'end_date' => '2026-06-12',
-            'reason' => 'Liburan keluarga',
-            'status' => 'Pending',
-        ],
-        [
-            'id' => '2',
-            'employee_id' => 'EMP002',
-            'employee_name' => 'Budi Santoso',
-            'start_date' => '2026-06-15',
-            'end_date' => '2026-06-18',
-            'reason' => 'Keperluan pribadi',
-            'status' => 'Approved',
-        ],
-        [
-            'id' => '3',
-            'employee_id' => 'EMP003',
-            'employee_name' => 'Andi Wijaya',
-            'start_date' => '2026-06-20',
-            'end_date' => '2026-06-22',
-            'reason' => 'Kunjungan keluarga',
-            'status' => 'Rejected',
-        ],
-    ];
-    return view(
-        'leave_request.index',
-        compact('dummyLeaveRequests')
-    );
-})->name('leave_request.index');
-
-Route::get('/leave-request/create', function () {
-    return view('leave_request.create');
-});
-
-Route::get('/leave-request/{id}', function ($id) {
-
-    $leaveRequest = [
-        'id' => $id,
-        'employee_id' => 'EMP001',
-        'employee_name' => 'Susanti Wijaya',
-        'start_date' => '2026-06-10',
-        'end_date' => '2026-06-12',
-        'reason' => 'Liburan keluarga',
-        'status' => 'Pending',
-        'created_at' => '2026-06-08',
-    ];
-
-    return view(
-        'leave_request.detail',
-        compact('leaveRequest')
-    );
-})->name('leave_request.detail');
+Route::get('/leave-request', [\App\Http\Controllers\LeaveRequestController::class, 'index'])->name('leave_request.index');
+Route::get('/leave-request/create', [\App\Http\Controllers\LeaveRequestController::class, 'create'])->name('leave_request.create');
+Route::post('/leave-request', [\App\Http\Controllers\LeaveRequestController::class, 'store'])->name('leave_request.store');
+Route::get('/leave-request/{id}', [\App\Http\Controllers\LeaveRequestController::class, 'show'])->name('leave_request.detail');
+Route::delete('/leave-request/{id}', [\App\Http\Controllers\LeaveRequestController::class, 'destroy'])->name('leave_request.destroy');
 
 Route::get('/payroll/create', function () {
     $employees = Employee::orderBy('name')->get(['id', 'name']);
@@ -249,32 +192,8 @@ Route::get('/attendance-recap', [AttendanceController::class, 'recap'])
 
 Route::resource('payroll', PayrollController::class)->except(['create']);
 Route::resource('evaluations', PerformanceEvaluationController::class)->except(['show']);
-Route::get('/leave-request/{id}/edit', function ($id) {
-
-    $leaveRequest = [
-        'id' => $id,
-        'employee_id' => 'EMP001',
-        'employee_name' => 'Susanti Wijaya',
-        'start_date' => '2026-06-10',
-        'end_date' => '2026-06-12',
-        'reason' => 'Liburan keluarga',
-        'status' => 'Pending',
-    ];
-
-    return view(
-        'leave_request.edit',
-        compact('leaveRequest')
-    );
-
-})->name('leave_request.edit');
-
-Route::put('/leave-request/{id}', function ($id) {
-
-    return redirect()
-        ->route('leave_request.index')
-        ->with('success', 'Data cuti berhasil diperbarui.');
-
-})->name('leave_request.update');
+Route::get('/leave-request/{id}/edit', [\App\Http\Controllers\LeaveRequestController::class, 'edit'])->name('leave_request.edit');
+Route::put('/leave-request/{id}', [\App\Http\Controllers\LeaveRequestController::class, 'update'])->name('leave_request.update');
 
 Route::get('/system-audit-temp', [AuditLogController::class, 'indexTemp'])->name('system.audit.temp');
 

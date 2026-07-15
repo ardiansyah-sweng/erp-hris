@@ -122,7 +122,7 @@
                     <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
                         <div class="border-b border-gray-100 pb-3">
                             <dt class="text-xs font-semibold text-gray-400 uppercase tracking-wider">ID Karyawan</dt>
-                            <dd class="text-sm font-semibold text-gray-800 mt-1 font-mono text-xs">#{{ $employee->id ?? '-' }}</dd>
+                            <dd class="text-sm font-semibold text-gray-800 mt-1 font-mono text-xs">{{ $employee->employee_code ?? '-' }}</dd>
                         </div>
                         <div class="border-b border-gray-100 pb-3">
                             <dt class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Jabatan / Role</dt>

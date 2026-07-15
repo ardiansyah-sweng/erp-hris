@@ -21,7 +21,11 @@ class EmployeeFactory extends Factory
         $dateOfBirth = fake()->dateTimeBetween('-60 years', '-18 years');
         $age = (int) Carbon::parse($dateOfBirth)->age;
 
+        static $counter = 0;
+        $counter++;
+
         return [
+            'employee_code' => 'EMP' . str_pad($counter, 3, '0', STR_PAD_LEFT),
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'phone_number' => fake()->phoneNumber(),

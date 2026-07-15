@@ -12,6 +12,7 @@ class Employee extends Model
     protected $table = 'employees';
 
     protected $fillable = [
+        'employee_code',
         'name',
         'email',
         'phone_number',
@@ -44,6 +45,16 @@ class Employee extends Model
     public function payrolls()
     {
         return $this->hasMany(Payroll::class, 'employee_id');
+    }
+
+    protected static function booted(): void
+    {
+        static::created(function (Employee $employee) {
+            if (!$employee->employee_code) {
+                $employee->employee_code = 'EMP' . str_pad($employee->id, 3, '0', STR_PAD_LEFT);
+                $employee->saveQuietly();
+            }
+        });
     }
 
     public function isActive()
