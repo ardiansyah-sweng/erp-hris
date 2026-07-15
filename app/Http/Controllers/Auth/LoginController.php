@@ -25,18 +25,18 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials)) {
 
-        $request->session()->regenerate();
+            $request->session()->regenerate();
 
-        LoginLog::create([
-            'user_id' => Auth::id(),
-            'login_at' => now(),
-            'status' => 'success',
-            'ip_address' => $request->ip(),
-            'user_agent' => $request->userAgent(),
-        ]);
+            LoginLog::create([
+                'user_id' => Auth::id(),
+                'login_at' => now(),
+                'status' => 'success',
+                'ip_address' => $request->ip(),
+                'user_agent' => $request->userAgent(),
+            ]);
 
-        return redirect('/dashboard');
-    }
+            return redirect('/dashboard');
+        }
 
         return back()->with('error', 'Email atau password salah');
     }
@@ -44,6 +44,11 @@ class LoginController extends Controller
     public function logout(Request $request)
     {
         Auth::logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect('/');

@@ -8,6 +8,9 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JobroleController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PayrollController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SettingController;
+
 use App\Http\Controllers\PerformanceEvaluationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AnnouncementController;
@@ -30,6 +33,12 @@ Route::get('/detail-employee', function () {
     return view('employee.detail', compact('employee'));
 });
 
+Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login']);
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+Route::post('/logout', [LoginController::class, 'logout'])
+    ->name('logout');
 Route::middleware('guest')->group(function () {
     Route::get('/', [LoginController::class, 'showLoginForm']);
     Route::post('/login', [LoginController::class, 'login']);
@@ -72,6 +81,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 });
 
+Route::middleware('auth')->group(function () {
 Route::get('/dashboard', function () {
     return view('dashboard');
 });
@@ -82,9 +92,35 @@ Route::get('/profile', function () {
     return view('profile.index');
 })->name('profile.index');
 
-Route::get('/settings', function () {
-    return view('settings.index');
-})->name('settings.index');
+    // PROFILE
+    Route::get('/profile', [ProfileController::class, 'index'])
+        ->name('profile.index');
+
+    Route::put('/profile', [ProfileController::class, 'update'])
+        ->name('profile.update');
+
+
+    // DELETE FOTO PROFILE
+    Route::delete('/profile/photo', [ProfileController::class, 'destroyPhoto'])
+        ->name('profile.photo.delete');
+
+
+    // SETTINGS
+    Route::get('/settings', function () {
+        return view('settings.index');
+    })->name('settings.index');
+
+
+    Route::put('/settings',
+        [SettingController::class, 'update']
+    )->name('settings.update');
+
+
+    Route::put('/settings/password',
+        [SettingController::class, 'updatePassword']
+    )->name('settings.password');
+
+});
 
 // ROUTE EDIT JOB ROLE
 Route::get('/job-roles/{id}/edit', function ($id) {

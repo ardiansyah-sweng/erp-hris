@@ -116,12 +116,12 @@
         <!-- User Profile -->
         <div class="border-t border-gray-100 px-4 py-4 flex-shrink-0 relative">
             <button id="profileButton" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 cursor-pointer transition-colors group">
-                <img class="h-8 w-8 rounded-full ring-2 ring-indigo-100 object-cover flex-shrink-0"
-                     src="https://ui-avatars.com/api/?name=Admin+HR&background=4f46e5&color=fff&bold=true"
-                     alt="User">
+                <img class="h-8 w-8 rounded-full ring-2 ring-indigo-100 object-cover"
+                    src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=4f46e5&color=fff&bold=true"
+                    alt="User">
                 <div class="flex-1 min-w-0">
-                    <p class="text-sm font-semibold text-gray-900 truncate">Admin HR</p>
-                    <p class="text-xs text-gray-500 truncate">admin@erphris.com</p>
+                    <p class="text-sm font-semibold text-gray-900 truncate">{{ Auth::user()->name }}</p>
+                    <p class="text-xs text-gray-500 truncate">{{ Auth::user()->email }}</p>
                 </div>
                 <svg class="w-4 h-4 text-gray-400 flex-shrink-0 group-hover:text-gray-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
@@ -135,17 +135,17 @@
                     <div class="flex items-center gap-3">
 
                         <img class="h-10 w-10 rounded-full ring-2 ring-indigo-100"
-                            src="https://ui-avatars.com/api/?name=Admin+HR&background=4f46e5&color=fff&bold=true"
+                            src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=4f46e5&color=fff&bold=true"
                             alt="User">
 
                         <div>
 
                             <p class="text-sm font-semibold text-gray-900">
-                                Admin HR
+                                {{ Auth::user()->name }}
                             </p>
 
                             <p class="text-xs text-gray-500">
-                                admin@erphris.com
+                                {{ Auth::user()->email }}
                             </p>
 
                         </div>
@@ -204,7 +204,10 @@
                 <!-- Logout -->
                 <div class="p-2">
 
-                    <a href="/logout" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-600 rounded-xl hover:bg-gray-50 transition-colors duration-200">
+                    <button
+                        type="button"
+                        onclick="openLogoutModal()"
+                        class="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-600 rounded-xl hover:bg-red-50 transition-colors duration-200">
 
                         <svg class="w-5 h-5 text-gray-500"
                             fill="none"
@@ -218,9 +221,9 @@
 
                         Keluar
 
-                    </a>
+                    </button>
 
-                </div>                    
+                </div>                   
             </div>
         </div>
     </aside>
@@ -250,6 +253,65 @@
         </main>
     </div>
 
+    <!-- Logout Modal -->
+    <div id="logoutModal"
+        class="fixed inset-0 z-[999] hidden items-center justify-center bg-black/40 backdrop-blur-sm">
+
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
+
+            <div class="flex justify-center mb-4">
+                <div class="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center">
+
+                    <svg class="w-7 h-7 text-red-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="1.8"
+                            d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"/>
+                    </svg>
+
+                </div>
+            </div>
+
+            <h2 class="text-xl font-bold text-center text-gray-900">
+                Keluar Akun
+            </h2>
+
+            <p class="mt-2 text-sm text-center text-gray-500">
+                Apakah Anda yakin ingin keluar dari ERP HRIS?
+            </p>
+
+            <div class="flex justify-end gap-3 mt-8">
+
+                <button
+                    onclick="closeLogoutModal()"
+                    class="px-5 py-2 rounded-xl border border-gray-200 hover:bg-gray-100">
+
+                    Batal
+
+                </button>
+
+                <form action="{{ route('logout') }}" method="POST">
+
+                    @csrf
+
+                    <button
+                        type="submit"
+                        class="px-5 py-2 rounded-xl bg-red-600 text-white hover:bg-red-700">
+
+                        Keluar
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
     @stack('scripts')
 
     <script>
@@ -275,18 +337,17 @@
             profileDropdown.classList.add('hidden');
         });
 
-        const logoutButton = document.getElementById('logoutButton');
-        const logoutModal = document.getElementById('logoutModal');
-        const cancelLogout = document.getElementById('cancelLogout');
+        function openLogoutModal() {
+            const modal = document.getElementById('logoutModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
 
-        logoutButton.addEventListener('click', (e) => {
-            e.preventDefault();
-            logoutModal.classList.remove('hidden');
-        });
-
-        cancelLogout.addEventListener('click', () => {
-            logoutModal.classList.add('hidden');
-        });
+        function closeLogoutModal() {
+            const modal = document.getElementById('logoutModal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
     </script>
 
 </body>
