@@ -312,6 +312,7 @@
         </div>
 
     </div>
+    @stack('scripts')
 
     <script>
         function toggleSidebar() {

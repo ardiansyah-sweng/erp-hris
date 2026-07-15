@@ -1,4 +1,4 @@
-<?php
+    <?php
 
 use Illuminate\Support\Facades\Route;
 use App\Models\Employee;
@@ -18,6 +18,10 @@ use App\Http\Controllers\AnnouncementController;
 Route::get('/employees/status', [EmployeeController::class, 'indexByStatus']);
 Route::post('/test-jobrole', [JobroleController::class, 'store']);
 Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
+Route::get('/employees/create', function () {
+    $jobroles = \App\Models\Jobrole::all();
+    return view('employee.create', compact('jobroles'));
+})->name('employee.create');
 Route::post('/employees/import', [EmployeeController::class, 'importCsv'])->name('employees.import');
 Route::post('/employees', [EmployeeController::class, 'store']);
 Route::get('/employees/{employee}', [EmployeeController::class, 'show'])->name('employees.show');
@@ -274,18 +278,6 @@ Route::put('/leave-request/{id}', function ($id) {
 
 Route::get('/system-audit-temp', [AuditLogController::class, 'indexTemp'])->name('system.audit.temp');
 
-Route::prefix('announcement')->group(function () {
-
-    Route::get(
-        '/',
-        [AnnouncementController::class, 'index']
-    )->name('announcement.index');
-
-    Route::get(
-        '/{id}',
-        [AnnouncementController::class, 'show']
-    )->name('announcement.show');
-
-});
+Route::resource('announcement', AnnouncementController::class);
 
 });

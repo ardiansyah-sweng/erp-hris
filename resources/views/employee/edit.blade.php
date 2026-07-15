@@ -145,6 +145,15 @@
                     @error('date_of_birth') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
                 </div>
 
+                {{-- Usia --}}
+                <div>
+                    <label for="age" class="block text-sm font-semibold text-gray-700 mb-1.5">Usia</label>
+                    <input type="number" id="age" name="age"
+                           value="{{ old('age', $employee->age) }}"
+                           min="0" readonly
+                           class="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm text-gray-900 bg-gray-50 cursor-not-allowed shadow-sm focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 outline-none transition">
+                </div>
+
                 {{-- Alamat --}}
                 <div class="col-span-1 md:col-span-2">
                     <label for="address" class="block text-sm font-semibold text-gray-700 mb-1.5">Alamat <span class="text-red-500">*</span></label>
@@ -173,3 +182,30 @@
 
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const dateInput = document.querySelector('input[name="date_of_birth"]');
+        const ageInput = document.getElementById('age');
+
+        function calculateAge() {
+            if (!dateInput.value) {
+                ageInput.value = '';
+                return;
+            }
+            const dob = new Date(dateInput.value);
+            const today = new Date();
+            let age = today.getFullYear() - dob.getFullYear();
+            const monthDiff = today.getMonth() - dob.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+                age--;
+            }
+            ageInput.value = age >= 0 ? age : '';
+        }
+
+        dateInput.addEventListener('change', calculateAge);
+        dateInput.addEventListener('input', calculateAge);
+    });
+</script>
+@endpush

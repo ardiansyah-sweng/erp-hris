@@ -15,23 +15,31 @@
         <p class="mt-1 text-sm text-gray-500">Kelola dan pantau data karyawan perusahaan.</p>
     </div>
 
-    <form action="{{ route('employees.import') }}" method="POST" enctype="multipart/form-data" class="mt-4 sm:mt-0 flex items-center gap-3">
-        @csrf
+    <div class="mt-4 sm:mt-0 flex items-center gap-3">
+        <a href="/employees/create" class="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            Tambah Karyawan
+        </a>
+        <form action="{{ route('employees.import') }}" method="POST" enctype="multipart/form-data" class="flex items-center gap-3">
+            @csrf
 
-        <input 
-            type="file" 
-            name="csv_file" 
-            accept=".csv"
-            required
-            class="block text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
-        >
+            <input 
+                type="file" 
+                name="csv_file" 
+                accept=".csv"
+                required
+                class="block text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+            >
 
-        <button 
-            type="submit"
-            class="inline-flex items-center rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700">
-            Import CSV
-        </button>
-    </form>
+            <button 
+                type="submit"
+                class="inline-flex items-center rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700">
+                Import CSV
+            </button>
+        </form>
+    </div>
 </div>
 
 @if(session('success'))
