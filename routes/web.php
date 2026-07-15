@@ -242,18 +242,6 @@ Route::put('/leave-request/{id}', function ($id) {
 
 Route::get('/system-audit-temp', [AuditLogController::class, 'indexTemp'])->name('system.audit.temp');
 
-Route::prefix('announcement')->group(function () {
-
-    Route::get(
-        '/',
-        [AnnouncementController::class, 'index']
-    )->name('announcement.index');
-
-    Route::get(
-        '/{id}',
-        [AnnouncementController::class, 'show']
-    )->name('announcement.show');
-
-});
+Route::resource('announcement', AnnouncementController::class);
 
 });
