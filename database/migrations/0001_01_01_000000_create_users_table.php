@@ -17,6 +17,12 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('profile_photo')->nullable();
+            $table->string('language')->default('Indonesia');
+            $table->string('theme')->default('Light');
+            $table->boolean('email_notification')->default(true);
+            $table->boolean('leave_notification')->default(true);
+            $table->boolean('payroll_notification')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });

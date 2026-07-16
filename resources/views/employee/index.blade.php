@@ -15,23 +15,31 @@
         <p class="mt-1 text-sm text-gray-500">Kelola dan pantau data karyawan perusahaan.</p>
     </div>
 
-    <form action="{{ route('employees.import') }}" method="POST" enctype="multipart/form-data" class="mt-4 sm:mt-0 flex items-center gap-3">
-        @csrf
+    <div class="mt-4 sm:mt-0 flex items-center gap-3">
+        <a href="/employees/create" class="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            Tambah Karyawan
+        </a>
+        <form action="{{ route('employees.import') }}" method="POST" enctype="multipart/form-data" class="flex items-center gap-3">
+            @csrf
 
-        <input 
-            type="file" 
-            name="csv_file" 
-            accept=".csv"
-            required
-            class="block text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
-        >
+            <input 
+                type="file" 
+                name="csv_file" 
+                accept=".csv"
+                required
+                class="block text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+            >
 
-        <button 
-            type="submit"
-            class="inline-flex items-center rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700">
-            Import CSV
-        </button>
-    </form>
+            <button 
+                type="submit"
+                class="inline-flex items-center rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700">
+                Import CSV
+            </button>
+        </form>
+    </div>
 </div>
 
 @if(session('success'))
@@ -123,14 +131,14 @@
                     <th class="px-3 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-widest">No HP</th>
                     <th class="px-3 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-widest">Tempat Lahir</th>
                     <th class="px-3 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-widest">Tanggal Lahir</th>
-                    <th class="py-4 pl-3 pr-6 text-center text-xs font-semibold text-gray-500 uppercase tracking-widest">Aksi</th>
+                    <th class="px-3 py-4 text-center text-xs font-semibold text-gray-500 uppercase tracking-widest">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-100 bg-white" id="tableBody">
                 @forelse($employees as $employee)
                 <tr class="hover:bg-indigo-50/40 transition-colors duration-150 group employee-row"
                     data-name="{{ strtolower($employee->name) }}">
-                    <td class="whitespace-nowrap py-4 pl-6 pr-3 text-sm text-gray-400 font-medium">#{{ $employee->id }}</td>
+                    <td class="whitespace-nowrap py-4 pl-6 pr-3 text-sm text-gray-400 font-medium font-mono">{{ $employee->employee_code }}</td>
                     <td class="whitespace-nowrap px-3 py-4">
                         <div class="flex items-center gap-3">
                             <div class="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 text-indigo-700 text-xs font-bold flex-shrink-0">
@@ -147,13 +155,9 @@
                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-600">
                         {{ \Carbon\Carbon::parse($employee->date_of_birth)->format('d-m-Y') }}
                     </td>
-                    <td class="whitespace-nowrap py-4 pl-3 pr-6 text-center text-sm">
-                        <a href="{{ url('/employee/test-edit') }}?id={{ $employee->id }}" 
-                           class="inline-flex items-center gap-1 text-xs font-bold text-amber-600 hover:text-amber-900 bg-amber-50 hover:bg-amber-100 px-3 py-1.5 rounded-xl transition-all duration-200 shadow-sm">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                            </svg>
-                            Edit
+                    <td class="whitespace-nowrap px-3 py-4 text-center text-sm font-medium">
+                        <a href="{{ route('employees.show', $employee->id) }}" class="inline-flex items-center rounded-xl bg-indigo-50 px-3 py-1.5 text-xs font-semibold text-indigo-600 hover:bg-indigo-100 transition-colors">
+                            Detail
                         </a>
                     </td>
                 </tr>
@@ -233,6 +237,13 @@
             </div>
         </div>
 
+        <!-- Footer Modal -->
+        <div class="px-6 py-4 bg-gray-50 border-t flex justify-end">
+            <a id="profileDetailLink" href="#" class="inline-flex items-center rounded-xl bg-indigo-600 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-indigo-700 transition-colors">
+                Detail Selengkapnya
+            </a>
+        </div>
+
     </div>
 </div>
 
@@ -309,9 +320,7 @@ function openProfileModal(item) {
     document.getElementById('profilePhone').innerText  = item.phone_number || '-';
     document.getElementById('profilePob').innerText    = item.place_of_birth || '-';
     document.getElementById('profileDob').innerText    = dob;
-    
-    // Set link tombol edit di dalam modal profil secara dinamis
-    document.getElementById('profileEditBtn').href = editBaseUrl + '?id=' + item.id;
+    document.getElementById('profileDetailLink').href  = '/employees/' + item.id;
 
     document.getElementById('profileModal').classList.remove('hidden');
 }

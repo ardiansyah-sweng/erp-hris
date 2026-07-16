@@ -109,38 +109,38 @@
 
                 <tbody class="divide-y divide-gray-100 bg-white">
 
-                @forelse($dummyLeaveRequests as $request)
+                @forelse($leaveRequests as $leave)
 
                     <tr class="hover:bg-gray-50">
                         <td class="px-6 py-4 text-sm text-gray-600">
-                            {{ $request['employee_id'] }}
+                            {{ $leave->employee_id }}
                         </td>
 
                         <td class="px-6 py-4 text-sm font-medium text-gray-900">
-                            {{ $request['employee_name'] }}
+                            {{ $leave->employee_name }}
                         </td>
 
                         <td class="px-6 py-4 text-sm text-gray-600">
-                            {{ $request['start_date'] }}
+                            {{ $leave->start_date }}
                         </td>
 
                         <td class="px-6 py-4 text-sm text-gray-600">
-                            {{ $request['end_date'] }}
+                            {{ $leave->end_date }}
                         </td>
 
                         <td class="px-6 py-4 text-sm text-gray-600">
-                            {{ $request['reason'] }}
+                            {{ $leave->reason }}
                         </td>
 
                         <td class="px-6 py-4">
 
-                            @if($request['status'] == 'Approved')
+                            @if($leave->status == 'Approved')
 
                                 <span class="inline-flex rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
                                     Approved
                                 </span>
 
-                            @elseif($request['status'] == 'Pending')
+                            @elseif($leave->status == 'Pending')
 
                                 <span class="inline-flex rounded-full bg-yellow-100 px-3 py-1 text-xs font-semibold text-yellow-700">
                                     Pending
@@ -157,27 +157,31 @@
                         </td>
 
                         <td class="px-6 py-4 text-sm font-semibold text-gray-900">
-                            {{ $request['remaining_days'] }} hari
+                            {{ $leave->remaining_days ?? '-' }} hari
                         </td>
 
                         <td class="px-6 py-4">
 
                             <div class="flex justify-end gap-2">
 
-                                <a href="{{ route('leave_request.detail', $request['id']) }}"
+                                <a href="{{ route('leave_request.detail', $leave->id) }}"
                                     class="text-sky-600 hover:text-sky-900 bg-sky-50 hover:bg-sky-100 px-3 py-1.5 rounded-lg">
                                     Detail
                                 </a>
 
-                                <a href="{{ route('leave_request.edit', $request['id']) }}"
+                                <a href="{{ route('leave_request.edit', $leave->id) }}"
                                     class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg">
                                     Edit
                                 </a>
-                                
-                                <a href="#"
-                                    class="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg">
-                                    Hapus
-                                </a>
+
+                                <form action="{{ route('leave_request.destroy', $leave->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')" class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                        class="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg">
+                                        Hapus
+                                    </button>
+                                </form>
 
                             </div>
 

@@ -20,7 +20,9 @@ class DatabaseSeeder extends Seeder
             EmployeeSeeder::class,
             AdminUserSeeder::class,
             PayrollSeeder::class,
+            LeaveRequestSeeder::class,
             AttendanceSeeder::class,
+            AnnouncementSeeder::class,
         ]);
     }
 }
