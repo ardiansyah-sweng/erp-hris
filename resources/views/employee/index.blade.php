@@ -138,7 +138,7 @@
                 @forelse($employees as $employee)
                 <tr class="hover:bg-indigo-50/40 transition-colors duration-150 group employee-row"
                     data-name="{{ strtolower($employee->name) }}">
-                    <td class="whitespace-nowrap py-4 pl-6 pr-3 text-sm text-gray-400 font-medium">#{{ $employee->id }}</td>
+                    <td class="whitespace-nowrap py-4 pl-6 pr-3 text-sm text-gray-400 font-medium font-mono">{{ $employee->employee_code }}</td>
                     <td class="whitespace-nowrap px-3 py-4">
                         <div class="flex items-center gap-3">
                             <div class="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 text-indigo-700 text-xs font-bold flex-shrink-0">

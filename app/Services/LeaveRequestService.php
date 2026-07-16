@@ -20,4 +20,28 @@ class LeaveRequestService
     {
         return LeaveRequest::create($data);
     }
+
+    public function updateLeaveRequest($id, array $data)
+    {
+        $leaveRequest = LeaveRequest::find($id);
+
+        if (!$leaveRequest) {
+            return false;
+        }
+
+        $leaveRequest->update($data);
+
+        return $leaveRequest;
+    }
+
+    public function deleteLeaveRequest($id)
+    {
+        $leaveRequest = LeaveRequest::find($id);
+
+        if (!$leaveRequest) {
+            return false;
+        }
+
+        return $leaveRequest->delete();
+    }
 }

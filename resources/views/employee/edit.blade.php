@@ -51,7 +51,7 @@
                 </div>
                 <div>
                     <p class="text-xs text-gray-500 font-medium uppercase tracking-widest">ID Karyawan</p>
-                    <p class="text-lg font-bold text-gray-800">#{{ $employee->id }} &mdash; {{ $employee->name }}</p>
+                    <p class="text-lg font-bold text-gray-800">{{ $employee->employee_code }} &mdash; {{ $employee->name }}</p>
                 </div>
             </div>
 
