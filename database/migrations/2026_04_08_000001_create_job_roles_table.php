@@ -14,6 +14,9 @@ return new class extends Migration
         Schema::create('job_roles', function (Blueprint $table) {
             $table->id();
             $table->string('role');
+            $table->string('department')->nullable();
+            $table->string('level')->nullable();
+            $table->string('status')->default('Active');
             $table->timestamps();
         });
     }

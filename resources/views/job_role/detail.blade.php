@@ -76,13 +76,13 @@
             {{-- Dibuat Pada --}}
             <div>
                 <p class="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-1">Dibuat Pada</p>
-                <p class="text-sm text-gray-900">{{ $jobrole->created_at }}</p>
+                <p class="text-sm text-gray-900">{{ $jobrole->created_at ? $jobrole->created_at->format('d M Y H:i') : '-' }}</p>
             </div>
 
             {{-- Terakhir Diperbarui --}}
             <div>
                 <p class="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-1">Terakhir Diperbarui</p>
-                <p class="text-sm text-gray-900">{{ $jobrole->updated_at }}</p>
+                <p class="text-sm text-gray-900">{{ $jobrole->updated_at ? $jobrole->updated_at->format('d M Y H:i') : '-' }}</p>
             </div>
 
         </div>
