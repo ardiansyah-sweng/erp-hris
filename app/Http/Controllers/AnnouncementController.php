@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\AnnouncementReminderMail;
+use App\Models\Employee;
 use App\Services\AnnouncementService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class AnnouncementController extends Controller
 {
@@ -121,5 +124,22 @@ class AnnouncementController extends Controller
 
         return redirect()->route('announcement.index')
             ->with('success', 'Pengumuman berhasil dihapus.');
+    }
+
+    public function sendReminder($id)
+    {
+        $announcement = \App\Models\Announcement::findOrFail($id);
+        $employees = Employee::whereNotNull('email')->get();
+        $emails = $employees->pluck('email')->toArray();
+
+        if (empty($emails)) {
+            return redirect()->route('announcement.index')
+                ->with('success', 'Tidak ada karyawan dengan email terdaftar.');
+        }
+
+        Mail::to($emails)->send(new AnnouncementReminderMail($announcement));
+
+        return redirect()->route('announcement.index')
+            ->with('success', 'Reminder berhasil dikirim ke ' . count($emails) . ' karyawan.');
     }
 }

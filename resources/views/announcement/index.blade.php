@@ -49,6 +49,16 @@
                         Dipublikasikan: {{ \Carbon\Carbon::parse($announcement->publish_date)->format('d M Y') }}
                     </span>
                     <div class="flex items-center gap-2">
+                        <form action="{{ route('announcement.send-reminder', $announcement->id) }}" method="POST" class="inline">
+                            @csrf
+                            <button type="submit"
+                                    class="text-emerald-600 hover:text-emerald-900 bg-emerald-50 hover:bg-emerald-100 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                </svg>
+                                Kirim Email
+                            </button>
+                        </form>
                         <a href="{{ route('announcement.show', $announcement->id) }}"
                            class="text-sky-600 hover:text-sky-900 bg-sky-50 hover:bg-sky-100 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

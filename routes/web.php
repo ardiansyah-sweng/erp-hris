@@ -1,4 +1,4 @@
-    <?php
+<?php
 
 use Illuminate\Support\Facades\Route;
 use App\Models\Employee;
@@ -198,5 +198,8 @@ Route::put('/leave-request/{id}', [\App\Http\Controllers\LeaveRequestController:
 Route::get('/system-audit-temp', [AuditLogController::class, 'indexTemp'])->name('system.audit.temp');
 
 Route::resource('announcement', AnnouncementController::class);
+
+Route::post('/announcement/{id}/send-reminder', [AnnouncementController::class, 'sendReminder'])
+    ->name('announcement.send-reminder');
 
 });
