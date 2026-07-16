@@ -71,7 +71,7 @@ Route::get('/job-roles/create', function () {
     return view('job_role.create_jobrole');
 })->name('jobrole.create');
 
-Route::delete('/job-roles/{id}', [JobroleController::class, 'destroy'])
+Route::delete('/job-roles/{jobrole}', [JobroleController::class, 'destroy'])
     ->name('jobrole.destroy');
 Route::get('/job-roles/{id}', [JobroleController::class, 'show']);
 

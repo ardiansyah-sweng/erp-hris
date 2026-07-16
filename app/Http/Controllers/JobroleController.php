@@ -31,18 +31,13 @@ class JobroleController extends Controller
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'name'       => 'required|string|max:255',
+            'role'       => 'required|string|max:255',
             'department' => 'nullable|string|max:255',
             'level'      => 'nullable|string|max:255',
             'status'     => 'nullable|string|max:255',
         ]);
 
-        $this->jobroleService->updateJobrole($id, [
-            'role'       => $validated['name'],
-            'department' => $validated['department'] ?? null,
-            'level'      => $validated['level'] ?? null,
-            'status'     => $validated['status'] ?? 'Active',
-        ]);
+        $this->jobroleService->updateJobrole($id, $validated);
 
         return redirect()->route('jobrole.index')
             ->with('success', 'Job role berhasil diperbarui.');
@@ -59,8 +54,8 @@ class JobroleController extends Controller
 
         $jobrole = $this->jobroleService->createJobrole([
             'role'       => $validated['name'],
-            'department' => $validated['department'] ?? null,
-            'level'      => $validated['level'] ?? null,
+            'department' => $validated['department'],
+            'level'      => $validated['level'],
             'status'     => $validated['status'] ?? 'Active',
         ]);
 
@@ -70,31 +65,40 @@ class JobroleController extends Controller
         ], 201);
     }
 
-    public function destroy($id)
+    public function destroy(Jobrole $jobrole)
     {
         try {
-            $jobrole = Jobrole::findOrFail($id);
             $jobrole->delete();
 
-            return response()->json([
-                'payload' => [
-                    'statusCode' => 200,
-                    'message' => 'Job role deleted successfully!',
-                    'data' => [
-                        'id' => $jobrole->id,
-                        'role' => $jobrole->role,
+            if (request()->wantsJson()) {
+                return response()->json([
+                    'payload' => [
+                        'statusCode' => 200,
+                        'message' => 'Job role deleted successfully!',
+                        'data' => [
+                            'id' => $jobrole->id,
+                            'role' => $jobrole->role,
+                        ]
                     ]
-                ]
-            ], 200);
+                ], 200);
+            }
+
+            return redirect()->route('jobrole.index')
+                ->with('success', 'Job role berhasil dihapus.');
 
         } catch (Exception $e) {
-            return response()->json([
-                'payload' => [
-                    'statusCode' => 500,
-                    'message' => 'Gagal menghapus data job role.',
-                    'error' => $e->getMessage()
-                ]
-            ], 500);
+            if (request()->wantsJson()) {
+                return response()->json([
+                    'payload' => [
+                        'statusCode' => 500,
+                        'message' => 'Gagal menghapus data job role.',
+                        'error' => $e->getMessage()
+                    ]
+                ], 500);
+            }
+
+            return redirect()->route('jobrole.index')
+                ->with('error', 'Gagal menghapus job role: ' . $e->getMessage());
         }
     }
     

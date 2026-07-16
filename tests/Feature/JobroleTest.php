@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\Jobrole;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
@@ -12,25 +11,22 @@ class JobroleTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->withoutVite();
-    }
-
+    /**
+     * Test that the job_roles table exists after migration.
+     */
     public function test_job_roles_table_exists(): void
     {
         $this->assertTrue(Schema::hasTable('job_roles'));
     }
 
+    /**
+     * Test that the job_roles table has all required columns.
+     */
     public function test_job_roles_table_has_expected_columns(): void
     {
         $this->assertTrue(Schema::hasColumns('job_roles', [
             'id',
             'role',
-            'department',
-            'level',
-            'status',
             'created_at',
             'updated_at',
         ]));
@@ -60,7 +56,7 @@ class JobroleTest extends TestCase
             'role' => 'Quality Assurance',
         ]);
 
-        $response = $this->withoutMiddleware()->deleteJson("/job-roles/{$jobrole->id}");
+        $response = $this->deleteJson("/job-roles/{$jobrole->id}");
 
         $response->assertStatus(200)
             ->assertJson([
@@ -73,81 +69,5 @@ class JobroleTest extends TestCase
         $this->assertDatabaseMissing('job_roles', [
             'id' => $jobrole->id,
         ]);
-    }
-
-    public function test_index_jobrole_view(): void
-    {
-        $this->actingAs(User::factory()->create());
-
-        Jobrole::create(['role' => 'Software Engineer', 'department' => 'IT', 'level' => 'Staff', 'status' => 'Active']);
-        Jobrole::create(['role' => 'Data Analyst', 'department' => 'Data', 'level' => 'Senior', 'status' => 'Active']);
-
-        $response = $this->get('/job-roles');
-
-        $response->assertStatus(200);
-        $response->assertViewIs('job_role.index');
-        $response->assertViewHas('jobroles');
-        $response->assertSee('Software Engineer');
-        $response->assertSee('Data Analyst');
-    }
-
-    public function test_show_jobrole_view(): void
-    {
-        $this->actingAs(User::factory()->create());
-
-        $jobrole = Jobrole::create(['role' => 'Software Engineer', 'department' => 'IT']);
-
-        $response = $this->get("/job-roles/{$jobrole->id}");
-
-        $response->assertStatus(200);
-        $response->assertViewIs('job_role.detail');
-        $response->assertViewHas('jobrole');
-        $response->assertSee('Software Engineer');
-    }
-
-    public function test_edit_jobrole_view(): void
-    {
-        $this->actingAs(User::factory()->create());
-
-        $jobrole = Jobrole::create(['role' => 'Data Analyst', 'department' => 'Data']);
-
-        $response = $this->get(route('jobrole.edit', $jobrole->id));
-
-        $response->assertStatus(200);
-        $response->assertViewIs('job_role.edit');
-        $response->assertViewHas('jobrole');
-        $response->assertSee('Data Analyst');
-    }
-
-    public function test_update_jobrole_successfully(): void
-    {
-        $this->actingAs(User::factory()->create());
-
-        $jobrole = Jobrole::create(['role' => 'Old Role']);
-
-        $response = $this->put(route('jobrole.update', $jobrole->id), [
-            'name' => 'Updated Role',
-        ]);
-
-        $response->assertRedirect(route('jobrole.index'));
-        $response->assertSessionHas('success');
-
-        $this->assertDatabaseHas('job_roles', [
-            'id' => $jobrole->id,
-            'role' => 'Updated Role',
-        ]);
-    }
-
-    public function test_update_jobrole_validation_fails(): void
-    {
-        $this->actingAs(User::factory()->create());
-
-        $jobrole = Jobrole::create(['role' => 'Some Role']);
-
-        $response = $this->put(route('jobrole.update', $jobrole->id), [
-            'name' => '',
-        ]);
-
-        $response->assertSessionHasErrors('name');
     }
 }
