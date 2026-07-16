@@ -84,12 +84,12 @@
                                     <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                                     </svg>
-                                    {{ $role->department?->name }}
+                                    {{ $role->department }}
                                 </div>
                             </td>
                             <td class="whitespace-nowrap px-3 py-4 text-sm">
                                 <span class="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-semibold text-blue-700 ring-1 ring-inset ring-blue-700/10">
-                                    {{ $role->level?->name }}
+                                    {{ $role->level }}
                                 </span>
                             </td>
                             <td class="whitespace-nowrap px-3 py-4 text-sm">

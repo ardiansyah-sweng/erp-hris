@@ -66,10 +66,12 @@ Route::get('/detail-employee', function () {
 Route::get('/job-roles', [JobroleController::class, 'index'])
     ->name('jobrole.index');
 
-Route::get('/job-roles/create', [JobroleController::class, 'create'])
-    ->name('jobrole.create');
+// ROUTE HALAMAN TAMBAH JOB ROLE
+Route::get('/job-roles/create', function () {
+    return view('job_role.create_jobrole');
+})->name('jobrole.create');
 
-Route::delete('/job-roles/{id}', [JobroleController::class, 'destroy'])
+Route::delete('/job-roles/{jobrole}', [JobroleController::class, 'destroy'])
     ->name('jobrole.destroy');
 Route::get('/job-roles/{id}', [JobroleController::class, 'show']);
 

@@ -55,33 +55,36 @@
 
             <!-- Departemen -->
             <div class="mb-6">
-                <label for="department_id" class="block text-sm font-semibold text-gray-700 mb-2">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
                     Departemen
                 </label>
 
-                <select id="department_id" name="department_id"
+                <select
+                    name="department"
                     class="w-full rounded-xl border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                 >
                     <option value="">Pilih Departemen</option>
-                    @foreach($departments as $dept)
-                        <option value="{{ $dept->id }}" {{ old('department_id') == $dept->id ? 'selected' : '' }}>{{ $dept->name }}</option>
-                    @endforeach
+                    <option value="IT">IT</option>
+                    <option value="Data">Data</option>
+                    <option value="Human Resources">Human Resources</option>
+                    <option value="Product">Product</option>
                 </select>
             </div>
 
             <!-- Level -->
             <div class="mb-6">
-                <label for="level_id" class="block text-sm font-semibold text-gray-700 mb-2">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
                     Level
                 </label>
 
-                <select id="level_id" name="level_id"
+                <select
+                    name="level"
                     class="w-full rounded-xl border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                 >
                     <option value="">Pilih Level</option>
-                    @foreach($levels as $lvl)
-                        <option value="{{ $lvl->id }}" {{ old('level_id') == $lvl->id ? 'selected' : '' }}>{{ $lvl->name }}</option>
-                    @endforeach
+                    <option value="Staff">Staff</option>
+                    <option value="Senior">Senior</option>
+                    <option value="Manager">Manager</option>
                 </select>
             </div>
 

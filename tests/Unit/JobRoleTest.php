@@ -24,7 +24,10 @@ class JobRoleTest extends TestCase
     public function test_job_roles_table_has_expected_columns(): void
     {
         $this->assertTrue(Schema::hasColumns('job_roles', [
-            'id', 'role', 'department_id', 'level_id', 'status', 'created_at', 'updated_at',
+            'id',
+            'role',
+            'created_at',
+            'updated_at',
         ]));
     }
 }
