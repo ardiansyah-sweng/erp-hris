@@ -15,7 +15,27 @@
             </p>
         </div>
 
-        <div class="mt-4 sm:mt-0">
+        <div class="mt-4 sm:mt-0 flex items-center gap-3">
+
+            <form action="{{ route('leave_request.send-reminder') }}" method="POST">
+                @csrf
+                <button type="submit"
+                    class="inline-flex items-center justify-center rounded-xl bg-white border border-gray-200 px-5 py-2.5 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-50 transition-all">
+
+                    <svg class="mr-2 h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+
+                    Kirim Reminder Cuti
+                </button>
+            </form>
+
             <a href="/leave-request/create"
             class="inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 transition-all">
 
@@ -33,6 +53,18 @@
             </a>
         </div>
     </div>
+
+    @if (session('success'))
+        <div class="rounded-xl bg-green-50 border border-green-200 text-green-700 text-sm px-4 py-3">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if (session('info'))
+        <div class="rounded-xl bg-blue-50 border border-blue-200 text-blue-700 text-sm px-4 py-3">
+            {{ session('info') }}
+        </div>
+    @endif
 
     <!-- Card Tabel -->
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
