@@ -55,36 +55,33 @@
 
             <!-- Departemen -->
             <div class="mb-6">
-                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                <label for="department_id" class="block text-sm font-semibold text-gray-700 mb-2">
                     Departemen
                 </label>
 
-                <select
-                    name="department"
+                <select id="department_id" name="department_id"
                     class="w-full rounded-xl border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                 >
                     <option value="">Pilih Departemen</option>
-                    <option value="IT">IT</option>
-                    <option value="Data">Data</option>
-                    <option value="Human Resources">Human Resources</option>
-                    <option value="Product">Product</option>
+                    @foreach($departments as $dept)
+                        <option value="{{ $dept->id }}" {{ old('department_id') == $dept->id ? 'selected' : '' }}>{{ $dept->name }}</option>
+                    @endforeach
                 </select>
             </div>
 
             <!-- Level -->
             <div class="mb-6">
-                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                <label for="level_id" class="block text-sm font-semibold text-gray-700 mb-2">
                     Level
                 </label>
 
-                <select
-                    name="level"
+                <select id="level_id" name="level_id"
                     class="w-full rounded-xl border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                 >
                     <option value="">Pilih Level</option>
-                    <option value="Staff">Staff</option>
-                    <option value="Senior">Senior</option>
-                    <option value="Manager">Manager</option>
+                    @foreach($levels as $lvl)
+                        <option value="{{ $lvl->id }}" {{ old('level_id') == $lvl->id ? 'selected' : '' }}>{{ $lvl->name }}</option>
+                    @endforeach
                 </select>
             </div>
 
