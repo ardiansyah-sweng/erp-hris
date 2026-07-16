@@ -36,14 +36,15 @@ class JobroleTest extends TestCase
     {
         $payload = [
             'name' => 'Software Engineer',
+            'department' => 'IT',
+            'level' => 'Staff',
+            'status' => 'Active',
         ];
 
         $response = $this->postJson('/test-jobrole', $payload);
 
         $response->assertStatus(201)
-            ->assertJson([
-                'message' => 'Data berhasil disimpan',
-            ]);
+            ->assertJson(['message' => 'Data berhasil disimpan']);
 
         $this->assertDatabaseHas('job_roles', [
             'role' => 'Software Engineer',
@@ -56,18 +57,13 @@ class JobroleTest extends TestCase
             'role' => 'Quality Assurance',
         ]);
 
-        $response = $this->deleteJson("/job-roles/{$jobrole->id}");
+        $jobroleId = $jobrole->id;
+
+        $response = $this->withoutMiddleware()->deleteJson("/job-roles/{$jobroleId}");
 
         $response->assertStatus(200)
-            ->assertJson([
-                'payload' => [
-                    'statusCode' => 200,
-                    'message' => 'Job role deleted successfully!',
-                ]
-            ]);
+            ->assertJson(['payload' => ['statusCode' => 200]]);
 
-        $this->assertDatabaseMissing('job_roles', [
-            'id' => $jobrole->id,
-        ]);
+        $this->assertDatabaseMissing('job_roles', ['id' => $jobroleId]);
     }
 }

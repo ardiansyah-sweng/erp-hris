@@ -54,8 +54,8 @@ class JobroleController extends Controller
 
         $jobrole = $this->jobroleService->createJobrole([
             'role'       => $validated['name'],
-            'department' => $validated['department'],
-            'level'      => $validated['level'],
+            'department' => $validated['department'] ?? null,
+            'level'      => $validated['level'] ?? null,
             'status'     => $validated['status'] ?? 'Active',
         ]);
 
@@ -65,40 +65,31 @@ class JobroleController extends Controller
         ], 201);
     }
 
-    public function destroy(Jobrole $jobrole)
+    public function destroy($id)
     {
         try {
+            $jobrole = Jobrole::findOrFail($id);
             $jobrole->delete();
 
-            if (request()->wantsJson()) {
-                return response()->json([
-                    'payload' => [
-                        'statusCode' => 200,
-                        'message' => 'Job role deleted successfully!',
-                        'data' => [
-                            'id' => $jobrole->id,
-                            'role' => $jobrole->role,
-                        ]
+            return response()->json([
+                'payload' => [
+                    'statusCode' => 200,
+                    'message' => 'Job role deleted successfully!',
+                    'data' => [
+                        'id' => $jobrole->id,
+                        'role' => $jobrole->role,
                     ]
-                ], 200);
-            }
-
-            return redirect()->route('jobrole.index')
-                ->with('success', 'Job role berhasil dihapus.');
+                ]
+            ], 200);
 
         } catch (Exception $e) {
-            if (request()->wantsJson()) {
-                return response()->json([
-                    'payload' => [
-                        'statusCode' => 500,
-                        'message' => 'Gagal menghapus data job role.',
-                        'error' => $e->getMessage()
-                    ]
-                ], 500);
-            }
-
-            return redirect()->route('jobrole.index')
-                ->with('error', 'Gagal menghapus job role: ' . $e->getMessage());
+            return response()->json([
+                'payload' => [
+                    'statusCode' => 500,
+                    'message' => 'Gagal menghapus data job role.',
+                    'error' => $e->getMessage()
+                ]
+            ], 500);
         }
     }
     
