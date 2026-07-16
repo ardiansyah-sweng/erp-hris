@@ -247,6 +247,93 @@
                  alt="User">
         </header>
 
+        <!-- Desktop Top Bar (Notifikasi) -->
+        @php
+            $belumAbsenHariIni = \App\Models\Employee::whereDoesntHave('attendances', function ($q) {
+                $q->whereDate('date', now()->toDateString());
+            })->get();
+
+            $cutiMendekati = \App\Models\LeaveRequest::where('status', 'Pending')
+                ->whereBetween('start_date', [now()->toDateString(), now()->addDays(3)->toDateString()])
+                ->get();
+
+            $terlambatHariIni = \App\Models\Attendance::whereDate('date', now()->toDateString())
+                ->where('status', 'late')
+                ->with('employee')
+                ->get();
+
+            $totalNotif = $belumAbsenHariIni->count() + $cutiMendekati->count() + $terlambatHariIni->count();
+        @endphp
+
+        <header class="hidden lg:flex bg-white border-b border-gray-100 items-center justify-end px-8 h-16 flex-shrink-0 relative">
+            <button onclick="toggleNotifDropdown()" class="relative p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                </svg>
+                @if($totalNotif > 0)
+                    <span class="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-semibold text-white">{{ $totalNotif }}</span>
+                @endif
+            </button>
+
+            <div id="notifDropdown" class="hidden absolute right-6 top-16 w-96 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden z-50">
+                <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
+                    <span class="text-sm font-semibold text-gray-900">Notifikasi</span>
+                    <span class="text-xs text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">{{ $totalNotif }} baru</span>
+                </div>
+
+                <div class="max-h-96 overflow-y-auto divide-y divide-gray-100">
+                    @forelse($belumAbsenHariIni as $emp)
+                        <div class="flex gap-3 px-4 py-3">
+                            <div class="w-8 h-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center flex-shrink-0">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-900">{{ $emp->name }} belum absen hari ini</p>
+                                <p class="text-xs text-gray-400">Hari ini</p>
+                            </div>
+                        </div>
+                    @empty
+                    @endforelse
+
+                    @forelse($cutiMendekati as $cuti)
+                        <div class="flex gap-3 px-4 py-3">
+                            <div class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center flex-shrink-0">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-900">Cuti {{ $cuti->employee_name }} jatuh tempo {{ \Carbon\Carbon::parse($cuti->start_date)->format('d M') }}</p>
+                                <p class="text-xs text-gray-400">Perlu persetujuan</p>
+                            </div>
+                        </div>
+                    @empty
+                    @endforelse
+
+                    @forelse($terlambatHariIni as $absen)
+                        <div class="flex gap-3 px-4 py-3">
+                            <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-900">{{ $absen->employee->name ?? '-' }} terlambat hari ini</p>
+                                <p class="text-xs text-gray-400">Jam masuk {{ substr($absen->check_in, 0, 5) }}</p>
+                            </div>
+                        </div>
+                    @empty
+                    @endforelse
+
+                    @if($totalNotif === 0)
+                        <div class="px-4 py-8 text-center text-sm text-gray-400">Tidak ada notifikasi baru.</div>
+                    @endif
+                </div>
+            </div>
+        </header>
+
         <!-- Page Content -->
         <main class="flex-1 p-6 lg:p-8">
             @yield('content')
@@ -315,6 +402,9 @@
     @stack('scripts')
 
     <script>
+        function toggleNotifDropdown() {
+            document.getElementById('notifDropdown').classList.toggle('hidden');
+        }
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebar-overlay');
