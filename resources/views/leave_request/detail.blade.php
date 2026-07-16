@@ -43,28 +43,28 @@
                 <div>
                     <dt class="text-sm text-gray-500">ID Karyawan</dt>
                     <dd class="mt-1 font-medium text-gray-900">
-                        {{ $leaveRequest['employee_id'] }}
+                        {{ $leaveRequest->employee_id }}
                     </dd>
                 </div>
 
                 <div>
                     <dt class="text-sm text-gray-500">Nama Karyawan</dt>
                     <dd class="mt-1 font-medium text-gray-900">
-                        {{ $leaveRequest['employee_name'] }}
+                        {{ $leaveRequest->employee_name }}
                     </dd>
                 </div>
 
                 <div>
                     <dt class="text-sm text-gray-500">Tanggal Mulai</dt>
                     <dd class="mt-1 font-medium text-gray-900">
-                        {{ $leaveRequest['start_date'] }}
+                        {{ $leaveRequest->start_date }}
                     </dd>
                 </div>
 
                 <div>
                     <dt class="text-sm text-gray-500">Tanggal Selesai</dt>
                     <dd class="mt-1 font-medium text-gray-900">
-                        {{ $leaveRequest['end_date'] }}
+                        {{ $leaveRequest->end_date }}
                     </dd>
                 </div>
 
@@ -73,13 +73,13 @@
 
                     <dd class="mt-1">
 
-                        @if($leaveRequest['status'] == 'Approved')
+                        @if($leaveRequest->status == 'Approved')
 
                             <span class="inline-flex rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
                                 Approved
                             </span>
 
-                        @elseif($leaveRequest['status'] == 'Pending')
+                        @elseif($leaveRequest->status == 'Pending')
 
                             <span class="inline-flex rounded-full bg-yellow-100 px-3 py-1 text-xs font-semibold text-yellow-700">
                                 Pending
@@ -100,7 +100,7 @@
                 <div>
                     <dt class="text-sm text-gray-500">Tanggal Pengajuan</dt>
                     <dd class="mt-1 font-medium text-gray-900">
-                        {{ $leaveRequest['created_at'] }}
+                        {{ $leaveRequest->created_at }}
                     </dd>
                 </div>
 
@@ -111,7 +111,7 @@
                     </dt>
 
                     <dd class="mt-1 text-gray-900">
-                        {{ $leaveRequest['reason'] }}
+                        {{ $leaveRequest->reason }}
                     </dd>
 
                 </div>
