@@ -96,6 +96,10 @@
                             Status
                         </th>
 
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase">
+                            Sisa Cuti
+                        </th>
+
                         <th class="px-6 py-4 text-right text-xs font-semibold text-gray-500 uppercase">
                             Aksi
                         </th>
@@ -152,6 +156,10 @@
 
                         </td>
 
+                        <td class="px-6 py-4 text-sm font-semibold text-gray-900">
+                            {{ $leave->remaining_days ?? '-' }} hari
+                        </td>
+
                         <td class="px-6 py-4">
 
                             <div class="flex justify-end gap-2">
@@ -185,7 +193,7 @@
 
                     <tr>
 
-                        <td colspan="6" class="py-16 text-center">
+                        <td colspan="7" class="py-16 text-center">
 
                             <div class="flex flex-col items-center">
 

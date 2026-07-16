@@ -48,7 +48,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $leaveRequestService = app(\App\Services\LeaveRequestService::class);
+    $leaveBalance = $leaveRequestService->getLeaveBalance('EMP001');
+
+    return view('dashboard', compact('leaveBalance'));
 });
 
 Route::post('/job-roles', [JobroleController::class, 'store'])
@@ -74,8 +77,8 @@ Route::get('/job-roles/create', function () {
 
 Route::delete('/job-roles/{jobrole}', [JobroleController::class, 'destroy']);
 Route::get('/job-roles/{id}', [JobroleController::class, 'show']);
-
 Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy']);
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -87,6 +90,7 @@ Route::get('/dashboard', function () {
 });
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
 
 Route::get('/profile', function () {
     return view('profile.index');
@@ -159,11 +163,57 @@ Route::put('/employee/test-edit', function () {
 });
 Route::put('/employees/{id}', [EmployeeController::class, 'update']);
 
+
+
+Route::get('/absensi', function () {
+    return view('absensi.index');
+})->name('absensi.index');
+
+
+
+Route::get('/leave-request', function () {
+    $leaveRequestService = app(\App\Services\LeaveRequestService::class);
+
+    $dummyLeaveRequests = \App\Models\LeaveRequest::orderByDesc('start_date')->get()
+        ->map(function ($request) use ($leaveRequestService) {
+            $balance = $leaveRequestService->getLeaveBalance($request->employee_id);
+            $request->remaining_days = $balance['remaining_days'];
+            return $request;
+        });
+
+    return view('leave_request.index', compact('dummyLeaveRequests'));
+})->name('leave_request.index');
+
+
+Route::get('/leave-request/create', function () {
+    return view('leave_request.create');
+});
+
+Route::get('/leave-request/{id}', function ($id) {
+
+    $leaveRequest = [
+        'id' => $id,
+        'employee_id' => 'EMP001',
+        'employee_name' => 'Susanti Wijaya',
+        'start_date' => '2026-06-10',
+        'end_date' => '2026-06-12',
+        'reason' => 'Liburan keluarga',
+        'status' => 'Pending',
+        'created_at' => '2026-06-08',
+    ];
+
+    return view(
+        'leave_request.detail',
+        compact('leaveRequest')
+    );
+})->name('leave_request.detail');
+
 Route::get('/leave-request', [\App\Http\Controllers\LeaveRequestController::class, 'index'])->name('leave_request.index');
 Route::get('/leave-request/create', [\App\Http\Controllers\LeaveRequestController::class, 'create'])->name('leave_request.create');
 Route::post('/leave-request', [\App\Http\Controllers\LeaveRequestController::class, 'store'])->name('leave_request.store');
 Route::get('/leave-request/{id}', [\App\Http\Controllers\LeaveRequestController::class, 'show'])->name('leave_request.detail');
 Route::delete('/leave-request/{id}', [\App\Http\Controllers\LeaveRequestController::class, 'destroy'])->name('leave_request.destroy');
+
 
 Route::get('/payroll/create', function () {
     $employees = Employee::orderBy('name')->get(['id', 'name']);
@@ -191,9 +241,43 @@ Route::get('/attendance-recap', [AttendanceController::class, 'recap'])
     ->name('attendance.recap');
 
 Route::resource('payroll', PayrollController::class)->except(['create']);
+
+
 Route::resource('evaluations', PerformanceEvaluationController::class)->except(['show']);
+
+
+Route::get('/leave-request/{id}/edit', function ($id) {
+
+    $leaveRequest = [
+        'id' => $id,
+        'employee_id' => 'EMP001',
+        'employee_name' => 'Susanti Wijaya',
+        'start_date' => '2026-06-10',
+        'end_date' => '2026-06-12',
+        'reason' => 'Liburan keluarga',
+        'status' => 'Pending',
+    ];
+
+    return view(
+        'leave_request.edit',
+        compact('leaveRequest')
+    );
+
+})->name('leave_request.edit');
+
+Route::put('/leave-request/{id}', function ($id) {
+
+    return redirect()
+        ->route('leave_request.index')
+        ->with('success', 'Data cuti berhasil diperbarui.');
+
+})->name('leave_request.update');
 Route::get('/leave-request/{id}/edit', [\App\Http\Controllers\LeaveRequestController::class, 'edit'])->name('leave_request.edit');
 Route::put('/leave-request/{id}', [\App\Http\Controllers\LeaveRequestController::class, 'update'])->name('leave_request.update');
+
+
+
+Route::get('/system-audit-temp', [AuditLogController::class, 'indexTemp'])->name('system.audit.temp');
 
 Route::get('/system-audit-temp', [AuditLogController::class, 'indexTemp'])->name('system.audit.temp');
 

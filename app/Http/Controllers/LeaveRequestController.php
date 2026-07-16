@@ -20,7 +20,12 @@ class LeaveRequestController extends Controller
      */
     public function index()
     {
-        $leaveRequests = $this->leaveRequestService->getAllLeaveRequests();
+        $leaveRequests = $this->leaveRequestService->getAllLeaveRequests()
+            ->map(function ($leave) {
+                $balance = $this->leaveRequestService->getLeaveBalance($leave->employee_id);
+                $leave->remaining_days = $balance['remaining_days'];
+                return $leave;
+            });
 
         return view(
             'leave_request.index',
@@ -78,6 +83,20 @@ class LeaveRequestController extends Controller
         );
     }
 
+    public function balance(Request $request, $employeeId)
+{
+    $year = $request->query('year');
+
+    $balance = $this->leaveRequestService->getLeaveBalance($employeeId, $year);
+
+    return response()->json([
+        'status' => 'success',
+        'data' => $balance,
+    ]);
+}
+
+
+
     /**
      * Menampilkan form edit pengajuan cuti
      */
@@ -132,4 +151,5 @@ class LeaveRequestController extends Controller
             ->route('leave_request.index')
             ->with('success', 'Data pengajuan cuti berhasil dihapus.');
     }
+
 }
