@@ -85,15 +85,11 @@
                     Status
                 </label>
                 <select
-                    name="status_id"
+                    name="status"
                     class="w-full rounded-xl border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                 >
-                    <option value="">Pilih Status</option>
-                    @foreach($statuses as $st)
-                        <option value="{{ $st->id }}" {{ old('status_id', $jobrole->status_id) == $st->id ? 'selected' : '' }}>
-                            {{ $st->name }}
-                        </option>
-                    @endforeach
+                    <option value="Active" {{ old('status', $jobrole->status) == 'Active' ? 'selected' : '' }}>Aktif</option>
+                    <option value="Cuti" {{ old('status', $jobrole->status) == 'Cuti' ? 'selected' : '' }}>Cuti</option>
                 </select>
             </div>
 

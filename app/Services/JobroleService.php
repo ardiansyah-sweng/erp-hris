@@ -8,7 +8,7 @@ class JobroleService
 {
     public function getAllJobrole()
     {
-        return Jobrole::with(['department', 'level', 'status'])->get();
+        return Jobrole::with(['department', 'level'])->get();
     }
 
     public function createJobrole(array $data)
@@ -17,13 +17,13 @@ class JobroleService
             'role'          => $data['name'],
             'department_id' => $data['department_id'] ?? null,
             'level_id'      => $data['level_id'] ?? null,
-            'status_id'     => $data['status_id'] ?? null,
+            'status'        => $data['status'] ?? 'Active',
         ]);
     }
 
     public function showJobrole($id)
     {
-        return Jobrole::with(['department', 'level', 'status'])->findOrFail($id);
+        return Jobrole::with(['department', 'level'])->findOrFail($id);
     }
 
     public function updateJobrole($id, array $data)
@@ -34,7 +34,7 @@ class JobroleService
             'role'          => $data['name'],
             'department_id' => $data['department_id'] ?? $jobrole->department_id,
             'level_id'      => $data['level_id'] ?? $jobrole->level_id,
-            'status_id'     => $data['status_id'] ?? $jobrole->status_id,
+            'status'        => $data['status'] ?? $jobrole->status,
         ]);
 
         return $jobrole;

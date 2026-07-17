@@ -15,7 +15,7 @@ class Jobrole extends Model
         'role',
         'department_id',
         'level_id',
-        'status_id',
+        'status',
     ];
 
     public function department()
@@ -26,10 +26,5 @@ class Jobrole extends Model
     public function level()
     {
         return $this->belongsTo(Level::class);
-    }
-
-    public function status()
-    {
-        return $this->belongsTo(Status::class);
     }
 }

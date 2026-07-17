@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\Jobrole;
 use App\Models\Department;
 use App\Models\Level;
-use App\Models\Status;
 use App\Services\JobroleService;
 use Exception;
 
@@ -29,8 +28,7 @@ class JobroleController extends Controller
     {
         $departments = Department::all();
         $levels      = Level::all();
-        $statuses    = Status::all();
-        return view('job_role.create_jobrole', compact('departments', 'levels', 'statuses'));
+        return view('job_role.create_jobrole', compact('departments', 'levels'));
     }
 
     public function store(Request $request)
@@ -39,7 +37,7 @@ class JobroleController extends Controller
             'name'          => 'required|string|max:255',
             'department_id' => 'nullable|integer|exists:departments,id',
             'level_id'      => 'nullable|integer|exists:levels,id',
-            'status_id'     => 'nullable|integer|exists:statuses,id',
+            'status'       => 'nullable|string|max:255',
         ]);
 
         $jobrole = $this->jobroleService->createJobrole($validated);
@@ -59,8 +57,7 @@ class JobroleController extends Controller
         $jobrole     = $this->jobroleService->showJobrole($id);
         $departments = Department::all();
         $levels      = Level::all();
-        $statuses    = Status::all();
-        return view('job_role.edit', compact('jobrole', 'departments', 'levels', 'statuses'));
+        return view('job_role.edit', compact('jobrole', 'departments', 'levels'));
     }
 
     public function update(Request $request, $id)
@@ -69,7 +66,7 @@ class JobroleController extends Controller
             'name'          => 'required|string|max:255',
             'department_id' => 'nullable|integer|exists:departments,id',
             'level_id'      => 'nullable|integer|exists:levels,id',
-            'status_id'     => 'nullable|integer|exists:statuses,id',
+            'status'       => 'nullable|string|max:255',
         ]);
 
         $this->jobroleService->updateJobrole($id, $validated);
