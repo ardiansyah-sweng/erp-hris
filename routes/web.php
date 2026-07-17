@@ -63,16 +63,16 @@ Route::get('/detail-employee', function () {
     return view('employee.detail', compact('employee'));
 });
 
-Route::get('/job-roles', function () {
-    return view('job_role.index');
-})->name('jobrole.index');
+Route::get('/job-roles', [JobroleController::class, 'index'])->name('jobrole.index');
 
 // ROUTE HALAMAN TAMBAH JOB ROLE
 Route::get('/job-roles/create', function () {
     return view('job_role.create_jobrole');
 })->name('jobrole.create');
 
-Route::delete('/job-roles/{jobrole}', [JobroleController::class, 'destroy']);
+Route::get('/job-roles/{id}/edit', [JobroleController::class, 'edit'])->name('jobrole.edit');
+Route::put('/job-roles/{id}', [JobroleController::class, 'update'])->name('jobrole.update');
+Route::delete('/job-roles/{id}', [JobroleController::class, 'destroy'])->name('jobrole.destroy');
 Route::get('/job-roles/{id}', [JobroleController::class, 'show']);
 
 Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy']);
@@ -122,22 +122,7 @@ Route::get('/profile', function () {
 
 });
 
-// ROUTE EDIT JOB ROLE
-Route::get('/job-roles/{id}/edit', function ($id) {
 
-    $dummyJobRoles = [
-        ['id' => 1, 'name' => 'Software Engineer', 'department' => 'IT', 'level' => 'Staff', 'status' => 'Active'],
-        ['id' => 2, 'name' => 'Data Analyst', 'department' => 'Data', 'level' => 'Senior', 'status' => 'Active'],
-        ['id' => 3, 'name' => 'HR Manager', 'department' => 'Human Resources', 'level' => 'Manager', 'status' => 'On Leave'],
-        ['id' => 4, 'name' => 'Quality Assurance', 'department' => 'IT', 'level' => 'Staff', 'status' => 'Active'],
-        ['id' => 5, 'name' => 'Product Manager', 'department' => 'Product', 'level' => 'Manager', 'status' => 'Active'],
-    ];
-
-    $jobrole = collect($dummyJobRoles)->firstWhere('id', $id);
-
-    return view('job_role.edit', compact('jobrole'));
-
-})->name('jobrole.edit');
 
 
 // ROUTE TEST EDIT EMPLOYEE
