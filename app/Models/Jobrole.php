@@ -13,8 +13,23 @@ class Jobrole extends Model
 
     protected $fillable = [
         'role',
-        'department',
-        'level',
-        'status',
+        'department_id',
+        'level_id',
+        'status_id',
     ];
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
+    }
+
+    public function level()
+    {
+        return $this->belongsTo(Level::class);
+    }
+
+    public function status()
+    {
+        return $this->belongsTo(Status::class);
+    }
 }

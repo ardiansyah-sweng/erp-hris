@@ -34,8 +34,8 @@
 
         {{-- Card Header --}}
         <div class="px-6 py-5 border-b border-gray-100 bg-gray-50/50">
-            <h2 class="text-base font-semibold text-gray-900">{{ $jobrole->name }}</h2>
-            <p class="text-sm text-gray-500 mt-0.5">{{ $jobrole->department }}</p>
+            <h2 class="text-base font-semibold text-gray-900">{{ $jobrole->role }}</h2>
+            <p class="text-sm text-gray-500 mt-0.5">{{ $jobrole->department?->name }}</p>
         </div>
 
         {{-- Card Body --}}
@@ -44,7 +44,7 @@
             {{-- Nama Role --}}
             <div>
                 <p class="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-1">Nama Role</p>
-                <p class="text-sm font-semibold text-gray-900">{{ $jobrole->name }}</p>
+                <p class="text-sm font-semibold text-gray-900">{{ $jobrole->role }}</p>
             </div>
 
             {{-- Departemen --}}
@@ -54,7 +54,7 @@
                     <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                     </svg>
-                    {{ $jobrole->department }}
+                    {{ $jobrole->department?->name }}
                 </div>
             </div>
 
@@ -62,14 +62,14 @@
             <div>
                 <p class="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-1">Level</p>
                 <span class="inline-flex items-center rounded-md bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700 ring-1 ring-inset ring-blue-700/10">
-                    {{ $jobrole->level }}
+                    {{ $jobrole->level?->name }}
                 </span>
             </div>
 
             {{-- Status --}}
             <div>
                 <p class="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-1">Status</p>
-                @if($jobrole->status == 'Active')
+                @if($jobrole->status?->name == 'Active')
                     <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
                         <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
                         Aktif

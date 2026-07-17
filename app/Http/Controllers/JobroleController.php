@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Jobrole;
+use App\Models\Department;
+use App\Models\Level;
+use App\Models\Status;
 use App\Services\JobroleService;
 use Exception;
 
@@ -24,16 +27,19 @@ class JobroleController extends Controller
 
     public function create()
     {
-        return view('job_role.create_jobrole');
+        $departments = Department::all();
+        $levels      = Level::all();
+        $statuses    = Status::all();
+        return view('job_role.create_jobrole', compact('departments', 'levels', 'statuses'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'department' => 'nullable|string|max:255',
-            'level' => 'nullable|string|max:255',
-            'status' => 'nullable|string|max:255',
+            'name'          => 'required|string|max:255',
+            'department_id' => 'nullable|integer|exists:departments,id',
+            'level_id'      => 'nullable|integer|exists:levels,id',
+            'status_id'     => 'nullable|integer|exists:statuses,id',
         ]);
 
         $jobrole = $this->jobroleService->createJobrole($validated);
@@ -50,17 +56,20 @@ class JobroleController extends Controller
 
     public function edit($id)
     {
-        $jobrole = $this->jobroleService->showJobrole($id);
-        return view('job_role.edit', compact('jobrole'));
+        $jobrole     = $this->jobroleService->showJobrole($id);
+        $departments = Department::all();
+        $levels      = Level::all();
+        $statuses    = Status::all();
+        return view('job_role.edit', compact('jobrole', 'departments', 'levels', 'statuses'));
     }
 
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'department' => 'nullable|string|max:255',
-            'level' => 'nullable|string|max:255',
-            'status' => 'nullable|string|max:255',
+            'name'          => 'required|string|max:255',
+            'department_id' => 'nullable|integer|exists:departments,id',
+            'level_id'      => 'nullable|integer|exists:levels,id',
+            'status_id'     => 'nullable|integer|exists:statuses,id',
         ]);
 
         $this->jobroleService->updateJobrole($id, $validated);
