@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Jobrole;
+use Exception;
 
 class JobroleService
 {
@@ -36,5 +37,28 @@ class JobroleService
         ]);
 
         return $jobrole;
+    }
+
+    public function destroyJobrole($id)
+    {
+        try {
+            $jobrole = Jobrole::findOrFail($id);
+            $jobrole->delete();
+
+            return [
+                'statusCode' => 200,
+                'message' => 'Job role deleted successfully!',
+                'data' => [
+                    'id' => $jobrole->id,
+                    'role' => $jobrole->role
+                ]
+            ];
+        } catch (Exception $e) {
+            return [
+                'statusCode' => 500,
+                'message' => 'Gagal menghapus data job role.',
+                'error' => $e->getMessage()
+            ];
+        }
     }
 }
