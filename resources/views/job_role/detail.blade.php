@@ -5,13 +5,22 @@
 @section('content')
 <div class="max-w-3xl mx-auto">
 
+    @if(session('success'))
+        <div class="mb-6 rounded-xl bg-emerald-50 border border-emerald-200 px-5 py-4 text-sm font-semibold text-emerald-700 flex items-center gap-3">
+            <svg class="w-5 h-5 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            {{ session('success') }}
+        </div>
+    @endif
+
     {{-- Header --}}
     <div class="sm:flex sm:items-center sm:justify-between mb-8">
         <div>
             <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Detail Job Role</h1>
             <p class="mt-1 text-sm text-gray-500">Informasi lengkap posisi pekerjaan.</p>
         </div>
-        <a href="/job-roles"
+            <a href="{{ route('jobrole.index') }}"
            class="mt-4 sm:mt-0 inline-flex items-center gap-1.5 text-sm text-gray-600 hover:text-gray-900 bg-white border border-gray-200 hover:border-gray-300 px-4 py-2 rounded-xl transition-colors shadow-sm">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
@@ -89,22 +98,77 @@
 
         {{-- Card Footer - Aksi --}}
         <div class="px-6 py-4 border-t border-gray-100 bg-gray-50/50 flex gap-3">
-            <a href="#"
+            <a href="{{ route('jobrole.edit', $jobrole->id) }}"
                class="inline-flex items-center gap-1.5 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-xl transition-colors shadow-sm">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
                 </svg>
                 Edit
             </a>
-            <a href="#"
-               class="inline-flex items-center gap-1.5 text-sm font-semibold text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 px-4 py-2 rounded-xl transition-colors border border-red-100">
+            <button type="button"
+               onclick="confirmDeleteDetail({{ $jobrole->id }}, '{{ $jobrole->role }}')"
+               class="inline-flex items-center gap-1.5 text-sm font-semibold text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 px-4 py-2 rounded-xl transition-colors border border-red-100 cursor-pointer">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                 </svg>
                 Hapus
-            </a>
+            </button>
         </div>
 
     </div>
 </div>
+
+{{-- Modal Konfirmasi Hapus --}}
+<div id="deleteModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 p-6">
+        <div class="flex items-center gap-4 mb-4">
+            <div class="p-3 rounded-full bg-red-50">
+                <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+                </svg>
+            </div>
+            <div>
+                <h3 class="text-lg font-semibold text-gray-900">Hapus Job Role</h3>
+                <p class="text-sm text-gray-500">Anda yakin ingin menghapus <span id="deleteName" class="font-semibold text-gray-700"></span>?</p>
+            </div>
+        </div>
+        <p class="text-sm text-red-600 bg-red-50 rounded-xl px-4 py-3 mb-6">Tindakan ini tidak dapat dibatalkan.</p>
+
+        <form id="deleteForm" method="POST">
+            @csrf
+            @method('DELETE')
+            <div class="flex justify-end gap-3">
+                <button type="button" onclick="closeDeleteModal()"
+                    class="rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition">
+                    Batal
+                </button>
+                <button type="submit"
+                    class="rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-700 transition">
+                    Ya, Hapus
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function confirmDeleteDetail(id, name) {
+        document.getElementById('deleteName').textContent = name;
+        document.getElementById('deleteForm').action = '/job-roles/' + id;
+        document.getElementById('deleteModal').classList.remove('hidden');
+        document.getElementById('deleteModal').classList.add('flex');
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').classList.add('hidden');
+        document.getElementById('deleteModal').classList.remove('flex');
+    }
+
+    document.addEventListener('click', function (e) {
+        const modal = document.getElementById('deleteModal');
+        if (e.target === modal) {
+            closeDeleteModal();
+        }
+    });
+</script>
 @endsection

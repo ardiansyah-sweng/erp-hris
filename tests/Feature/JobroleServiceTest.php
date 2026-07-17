@@ -5,11 +5,11 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use App\Models\Jobrole;
 use App\Services\JobroleService;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseTruncation;
 
 class JobroleServiceTest extends TestCase
 {
-    use RefreshDatabase;
+    use DatabaseTruncation;
 
     public function test_create_jobrole()
     {
