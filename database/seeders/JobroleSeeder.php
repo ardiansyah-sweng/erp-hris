@@ -4,37 +4,54 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Jobrole;
+use App\Models\Department;
+use App\Models\Level;
 
-/**
- * Class JobroleSeeder
- * Seeder untuk mengisi data awal (dummy) pada tabel job_roles
- */
 class JobroleSeeder extends Seeder
 {
-    /**
-     * Menjalankan proses seeder ke database
-     * Update: Disesuaikan dengan skema tabel terbaru yang hanya menggunakan kolom 'role'
-     */
     public function run(): void
     {
+        $it    = Department::where('name', 'IT')->first()->id;
+        $hrd   = Department::where('name', 'HRD')->first()->id;
+        $prod  = Department::where('name', 'Product')->first()->id;
+
+        $mid    = Level::where('name', 'Mid')->first()->id;
+        $senior = Level::where('name', 'Senior')->first()->id;
+        $mgr    = Level::where('name', 'Manager')->first()->id;
+
         Jobrole::create([
-            'role' => 'Software Engineer'
+            'role'          => 'Software Engineer',
+            'department_id' => $it,
+            'level_id'      => $senior,
+            'status'        => 'Active',
         ]);
 
         Jobrole::create([
-            'role' => 'Data Analyst'
+            'role'          => 'Data Analyst',
+            'department_id' => $it,
+            'level_id'      => $mid,
+            'status'        => 'Active',
         ]);
 
         Jobrole::create([
-            'role' => 'HR Manager'
+            'role'          => 'HR Manager',
+            'department_id' => $hrd,
+            'level_id'      => $mgr,
+            'status'        => 'Active',
         ]);
 
         Jobrole::create([
-            'role' => 'Quality Assurance'
+            'role'          => 'Quality Assurance',
+            'department_id' => $it,
+            'level_id'      => $mid,
+            'status'        => 'Active',
         ]);
 
         Jobrole::create([
-            'role' => 'Product Manager'
+            'role'          => 'Product Manager',
+            'department_id' => $prod,
+            'level_id'      => $senior,
+            'status'        => 'Active',
         ]);
     }
 }

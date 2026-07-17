@@ -8,10 +8,23 @@ use Illuminate\Database\Eloquent\Model;
 class Jobrole extends Model
 {
     use HasFactory;
-    
+
     protected $table = 'job_roles';
 
     protected $fillable = [
-        'role'
+        'role',
+        'department_id',
+        'level_id',
+        'status',
     ];
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
+    }
+
+    public function level()
+    {
+        return $this->belongsTo(Level::class);
+    }
 }

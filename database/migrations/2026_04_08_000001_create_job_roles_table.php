@@ -14,6 +14,9 @@ return new class extends Migration
         Schema::create('job_roles', function (Blueprint $table) {
             $table->id();
             $table->string('role');
+            $table->foreignId('department_id')->nullable()->constrained('departments')->nullOnDelete();
+            $table->foreignId('level_id')->nullable()->constrained('levels')->nullOnDelete();
+            $table->string('status')->default('Active');
             $table->timestamps();
         });
     }

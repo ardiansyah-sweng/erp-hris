@@ -1,12 +1,5 @@
 @php
-    // Data Dummy Sementara untuk Job Role
-    $dummyJobRoles = [
-        ['id' => 1, 'name' => 'Software Engineer', 'department' => 'IT', 'level' => 'Staff', 'status' => 'Active'],
-        ['id' => 2, 'name' => 'Data Analyst', 'department' => 'Data', 'level' => 'Senior', 'status' => 'Active'],
-        ['id' => 3, 'name' => 'HR Manager', 'department' => 'Human Resources', 'level' => 'Manager', 'status' => 'On Leave'],
-        ['id' => 4, 'name' => 'Quality Assurance', 'department' => 'IT', 'level' => 'Staff', 'status' => 'Active'],
-        ['id' => 5, 'name' => 'Product Manager', 'department' => 'Product', 'level' => 'Manager', 'status' => 'Active'],
-    ];
+    $jobroles = $jobroles ?? collect();
 @endphp
 
 @extends('layouts.app')
@@ -15,6 +8,23 @@
 
 @section('content')
 
+    @if(session('success'))
+        <div class="mb-6 rounded-xl bg-emerald-50 border border-emerald-200 px-5 py-4 text-sm font-semibold text-emerald-700 flex items-center gap-3">
+            <svg class="w-5 h-5 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="mb-6 rounded-xl bg-red-50 border border-red-200 px-5 py-4 text-sm font-semibold text-red-700 flex items-center gap-3">
+            <svg class="w-5 h-5 text-red-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            {{ session('error') }}
+        </div>
+    @endif
 
     <!-- Header -->
     <div class="sm:flex sm:items-center sm:justify-between mb-8">
@@ -50,7 +60,7 @@
                 <p class="text-sm font-medium text-gray-500">Total Job Role</p>
             </div>
             <div class="flex items-baseline gap-2">
-                <p class="text-3xl font-bold text-gray-900">{{ count($dummyJobRoles) }}</p>
+                <p class="text-3xl font-bold text-gray-900">{{ count($jobroles) }}</p>
                 <span class="text-sm text-emerald-600 font-medium">role aktif</span>
             </div>
         </div>
@@ -84,28 +94,27 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100 bg-white">
-                    <!--yang di dummyJobRoles diganti sesuai variabel di Controller nya-->
-                    @forelse($dummyJobRoles as $role)
+                    @forelse($jobroles as $role)
                         <tr class="hover:bg-indigo-50/40 transition-colors duration-150 group">
                             <td class="whitespace-nowrap py-4 pl-6 pr-3 text-sm font-medium text-gray-900">{{ $loop->iteration }}</td>
                             <td class="whitespace-nowrap px-3 py-4">
-                                <div class="text-sm font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors">{{ $role['name'] }}</div>
+                                <div class="text-sm font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors">{{ $role->role }}</div>
                             </td>
                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-600">
                                 <div class="flex items-center gap-1.5">
                                     <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                                     </svg>
-                                    {{ $role['department'] }}
+                                    {{ $role->department?->name }}
                                 </div>
                             </td>
                             <td class="whitespace-nowrap px-3 py-4 text-sm">
                                 <span class="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-semibold text-blue-700 ring-1 ring-inset ring-blue-700/10">
-                                    {{ $role['level'] }}
+                                    {{ $role->level?->name }}
                                 </span>
                             </td>
                             <td class="whitespace-nowrap px-3 py-4 text-sm">
-                                @if($role['status'] == 'Active')
+                                @if($role->status == 'Active')
                                     <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
                                         <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
                                         Aktif
@@ -118,12 +127,8 @@
                                 @endif
                             </td>
                             <td class="relative whitespace-nowrap py-4 pl-3 pr-6 text-right text-sm">
-                            
                                 <div class="flex justify-end gap-3">
-
-                                    <a href="{{ route('jobrole.edit', $role['id']) }}" class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg flex items-center gap-1 transition-colors">
-
-                                    <a href="/job-roles/{{ $role['id'] }}" 
+                                    <a href="{{ route('jobrole.show', $role->id) }}"
                                     class="text-sky-600 hover:text-sky-900 bg-sky-50 hover:bg-sky-100 px-3 py-1.5 rounded-lg flex items-center gap-1 transition-colors">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -131,18 +136,22 @@
                                         </svg>
                                         Detail
                                     </a>
-                                    <a href="{{ route('jobrole.edit', $role['id']) }}" class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg flex items-center gap-1 transition-colors">
+                                    <a href="{{ route('jobrole.edit', $role->id) }}" class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg flex items-center gap-1 transition-colors">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
                                         </svg>
                                         Edit
                                     </a>
-                                    <a href="#"class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg flex items-center gap-1 transition-colors">
+                                    <button type="button"
+                                        data-id="{{ $role->id }}"
+                                        data-name="{{ $role->role }}"
+                                        onclick="confirmDelete(this)"
+                                        class="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg flex items-center gap-1 transition-colors cursor-pointer">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                                         </svg>
                                         Hapus
-                                    </a>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -169,4 +178,61 @@
         </div>
     </div>
 
+</div>
+
+{{-- Modal Konfirmasi Hapus --}}
+<div id="deleteModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 p-6">
+        <div class="flex items-center gap-4 mb-4">
+            <div class="p-3 rounded-full bg-red-50">
+                <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+                </svg>
+            </div>
+            <div>
+                <h3 class="text-lg font-semibold text-gray-900">Hapus Job Role</h3>
+                <p class="text-sm text-gray-500">Anda yakin ingin menghapus <span id="deleteName" class="font-semibold text-gray-700"></span>?</p>
+            </div>
+        </div>
+        <p class="text-sm text-red-600 bg-red-50 rounded-xl px-4 py-3 mb-6">Tindakan ini tidak dapat dibatalkan.</p>
+
+        <form id="deleteForm" method="POST">
+            @csrf
+            @method('DELETE')
+            <div class="flex justify-end gap-3">
+                <button type="button" onclick="closeDeleteModal()"
+                    class="rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition">
+                    Batal
+                </button>
+                <button type="submit"
+                    class="rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-700 transition">
+                    Ya, Hapus
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function confirmDelete(button) {
+        const id = button.getAttribute('data-id');
+        const name = button.getAttribute('data-name');
+        document.getElementById('deleteName').textContent = name;
+        document.getElementById('deleteForm').action = '/job-roles/' + id;
+        document.getElementById('deleteModal').classList.remove('hidden');
+        document.getElementById('deleteModal').classList.add('flex');
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').classList.add('hidden');
+        document.getElementById('deleteModal').classList.remove('flex');
+    }
+
+    document.addEventListener('click', function (e) {
+        const modal = document.getElementById('deleteModal');
+        if (e.target === modal) {
+            closeDeleteModal();
+        }
+    });
+</script>
 @endsection
