@@ -15,6 +15,7 @@ use App\Http\Controllers\PerformanceEvaluationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AnnouncementController;
 
+
 Route::get('/employees/status', [EmployeeController::class, 'indexByStatus']);
 Route::post('/test-jobrole', [JobroleController::class, 'store']);
 Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
@@ -171,10 +172,16 @@ Route::resource('payroll', PayrollController::class);
 Route::get('/attendance-recap', [AttendanceController::class, 'recap'])
     ->name('attendance.recap');
 
+Route::get('/attendance-recap/pdf', [AttendanceController::class, 'recapPdf'])
+    ->name('attendance.recap.pdf');
+
 Route::resource('payroll', PayrollController::class)->except(['create']);
 Route::resource('evaluations', PerformanceEvaluationController::class)->except(['show']);
 Route::get('/leave-request/{id}/edit', [\App\Http\Controllers\LeaveRequestController::class, 'edit'])->name('leave_request.edit');
 Route::put('/leave-request/{id}', [\App\Http\Controllers\LeaveRequestController::class, 'update'])->name('leave_request.update');
+
+
+Route::get('/system-audit-temp', [AuditLogController::class, 'indexTemp'])->name('system.audit.temp');
 
 Route::get('/system-audit-temp', [AuditLogController::class, 'indexTemp'])->name('system.audit.temp');
 
@@ -184,3 +191,4 @@ Route::post('/announcement/{id}/send-reminder', [AnnouncementController::class, 
     ->name('announcement.send-reminder');
 
 });
+
