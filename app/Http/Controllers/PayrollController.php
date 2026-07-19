@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Payroll;
 use App\Models\Employee;
 use App\Services\PayrollService;
-use Illuminate\Support\Facades\DB; 
+use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PayrollController extends Controller
 {
@@ -235,5 +236,27 @@ class PayrollController extends Controller
         };
 
         return response()->stream($callback, 200, $headers);
+    }
+
+    public function printPdf($id)
+    {
+        $payroll = Payroll::with('employee.jobrole')->findOrFail($id);
+
+        $namaBulan = ['', 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+                      'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        $bulan = $namaBulan[$payroll->month] ?? $payroll->month;
+
+        $pdf = Pdf::loadView('payroll.pdf', compact('payroll', 'bulan'));
+        $fileName = "Slip_Gaji_{$payroll->employee->name}_{$bulan}_{$payroll->year}.pdf";
+
+        DB::table('activity_logs')->insert([
+            'user_email'  => auth()->user()->email ?? 'admin@erphris.com',
+            'action'      => 'PRINT',
+            'module'      => 'Payroll',
+            'description' => 'Mencetak slip gaji ' . $payroll->employee->name . ' periode ' . $bulan . ' ' . $payroll->year,
+            'created_at'  => now()
+        ]);
+
+        return $pdf->download($fileName);
     }
 }
