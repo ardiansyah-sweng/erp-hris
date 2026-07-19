@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attendance;
+use App\Models\Employee;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class AttendanceController extends Controller
@@ -54,7 +56,32 @@ class AttendanceController extends Controller
         $startDate = $request->query('start_date', now()->subDays(7)->toDateString());
         $endDate = $request->query('end_date', now()->toDateString());
 
-        $recap = Attendance::whereBetween('date', [$startDate, $endDate])
+        $recap = $this->buildRecap($startDate, $endDate);
+
+        return view('absensi.recap', compact('recap', 'startDate', 'endDate'));
+    }
+
+    /**
+     * Export rekap absensi ke PDF.
+     */
+    public function exportRecap(Request $request)
+    {
+        $startDate = $request->query('start_date', now()->subDays(7)->toDateString());
+        $endDate = $request->query('end_date', now()->toDateString());
+
+        $recap = $this->buildRecap($startDate, $endDate);
+
+        $pdf = Pdf::loadView('absensi.pdf-recap', compact('recap', 'startDate', 'endDate'));
+
+        return $pdf->download("rekap-absensi-{$startDate}-{$endDate}.pdf");
+    }
+
+    /**
+     * Build recap data for a given period.
+     */
+    private function buildRecap($startDate, $endDate)
+    {
+        return Attendance::whereBetween('date', [$startDate, $endDate])
             ->selectRaw('employee_id, status, COUNT(*) as total')
             ->groupBy('employee_id', 'status')
             ->get()
@@ -64,7 +91,7 @@ class AttendanceController extends Controller
                 foreach ($rows as $row) {
                     $summary[$row->status] = (int) $row->total;
                 }
-                $employee = \App\Models\Employee::find($employeeId);
+                $employee = Employee::find($employeeId);
                 return [
                     'employee_id' => (int) $employeeId,
                     'employee_name' => $employee->name ?? '-',
@@ -73,7 +100,5 @@ class AttendanceController extends Controller
                 ];
             })
             ->values();
-
-        return view('absensi.recap', compact('recap', 'startDate', 'endDate'));
     }
 }
