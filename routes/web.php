@@ -168,9 +168,9 @@ Route::get('/attendance/{id}', [AttendanceController::class, 'show'])
 
 
 Route::resource('payroll', PayrollController::class);
-Route::get('/employees/{employeeCode}/leave-balance', [\App\Http\Controllers\LeaveBalanceController::class, 'check'])
+Route::get('/employees/{employeeCode}/leave-balance', [\App\Http\Controllers\LeaveRequestController::class, 'check'])
     ->name('employees.leave-balance');
-
+    
 Route::get('/attendance-recap', [AttendanceController::class, 'recap'])
     ->name('attendance.recap');
 
