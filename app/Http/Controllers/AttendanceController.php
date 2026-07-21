@@ -62,7 +62,7 @@ class AttendanceController extends Controller
     }
 
     /**
-     * Export rekap absensi ke PDF.
+     * Export rekap absensi ke PDF (langsung download).
      */
     public function exportRecap(Request $request)
     {
@@ -74,6 +74,22 @@ class AttendanceController extends Controller
         $pdf = Pdf::loadView('absensi.pdf-recap', compact('recap', 'startDate', 'endDate'));
 
         return $pdf->download("rekap-absensi-{$startDate}-{$endDate}.pdf");
+    }
+
+    /**
+     * Preview rekap absensi PDF di browser dulu sebelum download.
+     * Sama persis dengan exportRecap(), hanya beda stream() vs download().
+     */
+    public function previewExportRecap(Request $request)
+    {
+        $startDate = $request->query('start_date', now()->subDays(7)->toDateString());
+        $endDate = $request->query('end_date', now()->toDateString());
+
+        $recap = $this->buildRecap($startDate, $endDate);
+
+        $pdf = Pdf::loadView('absensi.pdf-recap', compact('recap', 'startDate', 'endDate'));
+
+        return $pdf->stream("rekap-absensi-{$startDate}-{$endDate}.pdf");
     }
 
     /**
