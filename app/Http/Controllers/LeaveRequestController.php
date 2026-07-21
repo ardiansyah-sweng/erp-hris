@@ -18,9 +18,10 @@ class LeaveRequestController extends Controller
     /**
      * Menampilkan seluruh data pengajuan cuti
      */
-    public function index()
+    public function index(Request $request)
     {
-        $leaveRequests = $this->leaveRequestService->getAllLeaveRequests();
+        $search = $request->query('search');
+        $leaveRequests = $this->leaveRequestService->getLeaveRequestsPaginated(10, $search);
 
         return view(
             'leave_request.index',
@@ -49,16 +50,20 @@ class LeaveRequestController extends Controller
             'start_date'      => 'required|date',
             'end_date'        => 'required|date|after_or_equal:start_date',
             'reason'          => 'required',
-            'status'          => 'required|in:Pending,Approved,Rejected',
         ]);
 
-        $validated['submission_date'] = now();
+        try {
+            $this->leaveRequestService->createLeaveRequest($validated);
 
-        $this->leaveRequestService->createLeaveRequest($validated);
-
-        return redirect()
-            ->route('leave_request.index')
-            ->with('success', 'Pengajuan cuti berhasil ditambahkan.');
+            return redirect()
+                ->route('leave_request.index')
+                ->with('success', 'Pengajuan cuti berhasil ditambahkan.');
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', $e->getMessage());
+        }
     }
 
     /**
@@ -89,7 +94,9 @@ class LeaveRequestController extends Controller
             abort(404, 'Data pengajuan cuti tidak ditemukan');
         }
 
-        return view('leave_request.edit', compact('leaveRequest'));
+        $employees = Employee::select('employee_code', 'name')->get();
+
+        return view('leave_request.edit', compact('leaveRequest', 'employees'));
     }
 
     /**
@@ -106,15 +113,22 @@ class LeaveRequestController extends Controller
             'status'          => 'required|in:Pending,Approved,Rejected',
         ]);
 
-        $leaveRequest = $this->leaveRequestService->updateLeaveRequest($id, $validated);
+        try {
+            $leaveRequest = $this->leaveRequestService->updateLeaveRequest($id, $validated);
 
-        if (!$leaveRequest) {
-            abort(404, 'Data pengajuan cuti tidak ditemukan');
+            if (!$leaveRequest) {
+                abort(404, 'Data pengajuan cuti tidak ditemukan');
+            }
+
+            return redirect()
+                ->route('leave_request.index')
+                ->with('success', 'Data pengajuan cuti berhasil diperbarui.');
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', $e->getMessage());
         }
-
-        return redirect()
-            ->route('leave_request.index')
-            ->with('success', 'Data pengajuan cuti berhasil diperbarui.');
     }
 
     /**
@@ -122,14 +136,42 @@ class LeaveRequestController extends Controller
      */
     public function destroy($id)
     {
-        $deleted = $this->leaveRequestService->deleteLeaveRequest($id);
+        try {
+            $deleted = $this->leaveRequestService->deleteLeaveRequest($id);
 
-        if (!$deleted) {
-            abort(404, 'Data pengajuan cuti tidak ditemukan');
+            if (!$deleted) {
+                abort(404, 'Data pengajuan cuti tidak ditemukan');
+            }
+
+            return redirect()
+                ->route('leave_request.index')
+                ->with('success', 'Data pengajuan cuti berhasil dihapus.');
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->with('error', $e->getMessage());
+        }
+    }
+
+    /**
+     * Cek data karyawan berdasarkan employee code
+     */
+    public function check($employeeCode)
+    {
+        $employee = Employee::where('employee_code', $employeeCode)->first();
+
+        if (!$employee) {
+            return response()->json([
+                'found' => false,
+                'remaining_leave' => 0,
+                'employee_name' => null,
+            ]);
         }
 
-        return redirect()
-            ->route('leave_request.index')
-            ->with('success', 'Data pengajuan cuti berhasil dihapus.');
+        return response()->json([
+            'found' => true,
+            'remaining_leave' => $employee->remaining_leave,
+            'employee_name' => $employee->name,
+        ]);
     }
 }

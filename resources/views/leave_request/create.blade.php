@@ -42,6 +42,13 @@
         </h3>
     </div>
 
+    <!-- Notifikasi Error -->
+    @if(session('error'))
+        <div class="mx-6 mt-4 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
+            <p class="text-sm font-semibold text-red-700">{{ session('error') }}</p>
+        </div>
+    @endif
+
     <!-- Form -->
     <form action="{{ route('leave_request.store') }}" method="POST" class="p-6 space-y-6">
         @csrf
@@ -59,6 +66,8 @@
                 value="{{ old('employee_id') }}"
                 placeholder="Contoh: EMP001"
                 class="block w-full rounded-xl border-0 py-3 px-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm">
+            
+            <p id="remaining_leave_display" class="mt-1 text-sm"></p>
         </div>      
 
         <!-- Nama Karyawan -->
@@ -84,6 +93,7 @@
             <input
                 type="date"
                 name="start_date"
+                id="start_date"
                 value="{{ old('start_date') }}"
                 class="block w-full rounded-xl border-0 py-3 px-4 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm">
         </div>
@@ -96,8 +106,11 @@
             <input
                 type="date"
                 name="end_date"
+                id="end_date"
                 value="{{ old('end_date') }}"
                 class="block w-full rounded-xl border-0 py-3 px-4 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm">
+            
+            <p id="total_days_display" class="mt-1 text-sm"></p>
         </div>
 
         <!-- Alasan -->
@@ -110,19 +123,6 @@
                 rows="4"
                 placeholder="Masukkan alasan pengajuan cuti"
                 class="block w-full rounded-xl border-0 py-3 px-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm">{{ old('reason') }}</textarea>
-        </div>
-
-        <!-- Status -->
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-                Status
-            </label>
-            <select name="status"
-                class="block w-full rounded-xl border-0 py-3 px-4 text-gray-900 ring-1 ring-gray-300 focus:ring-2 focus:ring-indigo-600">
-                <option value="Pending" {{ old('status') == 'Pending' ? 'selected' : '' }}>Pending</option>
-                <option value="Approved" {{ old('status') == 'Approved' ? 'selected' : '' }}>Approved</option>
-                <option value="Rejected" {{ old('status') == 'Rejected' ? 'selected' : '' }}>Rejected</option>
-            </select>
         </div>
 
         <!-- Tombol -->
@@ -143,28 +143,5 @@
 
     </form>
 </div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-
-    const employees = @json($employees->pluck('name', 'employee_code'));
-
-    const employeeId = document.getElementById('employee_id');
-    const employeeName = document.getElementById('employee_name');
-
-    employeeId.addEventListener('keyup', function () {
-
-        const id = this.value.toUpperCase();
-
-        if (employees[id]) {
-            employeeName.value = employees[id];
-        } else {
-            employeeName.value = '';
-        }
-
-    });
-
-});
-</script>
 
 @endsection

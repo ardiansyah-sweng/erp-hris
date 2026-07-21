@@ -25,6 +25,10 @@ class Employee extends Model
         'status',
     ];
     
+    protected $appends = [
+        'remaining_leave',
+    ];
+
     protected $casts = [
         'date_of_birth' => 'date',
         'age' => 'integer',
@@ -45,6 +49,24 @@ class Employee extends Model
     public function payrolls()
     {
         return $this->hasMany(Payroll::class, 'employee_id');
+    }
+
+    public function leaveRequests()
+    {
+        return $this->hasMany(LeaveRequest::class, 'employee_id', 'employee_code');
+    }
+
+    public function getRemainingLeaveAttribute()
+    {
+        $annualQuota = 12;
+
+        $approvedDays = $this->leaveRequests()
+            ->where('status', 'Approved')
+            ->whereYear('start_date', now()->year)
+            ->get()
+            ->sum(fn($lr) => $lr->total_days);
+
+        return max(0, $annualQuota - $approvedDays);
     }
 
     protected static function booted(): void

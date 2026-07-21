@@ -21,9 +21,26 @@ class LeaveRequest extends Model
         'submission_date',
     ];
 
+    protected $appends = [
+        'total_days',
+    ];
+
     protected $casts = [
         'start_date' => 'date',
         'end_date' => 'date',
         'submission_date' => 'date',
     ];
+
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class, 'employee_id', 'employee_code');
+    }
+
+    public function getTotalDaysAttribute()
+    {
+        if (!$this->start_date || !$this->end_date) {
+            return 0;
+        }
+        return $this->start_date->diffInDays($this->end_date) + 1;
+    }
 }

@@ -69,6 +69,29 @@
                 </div>
 
                 <div>
+                    <dt class="text-sm text-gray-500">Total Hari</dt>
+                    <dd class="mt-1 font-medium text-gray-900">
+                        {{ $leaveRequest->total_days }} hari
+                    </dd>
+                </div>
+
+                <div>
+                    <dt class="text-sm text-gray-500">Sisa Cuti Tahunan</dt>
+                    <dd class="mt-1">
+                        @php
+                            $employee = \App\Models\Employee::where('employee_code', $leaveRequest->employee_id)->first();
+                        @endphp
+                        @if($employee)
+                            <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold {{ $employee->remaining_leave <= 3 ? 'bg-red-50 text-red-700' : 'bg-emerald-50 text-emerald-700' }}">
+                                {{ $employee->remaining_leave }} hari
+                            </span>
+                        @else
+                            <span class="text-gray-400">-</span>
+                        @endif
+                    </dd>
+                </div>
+
+                <div>
                     <dt class="text-sm text-gray-500">Status</dt>
 
                     <dd class="mt-1">

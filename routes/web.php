@@ -168,8 +168,18 @@ Route::get('/attendance/{id}', [AttendanceController::class, 'show'])
 
 
 Route::resource('payroll', PayrollController::class);
+Route::get('/employees/{employeeCode}/leave-balance', [\App\Http\Controllers\LeaveRequestController::class, 'check'])
+    ->name('employees.leave-balance');
+    
 Route::get('/attendance-recap', [AttendanceController::class, 'recap'])
     ->name('attendance.recap');
+
+Route::get('/attendance-recap/export', [AttendanceController::class, 'exportRecap'])
+    ->name('attendance.recap.export');
+
+// BARU: route preview PDF rekap absensi (dipanggil dari recap.blade.php)
+Route::get('/attendance-recap/export/preview', [AttendanceController::class, 'previewExportRecap'])
+    ->name('attendance.recap.export.preview');
 
 Route::resource('payroll', PayrollController::class)->except(['create']);
 Route::resource('evaluations', PerformanceEvaluationController::class)->except(['show']);

@@ -13,6 +13,12 @@
         </p>
     </div>
 
+    @if(session('error'))
+        <div class="bg-red-50 border border-red-200 rounded-xl px-4 py-3">
+            <p class="text-sm font-semibold text-red-700">{{ session('error') }}</p>
+        </div>
+    @endif
+
     <div class="mt-6 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
 
         <div class="px-6 py-5 border-b border-gray-100">
@@ -29,16 +35,17 @@
                 <label class="block text-sm font-medium text-gray-700 mb-2">
                     ID Karyawan
                 </label>
-                <input type="text" name="employee_id"
+                <input type="text" name="employee_id" id="employee_id"
                     value="{{ old('employee_id', $leaveRequest->employee_id) }}"
                     class="block w-full rounded-xl border-0 py-2.5 px-4 text-gray-900 ring-1 ring-gray-200 focus:ring-2 focus:ring-indigo-600 sm:text-sm">
+                <p id="remaining_leave_display" class="mt-1 text-sm"></p>
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">
                     Nama Karyawan
                 </label>
-                <input type="text" name="employee_name"
+                <input type="text" name="employee_name" id="employee_name"
                     value="{{ old('employee_name', $leaveRequest->employee_name) }}"
                     class="block w-full rounded-xl border-0 py-2.5 px-4 text-gray-900 ring-1 ring-gray-200 focus:ring-2 focus:ring-indigo-600 sm:text-sm">
             </div>
@@ -48,7 +55,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">
                         Tanggal Mulai
                     </label>
-                    <input type="date" name="start_date"
+                    <input type="date" name="start_date" id="start_date"
                         value="{{ old('start_date', $leaveRequest->start_date) }}"
                         class="block w-full rounded-xl border-0 py-2.5 px-4 text-gray-900 ring-1 ring-gray-200 focus:ring-2 focus:ring-indigo-600 sm:text-sm">
                 </div>
@@ -57,9 +64,10 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">
                         Tanggal Selesai
                     </label>
-                    <input type="date" name="end_date"
+                    <input type="date" name="end_date" id="end_date"
                         value="{{ old('end_date', $leaveRequest->end_date) }}"
                         class="block w-full rounded-xl border-0 py-2.5 px-4 text-gray-900 ring-1 ring-gray-200 focus:ring-2 focus:ring-indigo-600 sm:text-sm">
+                    <p id="total_days_display" class="mt-1 text-sm"></p>
                 </div>
             </div>
             
