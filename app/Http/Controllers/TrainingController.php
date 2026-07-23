@@ -43,7 +43,7 @@ class TrainingController extends Controller
             ->with('success', 'Training berhasil ditambahkan.');
     }
 
-        public function edit(Training $training)
+    public function edit(Training $training)
     {
         $departments = Department::orderBy('name')->get();
 
@@ -53,7 +53,7 @@ class TrainingController extends Controller
         ));
     }
 
-        public function update(Request $request, Training $training)
+    public function update(Request $request, Training $training)
     {
         $request->validate([
             'title' => 'required|string|max:255',
@@ -80,7 +80,7 @@ class TrainingController extends Controller
             ->with('success', 'Training berhasil diperbarui.');
     }
 
-        public function destroy(Training $training)
+    public function destroy(Training $training)
     {
         $training->delete();
 
@@ -89,7 +89,7 @@ class TrainingController extends Controller
             ->with('success', 'Training berhasil dihapus.');
     }
     
-        public function show(Training $training)
+    public function show(Training $training)
     {
         $training->load('department');
 

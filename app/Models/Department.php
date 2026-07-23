@@ -13,7 +13,7 @@ class Department extends Model
         'name',
     ];
 
-        public function trainings()
+    public function trainings()
     {
         return $this->hasMany(Training::class);
     }
