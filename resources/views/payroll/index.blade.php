@@ -127,6 +127,14 @@
                             </td>
                             <td class="relative whitespace-nowrap py-4 pl-3 pr-6 text-right text-sm">
                                 <div class="flex justify-end gap-3">
+                                    <a href="{{ route('payroll.pdf', $payroll->id) }}" 
+                                       class="text-emerald-600 hover:text-emerald-900 bg-emerald-50 hover:bg-emerald-100 px-3 py-1.5 rounded-lg flex items-center gap-1 transition-colors"
+                                       title="Download Slip Gaji PDF">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                        </svg>
+                                        PDF
+                                    </a>
                                     <a href="{{ route('payroll.show', $payroll->id) }}" 
                                        class="text-sky-600 hover:text-sky-900 bg-sky-50 hover:bg-sky-100 px-3 py-1.5 rounded-lg flex items-center gap-1 transition-colors">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

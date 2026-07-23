@@ -155,6 +155,7 @@ Route::get('/payroll/create', function () {
 Route::post('/payroll', [PayrollController::class, 'store']);
 // Route export WAJIB di atas '/payroll/{id}' agar 'export' tidak ditangkap sebagai id
 Route::get('/payroll/export', [PayrollController::class, 'export'])->name('payroll.export');
+Route::get('/payroll/{id}/pdf', [PayrollController::class, 'exportPdf'])->name('payroll.pdf');
 Route::get('/payroll/{id}', [PayrollController::class, 'show']);
 Route::put('/payroll/{id}', [PayrollController::class, 'update']);
 Route::delete('/payroll/{id}', [PayrollController::class, 'destroy']);
