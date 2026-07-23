@@ -14,6 +14,7 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\PerformanceEvaluationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AnnouncementController;
+use App\Http\Controllers\TrainingController;
 
 Route::get('/employees/status', [EmployeeController::class, 'indexByStatus']);
 Route::post('/test-jobrole', [JobroleController::class, 'store']);
@@ -49,7 +50,9 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/dashboard', function () {
     return view('dashboard');
+
 });
+
 
 // JOB ROLE ROUTES
 Route::get('/job-roles', [JobroleController::class, 'index'])->name('jobrole.index');
@@ -83,6 +86,16 @@ Route::get('/dashboard', function () {
 });
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+Route::resource('training', TrainingController::class);
+Route::get('/training', [TrainingController::class,'index'])->name('training.index');
+Route::get('/training/create', [TrainingController::class,'create'])->name('training.create');
+Route::post('/training', [TrainingController::class,'store'])->name('training.store');
+
+Route::get('/training/{training}/edit', [TrainingController::class,'edit'])->name('training.edit');
+Route::put('/training/{training}', [TrainingController::class,'update'])->name('training.update');
+
+Route::delete('/training/{training}', [TrainingController::class,'destroy'])->name('training.destroy');
 
 Route::get('/profile', function () {
     return view('profile.index');

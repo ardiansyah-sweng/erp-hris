@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             LeaveRequestSeeder::class,
             AttendanceSeeder::class,
             AnnouncementSeeder::class,
+            TrainingSeeder::class,
         ]);
     }
 }
