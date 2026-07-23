@@ -29,6 +29,11 @@ class Payroll extends Model
         'payment_date' => 'date',
     ];
 
+    public function getNetSalaryAttribute()
+    {
+        return $this->basic_salary + $this->allowances - $this->deductions;
+    }
+
     public function employee()
     {
         return $this->belongsTo(Employee::class, 'employee_id');

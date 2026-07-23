@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Payroll;
 use App\Models\Employee;
 use App\Services\PayrollService;
-use Illuminate\Support\Facades\DB; 
+use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf; 
 
 class PayrollController extends Controller
 {
@@ -235,5 +236,32 @@ class PayrollController extends Controller
         };
 
         return response()->stream($callback, 200, $headers);
+    }
+
+    public function exportPdf($id)
+    {
+        $payroll = Payroll::with('employee.jobrole')->findOrFail($id);
+
+        if (strtolower($payroll->status) !== 'paid') {
+            return redirect()
+                ->route('payroll.index')
+                ->with('error', 'Slip Gaji PDF hanya dapat diakses jika status pembayaran sudah Paid.');
+        }
+
+        // Injeksi Activity Log
+        DB::table('activity_logs')->insert([
+            'user_email'  => auth()->user()->email ?? 'admin@erphris.com',
+            'action'      => 'EXPORT_PDF',
+            'module'      => 'Payroll',
+            'description' => 'Mengunduh Slip Gaji PDF untuk Karyawan: ' . ($payroll->employee->name ?? 'ID '.$payroll->employee_id),
+            'created_at'  => now()
+        ]);
+
+        $pdf = Pdf::loadView('payroll.pdf', compact('payroll'));
+        
+        $employeeName = str_replace(' ', '_', preg_replace('/[^A-Za-z0-9\-]/', '', $payroll->employee->name ?? 'Karyawan'));
+        $fileName = 'Slip_Gaji_' . $employeeName . '_' . $payroll->month . '_' . $payroll->year . '.pdf';
+
+        return $pdf->stream($fileName);
     }
 }

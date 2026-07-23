@@ -12,20 +12,31 @@ class PayrollFactory extends Factory
 
     public function definition(): array
     {
+        $basicSalary = 5000000;
         $allowances = $this->faker->randomFloat(2, 0, 3000000);
         $deductions = $this->faker->randomFloat(2, 0, 1000000);
-        $netSalary  = 5000000 + $allowances - $deductions;
+        $netSalary  = $basicSalary + $allowances - $deductions;
 
         return [
             'employee_id'  => Employee::factory(),
             'month'        => $this->faker->numberBetween(1, 12),
             'year'         => $this->faker->numberBetween(2024, 2026),
-            'basic_salary' => 5000000,
+            'basic_salary' => $basicSalary,
             'allowances'   => $allowances,
             'deductions'   => $deductions,
             'net_salary'   => $netSalary,
             'status'       => 'pending',
         ];
+    }
+
+    public function configure()
+    {
+        return $this->afterMaking(function (Payroll $payroll) {
+            $payroll->net_salary = $payroll->basic_salary + $payroll->allowances - $payroll->deductions;
+        })->afterCreating(function (Payroll $payroll) {
+            $payroll->net_salary = $payroll->basic_salary + $payroll->allowances - $payroll->deductions;
+            $payroll->saveQuietly();
+        });
     }
 
     public function pending(): static
