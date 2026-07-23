@@ -242,6 +242,12 @@ class PayrollController extends Controller
     {
         $payroll = Payroll::with('employee.jobrole')->findOrFail($id);
 
+        if (strtolower($payroll->status) !== 'paid') {
+            return redirect()
+                ->route('payroll.index')
+                ->with('error', 'Slip Gaji PDF hanya dapat diakses jika status pembayaran sudah Paid.');
+        }
+
         // Injeksi Activity Log
         DB::table('activity_logs')->insert([
             'user_email'  => auth()->user()->email ?? 'admin@erphris.com',
@@ -256,6 +262,6 @@ class PayrollController extends Controller
         $employeeName = str_replace(' ', '_', preg_replace('/[^A-Za-z0-9\-]/', '', $payroll->employee->name ?? 'Karyawan'));
         $fileName = 'Slip_Gaji_' . $employeeName . '_' . $payroll->month . '_' . $payroll->year . '.pdf';
 
-        return $pdf->download($fileName);
+        return $pdf->stream($fileName);
     }
 }
