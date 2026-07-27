@@ -139,6 +139,13 @@
 
             </a>
 
+            <a href="{{ route('training.participants.index',$training->id) }}"
+                class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white">
+
+                Kelola Peserta
+
+            </a>
+
         </div>
 
     </div>

@@ -97,6 +97,12 @@ Route::put('/training/{training}', [TrainingController::class,'update'])->name('
 
 Route::delete('/training/{training}', [TrainingController::class,'destroy'])->name('training.destroy');
 
+// TRAINING PARTICIPANTS ROUTES
+Route::get('/training/{training}/participants', [\App\Http\Controllers\TrainingParticipantController::class, 'index'])->name('training.participants.index');
+Route::post('/training/{training}/participants', [\App\Http\Controllers\TrainingParticipantController::class, 'store'])->name('training.participants.store');
+Route::put('/training-participants/{participant}', [\App\Http\Controllers\TrainingParticipantController::class, 'updateAttendance'])->name('training.participants.update');
+Route::delete('/training-participants/{participant}', [\App\Http\Controllers\TrainingParticipantController::class, 'destroy'])->name('training.participants.destroy');
+
 Route::get('/profile', function () {
     return view('profile.index');
 })->name('profile.index');
