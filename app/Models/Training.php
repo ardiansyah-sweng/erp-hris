@@ -20,4 +20,9 @@ class Training extends Model
     {
         return $this->belongsTo(Department::class);
     }
+
+    public function participants()
+    {
+        return $this->hasMany(TrainingParticipant::class);
+    }
 }
