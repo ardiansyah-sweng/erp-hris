@@ -14,6 +14,7 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\PerformanceEvaluationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AnnouncementController;
+use App\Http\Controllers\RecruitmentController;
 use App\Http\Controllers\TrainingController;
 
 Route::get('/employees/status', [EmployeeController::class, 'indexByStatus']);
@@ -21,7 +22,11 @@ Route::post('/test-jobrole', [JobroleController::class, 'store']);
 Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
 Route::get('/employees/create', function () {
     $jobroles = \App\Models\Jobrole::all();
-    return view('employee.create', compact('jobroles'));
+    $acceptedRecruitments = \App\Models\Recruitment::with('jobrole')
+        ->where('status', 'Accepted')
+        ->whereNotIn('email', \App\Models\Employee::select('email'))
+        ->get();
+    return view('employee.create', compact('jobroles', 'acceptedRecruitments'));
 })->name('employee.create');
 Route::post('/employees/import', [EmployeeController::class, 'importCsv'])->name('employees.import');
 Route::post('/employees', [EmployeeController::class, 'store']);
@@ -96,6 +101,21 @@ Route::get('/training/{training}/edit', [TrainingController::class,'edit'])->nam
 Route::put('/training/{training}', [TrainingController::class,'update'])->name('training.update');
 
 Route::delete('/training/{training}', [TrainingController::class,'destroy'])->name('training.destroy');
+
+// RECRUITMENT ROUTES
+Route::resource('recruitment', RecruitmentController::class);
+
+Route::get('/recruitment', [RecruitmentController::class,'index'])->name('recruitment.index');
+Route::get('/recruitment/create', [RecruitmentController::class,'create'])->name('recruitment.create');
+Route::post('/recruitment', [RecruitmentController::class,'store'])->name('recruitment.store');
+
+Route::get('/recruitment/{recruitment}', [RecruitmentController::class,'show'])->name('recruitment.show');
+
+Route::get('/recruitment/{recruitment}/edit', [RecruitmentController::class,'edit'])->name('recruitment.edit');
+Route::put('/recruitment/{recruitment}', [RecruitmentController::class,'update'])->name('recruitment.update');
+Route::put('/recruitment/{recruitment}/status', [RecruitmentController::class,'updateStatus'])->name('recruitment.status');
+
+Route::delete('/recruitment/{recruitment}', [RecruitmentController::class,'destroy'])->name('recruitment.destroy');
 
 // TRAINING PARTICIPANTS ROUTES
 Route::get('/training/{training}/participants', [\App\Http\Controllers\TrainingParticipantController::class, 'index'])->name('training.participants.index');
