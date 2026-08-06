@@ -1,106 +1,48 @@
 <?php
 
-namespace App\Http\Controllers;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-use App\Models\Recruitment;
-use App\Models\Jobrole;
-use Illuminate\Http\Request;
-
-class RecruitmentController extends Controller
+return new class extends Migration
 {
-    public function index()
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
     {
-        $recruitments = Recruitment::with('jobRole')
-            ->latest()
-            ->get();
+        Schema::create('recruitments', function (Blueprint $table) {
+            $table->id();
 
-        return view('recruitment.index', compact('recruitments'));
+            $table->string('name');
+            $table->string('email');
+            $table->string('phone_number');
+
+            $table->foreignId('role_id')
+                ->constrained('job_roles')
+                ->cascadeOnDelete();
+
+            $table->date('apply_date');
+            $table->string('cv')->nullable();
+
+            $table->enum('status', [
+                'Screening',
+                'Interview',
+                'Accepted',
+                'Rejected',
+            ])->default('Screening');
+
+            $table->text('notes')->nullable();
+
+            $table->timestamps();
+        });
     }
 
-    public function create()
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
     {
-        $jobroles = Jobrole::orderBy('role')->get();
-
-        return view('recruitment.create', compact('jobroles'));
+        Schema::dropIfExists('recruitments');
     }
-
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'phone_number' => 'required|string|max:20',
-            'role_id' => 'required|exists:job_roles,id',
-            'apply_date' => 'required|date',
-            'status' => 'required',
-            'notes' => 'nullable|string',
-        ]);
-
-        Recruitment::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone_number' => $request->phone_number,
-            'role_id' => $request->role_id,
-            'apply_date' => $request->apply_date,
-            'status' => $request->status,
-            'notes' => $request->notes,
-        ]);
-
-        return redirect()
-            ->route('recruitment.index')
-            ->with('success', 'Recruitment berhasil ditambahkan.');
-    }
-
-    public function show(Recruitment $recruitment)
-    {
-        $recruitment->load('jobRole');
-
-        return view('recruitment.show', compact('recruitment'));
-    }
-
-    public function edit(Recruitment $recruitment)
-    {
-        $jobroles = Jobrole::orderBy('role')->get();
-
-        return view('recruitment.edit', compact(
-            'recruitment',
-            'jobroles'
-        ));
-    }
-
-    public function update(Request $request, Recruitment $recruitment)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'phone_number' => 'required|string|max:20',
-            'role_id' => 'required|exists:job_roles,id',
-            'apply_date' => 'required|date',
-            'status' => 'required',
-            'notes' => 'nullable|string',
-        ]);
-
-        $recruitment->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone_number' => $request->phone_number,
-            'role_id' => $request->role_id,
-            'apply_date' => $request->apply_date,
-            'status' => $request->status,
-            'notes' => $request->notes,
-        ]);
-
-        return redirect()
-            ->route('recruitment.index')
-            ->with('success', 'Recruitment berhasil diperbarui.');
-    }
-
-    public function destroy(Recruitment $recruitment)
-    {
-        $recruitment->delete();
-
-        return redirect()
-            ->route('recruitment.index')
-            ->with('success', 'Recruitment berhasil dihapus.');
-    }
-}
+};
