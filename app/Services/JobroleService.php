@@ -16,7 +16,7 @@ class JobroleService
     public function createJobrole(array $data)
     {
         return Jobrole::create([
-            'role'          => $data['name'],
+            'role'          => $data['name'] ?? $data['role'] ?? null,
             'department_id' => $data['department_id'] ?? null,
             'level_id'      => $data['level_id'] ?? null,
             'status'        => $data['status'] ?? 'Active',
@@ -33,7 +33,7 @@ class JobroleService
         $jobrole = Jobrole::findOrFail($id);
 
         $jobrole->update([
-            'role'          => $data['name'],
+            'role'          => $data['name'] ?? $data['role'] ?? $jobrole->role,
             'department_id' => $data['department_id'] ?? $jobrole->department_id,
             'level_id'      => $data['level_id'] ?? $jobrole->level_id,
             'status'        => $data['status'] ?? $jobrole->status,
@@ -42,16 +42,6 @@ class JobroleService
         return $jobrole;
     }
 
-    public function deleteJobrole($id)
-    {
-        $result = $this->destroyJobrole($id);
-
-        if (isset($result['statusCode']) && $result['statusCode'] !== 200) {
-            throw new Exception($result['message']);
-        }
-
-        return $result;
-    }
 
     /**
      * Menghapus data Jobrole berdasarkan ID dengan validasi lengkap.

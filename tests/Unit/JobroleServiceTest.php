@@ -40,6 +40,8 @@ class JobroleServiceTest extends TestCase
      */
     public function test_get_all_jobrole_successfully()
     {
+        Jobrole::query()->delete();
+
         // Siapkan beberapa data di database
         Jobrole::create(['role' => 'Software Engineer']);
         Jobrole::create(['role' => 'UI/UX Designer']);

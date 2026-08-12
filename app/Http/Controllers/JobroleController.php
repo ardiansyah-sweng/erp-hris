@@ -77,34 +77,20 @@ class JobroleController extends Controller
 
     public function destroy(Request $request, $id)
     {
-        try {
-            $this->jobroleService->deleteJobrole($id);
+        $result = $this->jobroleService->destroyJobrole($id);
 
-            if ($request->expectsJson()) {
-                return response()->json([
-                    'payload' => [
-                        'statusCode' => 200,
-                        'message' => 'Job role deleted successfully!',
-                    ]
-                ], 200);
-            }
-
-            return redirect()->route('jobrole.index')
-                ->with('success', 'Job role berhasil dihapus.');
-
-        } catch (Exception $e) {
-            if ($request->expectsJson()) {
-                return response()->json([
-                    'payload' => [
-                        'statusCode' => 500,
-                        'message' => 'Gagal menghapus data job role.',
-                        'error' => $e->getMessage()
-                    ]
-                ], 500);
-            }
-
-            return redirect()->route('jobrole.index')
-                ->with('error', 'Gagal menghapus job role.');
+        if ($request->expectsJson()) {
+            return response()->json([
+                'payload' => $result
+            ], $result['statusCode'] ?? 200);
         }
+
+        if (isset($result['statusCode']) && $result['statusCode'] !== 200) {
+            return redirect()->route('jobrole.index')
+                ->with('error', $result['message'] ?? 'Gagal menghapus job role.');
+        }
+
+        return redirect()->route('jobrole.index')
+            ->with('success', $result['message'] ?? 'Job role berhasil dihapus.');
     }
 }
