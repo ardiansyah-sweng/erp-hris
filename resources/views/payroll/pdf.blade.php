@@ -197,18 +197,38 @@
                 <td>Penerimaan</td>
                 <td class="text-right">{{ number_format($payroll->basic_salary, 0, ',', '.') }}</td>
             </tr>
+            @if($payroll->position_allowance > 0 || $payroll->meal_allowance > 0 || $payroll->transport_allowance > 0 || $payroll->allowances > 0)
             <tr>
                 <td>2</td>
-                <td>Tunjangan (Allowances)</td>
+                <td>Tunjangan Jabatan / Makan / Transport / Lainnya</td>
                 <td>Penerimaan</td>
-                <td class="text-right">+ {{ number_format($payroll->allowances, 0, ',', '.') }}</td>
+                <td class="text-right">+ {{ number_format($payroll->allowances + $payroll->position_allowance + $payroll->meal_allowance + $payroll->transport_allowance, 0, ',', '.') }}</td>
             </tr>
+            @endif
+            @if($payroll->overtime_pay > 0)
             <tr>
                 <td>3</td>
-                <td>Potongan (Deductions)</td>
-                <td>Potongan</td>
-                <td class="text-right" style="color: #dc2626;">- {{ number_format($payroll->deductions, 0, ',', '.') }}</td>
+                <td>Upah Lembur ({{ $payroll->overtime_hours }} Jam)</td>
+                <td>Penerimaan</td>
+                <td class="text-right" style="color: #4f46e5;">+ {{ number_format($payroll->overtime_pay, 0, ',', '.') }}</td>
             </tr>
+            @endif
+            @if($payroll->reimbursement_total > 0)
+            <tr>
+                <td>4</td>
+                <td>Klaim Reimbursement (Approved)</td>
+                <td>Penerimaan</td>
+                <td class="text-right" style="color: #2563eb;">+ {{ number_format($payroll->reimbursement_total, 0, ',', '.') }}</td>
+            </tr>
+            @endif
+            @if($payroll->pph21 > 0 || $payroll->bpjs_kesehatan > 0 || $payroll->bpjs_ketenagakerjaan > 0 || $payroll->deductions > 0)
+            <tr>
+                <td>5</td>
+                <td>Potongan Pajak PPh21 / BPJS / Lainnya</td>
+                <td>Potongan</td>
+                <td class="text-right" style="color: #dc2626;">- {{ number_format($payroll->deductions + $payroll->pph21 + $payroll->bpjs_kesehatan + $payroll->bpjs_ketenagakerjaan, 0, ',', '.') }}</td>
+            </tr>
+            @endif
             <tr class="total-row">
                 <td colspan="3" style="text-align: right;">TOTAL GAJI BERSIH (TAKE HOME PAY):</td>
                 <td class="text-right">Rp {{ number_format($payroll->net_salary, 0, ',', '.') }}</td>
