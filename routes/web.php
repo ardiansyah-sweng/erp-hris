@@ -213,4 +213,46 @@ Route::resource('announcement', AnnouncementController::class);
 Route::post('/announcement/{id}/send-reminder', [AnnouncementController::class, 'sendReminder'])
     ->name('announcement.send-reminder');
 
+// ==========================================
+// 1. SHIFT & JADWAL KERJA ROUTES
+// ==========================================
+Route::resource('shifts', \App\Http\Controllers\ShiftController::class)->except(['show']);
+Route::post('/shifts/assign', [\App\Http\Controllers\ShiftController::class, 'assignStore'])->name('shifts.assign.store');
+Route::delete('/shifts/assign/{id}', [\App\Http\Controllers\ShiftController::class, 'assignDestroy'])->name('shifts.assign.destroy');
+
+// ==========================================
+// 2. OVERTIME (LEMBUR) ROUTES
+// ==========================================
+Route::get('/overtime', [\App\Http\Controllers\OvertimeController::class, 'index'])->name('overtime.index');
+Route::get('/overtime/create', [\App\Http\Controllers\OvertimeController::class, 'create'])->name('overtime.create');
+Route::post('/overtime', [\App\Http\Controllers\OvertimeController::class, 'store'])->name('overtime.store');
+Route::post('/overtime/{id}/approve', [\App\Http\Controllers\OvertimeController::class, 'approve'])->name('overtime.approve');
+Route::post('/overtime/{id}/reject', [\App\Http\Controllers\OvertimeController::class, 'reject'])->name('overtime.reject');
+Route::delete('/overtime/{id}', [\App\Http\Controllers\OvertimeController::class, 'destroy'])->name('overtime.destroy');
+
+// ==========================================
+// 3. REIMBURSEMENT (KLAIM BIAYA) ROUTES
+// ==========================================
+Route::get('/reimbursement', [\App\Http\Controllers\ReimbursementController::class, 'index'])->name('reimbursement.index');
+Route::get('/reimbursement/create', [\App\Http\Controllers\ReimbursementController::class, 'create'])->name('reimbursement.create');
+Route::post('/reimbursement', [\App\Http\Controllers\ReimbursementController::class, 'store'])->name('reimbursement.store');
+Route::get('/reimbursement/{id}', [\App\Http\Controllers\ReimbursementController::class, 'show'])->name('reimbursement.show');
+Route::post('/reimbursement/{id}/approve', [\App\Http\Controllers\ReimbursementController::class, 'approve'])->name('reimbursement.approve');
+Route::post('/reimbursement/{id}/reject', [\App\Http\Controllers\ReimbursementController::class, 'reject'])->name('reimbursement.reject');
+Route::delete('/reimbursement/{id}', [\App\Http\Controllers\ReimbursementController::class, 'destroy'])->name('reimbursement.destroy');
+
+// ==========================================
+// 5. EMPLOYEE SELF-SERVICE PORTAL ROUTES
+// ==========================================
+Route::prefix('my')->name('self-service.')->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\SelfServiceController::class, 'dashboard'])->name('dashboard');
+    Route::get('/schedule', [\App\Http\Controllers\SelfServiceController::class, 'schedule'])->name('schedule');
+    Route::get('/overtime', [\App\Http\Controllers\SelfServiceController::class, 'overtimeIndex'])->name('overtime');
+    Route::post('/overtime', [\App\Http\Controllers\SelfServiceController::class, 'overtimeStore'])->name('overtime.store');
+    Route::get('/reimbursement', [\App\Http\Controllers\SelfServiceController::class, 'reimbursementIndex'])->name('reimbursement');
+    Route::post('/reimbursement', [\App\Http\Controllers\SelfServiceController::class, 'reimbursementStore'])->name('reimbursement.store');
+    Route::get('/payslip', [\App\Http\Controllers\SelfServiceController::class, 'payslipIndex'])->name('payslip');
+    Route::get('/payslip/{id}/download', [\App\Http\Controllers\SelfServiceController::class, 'payslipDownload'])->name('payslip.download');
+});
+
 });

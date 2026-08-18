@@ -27,27 +27,28 @@ class PayrollController extends Controller
         return view('payroll.index', compact('payrolls'));
     }
 
+    public function create()
+    {
+        $employees = Employee::where('status', 'active')->orderBy('name')->get();
+        return view('payroll.create', compact('employees'));
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'employee_id' => 'required|exists:employees,id',
-            'month' => 'required|integer',
-            'year' => 'required|integer',
-            'basic_salary' => 'required|numeric',
-            'allowances' => 'nullable|numeric',
-            'deductions' => 'nullable|numeric',
-            'status' => 'nullable|string',
+            'employee_id'         => 'required|exists:employees,id',
+            'month'               => 'required|integer|between:1,12',
+            'year'                => 'required|integer|digits:4',
+            'basic_salary'        => 'required|numeric|min:0',
+            'allowances'          => 'nullable|numeric|min:0',
+            'position_allowance'  => 'nullable|numeric|min:0',
+            'meal_allowance'      => 'nullable|numeric|min:0',
+            'transport_allowance' => 'nullable|numeric|min:0',
+            'deductions'          => 'nullable|numeric|min:0',
+            'status'              => 'nullable|string',
         ]);
 
-        $validated['allowances'] = $validated['allowances'] ?? 0;
-        $validated['deductions'] = $validated['deductions'] ?? 0;
-
-        $validated['net_salary'] =
-            $validated['basic_salary']
-            + $validated['allowances']
-            - $validated['deductions'];
-
-        $payroll = Payroll::create($validated);
+        $payroll = $this->payrollService->generatePayroll($validated);
 
         // ==========================================
         // 🌟 INJEKSI LOG: UNTUK AKSI CREATE
@@ -56,17 +57,21 @@ class PayrollController extends Controller
             'user_email'  => auth()->user()->email ?? 'admin@erphris.com',
             'action'      => 'CREATE',
             'module'      => 'Payroll',
-            'description' => 'Membuat data payroll baru untuk ID Karyawan: ' . $payroll->employee_id . ' (Net: ' . $validated['net_salary'] . ')',
+            'description' => 'Membuat data payroll baru untuk ID Karyawan: ' . $payroll->employee_id . ' (Net: ' . number_format($payroll->net_salary, 0, ',', '.') . ')',
             'created_at'  => now()
         ]);
 
-        return response()->json([
-            'payload' => [
-                'statusCode' => 201,
-                'message' => 'Payroll created successfully!',
-                'data' => $payroll
-            ]
-        ], 201);
+        if ($request->expectsJson()) {
+            return response()->json([
+                'payload' => [
+                    'statusCode' => 201,
+                    'message' => 'Payroll created successfully!',
+                    'data' => $payroll
+                ]
+            ], 201);
+        }
+
+        return redirect()->route('payroll.index')->with('success', 'Data penggajian berhasil dibuat.');
     }
 
     public function show(Request $request, $id)

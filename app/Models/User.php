@@ -23,6 +23,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'employee_id',
         'profile_photo',
         'language',
         'theme',
@@ -31,6 +32,14 @@ class User extends Authenticatable
         'payroll_notification',
     ];
     protected $hidden = ['password', 'remember_token'];
+
+    /**
+     * Relasi ke data karyawan (untuk Self-Service portal).
+     */
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class);
+    }
 
     /**
      * Get the attributes that should be cast.

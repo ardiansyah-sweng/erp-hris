@@ -88,4 +88,42 @@ class Employee extends Model
     {
         return $this->status === 'inactive';
     }
+
+    /**
+     * Assignment shift karyawan.
+     */
+    public function employeeShifts()
+    {
+        return $this->hasMany(EmployeeShift::class);
+    }
+
+    /**
+     * Shift aktif karyawan saat ini.
+     */
+    public function currentShift()
+    {
+        $assignment = $this->employeeShifts()
+            ->active()
+            ->with('shift')
+            ->orderByDesc('effective_date')
+            ->first();
+
+        return $assignment ? $assignment->shift : null;
+    }
+
+    /**
+     * Riwayat lembur karyawan.
+     */
+    public function overtimes()
+    {
+        return $this->hasMany(Overtime::class);
+    }
+
+    /**
+     * Riwayat klaim reimbursement karyawan.
+     */
+    public function reimbursements()
+    {
+        return $this->hasMany(Reimbursement::class);
+    }
 }
