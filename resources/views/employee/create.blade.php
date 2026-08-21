@@ -21,6 +21,20 @@
             @csrf
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700">Pilih dari Pelamar (Accepted)</label>
+                    <select id="recruitmentSelect" class="mt-1 block w-full rounded-md border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-200">
+                        <option value="">-- Pilih Pelamar --</option>
+                        @foreach(($acceptedRecruitments ?? []) as $recruit)
+                            <option value="{{ $recruit->id }}">{{ $recruit->name }} — {{ $recruit->email }} ({{ $recruit->jobrole->role ?? 'Tanpa Role' }})</option>
+                        @endforeach
+                    </select>
+                    @if(empty($acceptedRecruitments))
+                        <p class="mt-1 text-xs text-gray-400">Belum ada pelamar berstatus Accepted.</p>
+                    @endif
+                </div>
+
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Nama</label>
                     <input type="text" name="name" value="{{ old('name') }}" class="mt-1 block w-full rounded-md border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-200" required>
@@ -58,12 +72,13 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Job Role</label>
-                    <select name="role_id" class="mt-1 block w-full rounded-md border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-200">
+                    <select name="role_id" id="roleSelect" class="mt-1 block w-full rounded-md border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-200">
                         <option value="">-- Pilih Role --</option>
                         @foreach(($jobroles ?? []) as $role)
                             <option value="{{ $role->id }}" {{ old('role_id') == $role->id ? 'selected' : '' }}>{{ $role->role }}</option>
                         @endforeach
                     </select>
+                    <input type="hidden" id="roleIdHidden" value="{{ old('role_id') }}">
                 </div>
 
                 <div class="md:col-span-2">
@@ -108,6 +123,55 @@
         if (dateInput.value) {
             calculateAge();
         }
+
+        const recruitmentSelect = document.getElementById('recruitmentSelect');
+        const roleSelect = document.getElementById('roleSelect');
+        const roleIdHidden = document.getElementById('roleIdHidden');
+        const recruitData = @json($acceptedRecruitments ?? []);
+        const textFields = {
+            name: document.querySelector('input[name="name"]'),
+            email: document.querySelector('input[name="email"]'),
+            phone_number: document.querySelector('input[name="phone_number"]'),
+        };
+
+        function lockField(input, lock) {
+            if (lock) {
+                input.setAttribute('readonly', '');
+                input.classList.add('bg-gray-50', 'cursor-not-allowed');
+            } else {
+                input.removeAttribute('readonly');
+                input.classList.remove('bg-gray-50', 'cursor-not-allowed');
+            }
+        }
+
+        function applyRecruit(id) {
+            const rec = recruitData.find(function (r) { return String(r.id) === String(id); });
+            const lock = !!rec;
+
+            Object.keys(textFields).forEach(function (key) {
+                if (rec) {
+                    textFields[key].value = rec[key] || '';
+                }
+                lockField(textFields[key], lock);
+            });
+
+            if (rec) {
+                roleSelect.value = rec.role_id;
+                roleSelect.setAttribute('disabled', '');
+                roleSelect.removeAttribute('name');
+                roleIdHidden.setAttribute('name', 'role_id');
+                roleIdHidden.value = rec.role_id;
+            } else {
+                roleSelect.removeAttribute('disabled');
+                roleSelect.setAttribute('name', 'role_id');
+                roleIdHidden.removeAttribute('name');
+                roleIdHidden.value = '';
+            }
+        }
+
+        recruitmentSelect.addEventListener('change', function (e) {
+            applyRecruit(e.target.value);
+        });
     });
 </script>
 @endpush
